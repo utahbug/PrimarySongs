@@ -74,6 +74,8 @@ body.pdf-open { --pdf-nav-space: calc(58px + env(safe-area-inset-bottom)); overf
 
 body.pdf-open .main-nav { border-bottom: 0px; border-top: 1px solid var(--line); bottom: 0px; left: 0px; overflow-x: auto; overflow-y: visible; padding-bottom: max(6px, env(safe-area-inset-bottom)); position: fixed; right: 0px; top: auto; z-index: 35; }
 
+body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-area-inset-bottom)); max-height: min(58dvh, 340px); position: fixed; right: max(8px, env(safe-area-inset-right)); top: auto; z-index: 120; }
+
 .nav-button, .primary-button, .secondary-button, .icon-button { align-items: center; border-radius: var(--radius); border: 1px solid var(--line); display: inline-flex; justify-content: center; min-height: 40px; padding: 8px 12px; text-decoration: none; touch-action: manipulation; }
 
 .nav-button { background: var(--accent-soft); border-color: var(--line); color: var(--ink); flex: 0 0 auto; font-weight: 700; }
