@@ -3,24 +3,25 @@
 const PDFJS_VERSION = "3.11.174";
 const PDFJS_WORKER_URL = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js`;
 
+const APP_STORAGE_SCOPE = getAppStorageScope();
 const STORAGE_KEYS = {
-  deletedItems: "primaryMusicHelper.deletedItems",
-  favorites: "primaryMusicHelper.favorites",
-  importedItems: "primaryMusicHelper.importedItems",
-  itemEdits: "primaryMusicHelper.itemEdits",
-  lastOpened: "primaryMusicHelper.lastOpened",
-  lists: "primaryMusicHelper.lists",
-  pdfPages: "primaryMusicHelper.pdfPages",
-  quickIndexes: "primaryMusicHelper.quickIndexes",
-  recents: "primaryMusicHelper.recents",
-  settings: "primaryMusicHelper.settings",
-  starterFavorites: "primaryMusicHelper.starterFavorites",
-  starterLists: "primaryMusicHelper.starterLists",
-  setlists: "primaryMusicHelper.setlists",
-  quickChecks: "primaryMusicHelper.quickChecks"
+  deletedItems: storageKey("deletedItems"),
+  favorites: storageKey("favorites"),
+  importedItems: storageKey("importedItems"),
+  itemEdits: storageKey("itemEdits"),
+  lastOpened: storageKey("lastOpened"),
+  lists: storageKey("lists"),
+  pdfPages: storageKey("pdfPages"),
+  quickIndexes: storageKey("quickIndexes"),
+  recents: storageKey("recents"),
+  settings: storageKey("settings"),
+  starterFavorites: storageKey("starterFavorites"),
+  starterLists: storageKey("starterLists"),
+  setlists: storageKey("setlists"),
+  quickChecks: storageKey("quickChecks")
 };
 
-const IMPORT_DB_NAME = "primaryMusicHelper.imports";
+const IMPORT_DB_NAME = `${APP_STORAGE_SCOPE}.imports`;
 const IMPORT_DB_VERSION = 1;
 const PDF_STORE_NAME = "pdfFiles";
 const RICH_TOGGLE_COMMANDS = ["bold", "italic", "strikeThrough", "insertUnorderedList", "insertOrderedList"];
@@ -31,251 +32,154 @@ const BATCH_DELETE_SECTIONS = ["library", "cards", "links"];
 
 const BUILT_IN_LINKS = [];
 
+function storageKey(name) {
+  return `${APP_STORAGE_SCOPE}.${name}`;
+}
+
+function getAppStorageScope() {
+  const pathParts = window.location.pathname
+    .split("/")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const repoOrFolder = pathParts[0] || "local";
+  return `primaryMusicHelper.${repoOrFolder}`;
+}
+
 const DEFAULT_LIBRARY_DATA = {
   "items": [
     {
-      "id": "this-little-light-of-mine-lyrics",
-      "title": "This Little Light of Mine - lyrics",
+      "id": "called-to-serve-lyrics-249",
+      "title": "Called to Serve - lyrics, 249",
       "type": "pdf",
-      "category": "Primary 2026 Lyrics",
-      "page": 1028,
-      "file": "music/Primary-2026/This-Little-Light-of-Mine-lyrics.pdf"
+      "file": "music/Primary-2026/Called to Serve - lyrics, 249.pdf",
+      "page": 249
     },
     {
-      "id": "called-to-serve-lyrics",
-      "title": "Called to Serve - lyrics",
+      "id": "called-to-serve-hymnbook-174",
+      "title": "Called to Serve (hymnbook) ♫, 174",
       "type": "pdf",
-      "category": "Primary 2026 Lyrics",
-      "page": 249,
-      "file": "music/Primary-2026/Called-to-Serve-lyrics.pdf"
+      "file": "music/Primary-2026/Called to Serve (hymnbook) ♫, 174.pdf",
+      "page": 174
     },
     {
-      "id": "i-will-follow-gods-plan-for-me-lyrics",
-      "title": "I Will Follow God's Plan for Me - lyrics",
+      "id": "called-to-serve-249",
+      "title": "Called to Serve ♫, 249",
       "type": "pdf",
-      "category": "Primary 2026 Lyrics",
-      "page": 165,
-      "file": "music/Primary-2026/I-Will-Follow-Gods-Plan-for-Me-lyrics.pdf"
+      "file": "music/Primary-2026/Called to Serve ♫, 249.pdf",
+      "page": 249
     },
     {
       "id": "choose-to-serve-the-lord-lyrics",
       "title": "Choose to Serve the Lord - lyrics",
       "type": "pdf",
-      "category": "Primary 2026 Lyrics",
-      "file": "music/Primary-2026/Choose-to-Serve-the-Lord-lyrics.pdf"
+      "file": "music/Primary-2026/Choose to Serve the Lord - lyrics.pdf"
     },
     {
-      "id": "search-ponder-pray-lyrics",
-      "title": "Search, Ponder, and Pray - lyrics",
-      "type": "pdf",
-      "category": "Primary 2026 Lyrics",
-      "page": 109,
-      "file": "music/Primary-2026/Search-Ponder-and-Pray-lyrics.pdf"
-    },
-    {
-      "id": "wise-man-foolish-man-lyrics",
-      "title": "The Wise Man and the Foolish Man - lyrics",
-      "type": "pdf",
-      "category": "Primary 2026 Lyrics",
-      "page": 281,
-      "file": "music/Primary-2026/The-Wise-Man-and-the-Foolish-Man-lyrics.pdf"
-    },
-    {
-      "id": "i-will-walk-with-jesus-lyrics",
-      "title": "I Will Walk with Jesus - lyrics",
-      "type": "pdf",
-      "category": "Primary 2026 Lyrics",
-      "page": 1004,
-      "file": "music/Primary-2026/I-Will-Walk-with-Jesus-lyrics.pdf"
-    },
-    {
-      "id": "i-will-walk-with-jesus-music",
-      "title": "I Will Walk with Jesus ♫",
-      "type": "pdf",
-      "category": "Primary 2026 Music",
-      "page": 1004,
-      "file": "music/Primary-2026/I-Will-Walk-with-Jesus-music.pdf"
-    },
-    {
-      "id": "i-feel-my-saviors-love-lyrics",
-      "title": "I Feel My Savior's Love - lyrics",
-      "type": "pdf",
-      "category": "Primary 2026 Lyrics",
-      "page": 74,
-      "file": "music/Primary-2026/I-Feel-My-Saviors-Love-lyrics.pdf"
-    },
-    {
-      "id": "this-little-light-of-mine-music",
-      "title": "This Little Light of Mine ♫",
-      "type": "pdf",
-      "category": "Primary 2026 Music",
-      "page": 1028,
-      "file": "music/Primary-2026/This-Little-Light-of-Mine-music.pdf"
-    },
-    {
-      "id": "called-to-serve-music",
-      "title": "Called to Serve ♫",
-      "type": "pdf",
-      "category": "Primary 2026 Music",
-      "page": 249,
-      "file": "music/Primary-2026/Called-to-Serve-music.pdf"
-    },
-    {
-      "id": "called-to-serve-hymnbook-music",
-      "title": "Called to Serve (hymnbook) ♫",
-      "type": "pdf",
-      "category": "Primary 2026 Music",
-      "page": 249,
-      "file": "music/Primary-2026/Called-to-Serve-hymnbook-music.pdf"
-    },
-    {
-      "id": "i-will-follow-gods-plan-for-me-music",
-      "title": "I Will Follow God's Plan for Me ♫",
-      "type": "pdf",
-      "category": "Primary 2026 Music",
-      "page": 165,
-      "file": "music/Primary-2026/I-Will-Follow-Gods-Plan-for-Me-music.pdf"
-    },
-    {
-      "id": "choose-to-serve-the-lord-music",
+      "id": "choose-to-serve-the-lord",
       "title": "Choose to Serve the Lord ♪ ♫",
       "type": "pdf",
-      "category": "Primary 2026 Music",
-      "file": "music/Primary-2026/Choose-to-Serve-the-Lord-music.pdf"
+      "file": "music/Primary-2026/Choose to Serve the Lord ♪ ♫.pdf"
     },
     {
-      "id": "search-ponder-pray-music",
-      "title": "Search, Ponder, and Pray ♫",
+      "id": "i-feel-my-saviors-love-74",
+      "title": "I Feel My Savior's Love ♫, 74",
       "type": "pdf",
-      "category": "Primary 2026 Music",
-      "page": 109,
-      "file": "music/Primary-2026/Search-Ponder-and-Pray-music.pdf"
+      "file": "music/Primary-2026/I Feel My Savior's Love ♫, 74.pdf",
+      "page": 74
     },
     {
-      "id": "wise-man-foolish-man-music",
-      "title": "The Wise Man and the Foolish Man ♫",
+      "id": "i-feel-my-savior-s-love-lyrics-74",
+      "title": "I Feel My Savior’s Love, lyrics, 74",
       "type": "pdf",
-      "category": "Primary 2026 Music",
-      "page": 281,
-      "file": "music/Primary-2026/The-Wise-Man-and-the-Foolish-Man-music.pdf"
+      "file": "music/Primary-2026/I Feel My Savior’s Love, lyrics, 74.pdf",
+      "page": 74
     },
     {
-      "id": "i-feel-my-saviors-love-music",
-      "title": "I Feel My Savior's Love ♫",
+      "id": "i-will-follow-god-s-plan-lyrics-165",
+      "title": "I Will Follow God’s Plan - lyrics, 165",
       "type": "pdf",
-      "category": "Primary 2026 Music",
-      "page": 74,
-      "file": "music/Primary-2026/I-Feel-My-Saviors-Love-music.pdf"
+      "file": "music/Primary-2026/I Will Follow God’s Plan - lyrics, 165.pdf",
+      "page": 165
     },
     {
-      "id": "lds-childrens-songbook",
+      "id": "i-will-follow-gods-plan-for-me-165",
+      "title": "I Will Follow God's Plan for Me ♫, 165",
+      "type": "pdf",
+      "file": "music/Primary-2026/I Will Follow God's Plan for Me ♫, 165.pdf",
+      "page": 165
+    },
+    {
+      "id": "i-will-walk-with-jesus-1004-lyrics",
+      "title": "I Will Walk with Jesus, 1004 - lyrics",
+      "type": "pdf",
+      "file": "music/Primary-2026/I Will Walk with Jesus, 1004 - lyrics.pdf",
+      "page": 1004
+    },
+    {
+      "id": "i-will-walk-with-jesus-1004",
+      "title": "I Will Walk with Jesus, 1004 ♫",
+      "type": "pdf",
+      "file": "music/Primary-2026/I Will Walk with Jesus, 1004 ♫.pdf",
+      "page": 1004
+    },
+    {
+      "id": "search-ponder-and-pray-lyrics-109",
+      "title": "Search, Ponder, and Pray - lyrics, 109",
+      "type": "pdf",
+      "file": "music/Primary-2026/Search, Ponder, and Pray - lyrics, 109.pdf",
+      "page": 109
+    },
+    {
+      "id": "search-ponder-and-pray-109",
+      "title": "Search, Ponder, and Pray ♫, 109",
+      "type": "pdf",
+      "file": "music/Primary-2026/Search, Ponder, and Pray ♫, 109.pdf",
+      "page": 109
+    },
+    {
+      "id": "the-wise-man-and-the-foolish-man-281",
+      "title": "The Wise Man and the Foolish Man ♫, 281",
+      "type": "pdf",
+      "file": "music/Primary-2026/The Wise Man and the Foolish Man ♫, 281.pdf",
+      "page": 281
+    },
+    {
+      "id": "the-wise-man-and-the-foolish-man-lyrics-281",
+      "title": "The Wise Man and the Foolish Man, lyrics, 281",
+      "type": "pdf",
+      "file": "music/Primary-2026/The Wise Man and the Foolish Man, lyrics, 281.pdf",
+      "page": 281
+    },
+    {
+      "id": "this-little-light-of-mine-lyrics-1028",
+      "title": "This Little Light of Mine - lyrics, 1028",
+      "type": "pdf",
+      "file": "music/Primary-2026/This Little Light of Mine - lyrics, 1028.pdf",
+      "page": 1028
+    },
+    {
+      "id": "this-little-light-of-mine-1028",
+      "title": "This Little Light of Mine ♫, 1028",
+      "type": "pdf",
+      "file": "music/Primary-2026/This Little Light of Mine ♫, 1028.pdf",
+      "page": 1028
+    },
+    {
+      "id": "childrens-songbook-link",
       "title": "Children's Songbook",
       "type": "link",
-      "category": "LDS Library",
       "url": "https://www.churchofjesuschrist.org/media/music/collections/childrens-songbook?lang=eng"
     },
     {
-      "id": "lds-new-hymns",
+      "id": "new-hymns-link",
       "title": "New Hymns",
       "type": "link",
-      "category": "LDS Library",
       "url": "https://www.churchofjesuschrist.org/media/music/collections/hymns-for-home-and-church?lang=eng"
     }
   ],
-  "favorites": [
-    "this-little-light-of-mine-music",
-    "called-to-serve-music",
-    "i-will-follow-gods-plan-for-me-music",
-    "favorite-divider:primary-program-2026",
-    "choose-to-serve-the-lord-music",
-    "search-ponder-pray-music",
-    "wise-man-foolish-man-music",
-    "i-feel-my-saviors-love-music",
-    "favorite-divider:primary-links-2026",
-    "lds-childrens-songbook",
-    "lds-new-hymns"
-  ],
+  "favorites": [],
   "quickIndexes": [],
-  "setlists": [
-    {
-      "id": "primary-program-lyrics",
-      "title": "Primary Program (lyrics)",
-      "items": [
-        {
-          "itemId": "this-little-light-of-mine-lyrics"
-        },
-        {
-          "itemId": "called-to-serve-lyrics"
-        },
-        {
-          "itemId": "i-will-follow-gods-plan-for-me-lyrics"
-        }
-      ]
-    },
-    {
-      "id": "primary-program-music",
-      "title": "Primary Program ♪ ♫",
-      "items": [
-        {
-          "itemId": "this-little-light-of-mine-music"
-        },
-        {
-          "itemId": "called-to-serve-music"
-        },
-        {
-          "itemId": "i-will-follow-gods-plan-for-me-music"
-        }
-      ]
-    },
-    {
-      "id": "primary-songs-2026-lyrics",
-      "title": "Primary Songs 2026 (lyrics)",
-      "items": [
-        {
-          "itemId": "choose-to-serve-the-lord-lyrics"
-        },
-        {
-          "itemId": "search-ponder-pray-lyrics"
-        },
-        {
-          "itemId": "wise-man-foolish-man-lyrics"
-        },
-        {
-          "itemId": "i-will-walk-with-jesus-lyrics"
-        },
-        {
-          "itemId": "i-feel-my-saviors-love-lyrics"
-        },
-        {
-          "itemId": "this-little-light-of-mine-lyrics"
-        }
-      ]
-    },
-    {
-      "id": "primary-songs-2026-music",
-      "title": "Primary Songs 2026 ♪ ♫",
-      "items": [
-        {
-          "itemId": "choose-to-serve-the-lord-music"
-        },
-        {
-          "itemId": "search-ponder-pray-music"
-        },
-        {
-          "itemId": "wise-man-foolish-man-music"
-        },
-        {
-          "itemId": "i-will-walk-with-jesus-music"
-        },
-        {
-          "itemId": "i-feel-my-saviors-love-music"
-        },
-        {
-          "itemId": "this-little-light-of-mine-music"
-        }
-      ]
-    }
-  ]
+  "setlists": []
 };
 
 const THEME_PRESETS = {
@@ -2543,8 +2447,8 @@ function itemDeleteActionHtml(item) {
 }
 
 function compactItemRowHtml(item, options = {}) {
-  const meta = compactLibraryMetaText(item);
-  const title = itemDisplayTitle(item);
+  const meta = options.favoriteList ? "" : compactLibraryMetaText(item);
+  const title = options.favoriteList ? itemDisplayTitleWithInlinePage(item) : itemDisplayTitle(item);
   const compactAction = options.compactAction === "edit"
     ? `
     <button class="icon-button info-button compact-info-button" type="button" data-edit-item="${escapeHtml(item.id)}" aria-label="Edit ${escapeHtml(title)}" title="Edit">
@@ -2788,14 +2692,8 @@ function renderInlineListItems(list) {
   return `
     <div class="inline-list-items">
       ${entries.map((entry) => {
-        const title = itemDisplayTitle(entry.item);
-        const page = entry.page || entry.item.page;
+        const title = itemDisplayTitleWithInlinePage(entry.item, entry.page);
         const favorite = state.favorites.has(entry.item.id);
-        const meta = [
-          page ? `p. ${page}` : "",
-          entry.item.book || entry.item.category || "",
-          entry.item.type || ""
-        ].filter(Boolean).join(" - ");
         return `
           <div class="inline-list-row">
             <button class="icon-button favorite-toggle inline-list-favorite ${favorite ? "favorite-on" : ""}" type="button" data-favorite="${escapeHtml(entry.item.id)}" aria-label="Toggle favorite for ${escapeHtml(title)}" title="Toggle favorite">
@@ -2803,7 +2701,6 @@ function renderInlineListItems(list) {
             </button>
             <button class="inline-list-item" type="button" data-open="${escapeHtml(entry.item.id)}">
               <span class="compact-title">${escapeHtml(title)}</span>
-              ${meta ? `<span class="compact-meta">${escapeHtml(meta)}</span>` : ""}
             </button>
             <button class="icon-button inline-list-edit-button" type="button" data-edit-item="${escapeHtml(entry.item.id)}" data-edit-context="lists" aria-label="Edit ${escapeHtml(title)}" title="Edit item">&#9998;</button>
           </div>
@@ -4615,6 +4512,28 @@ function itemDisplayTitle(item) {
   return "Untitled";
 }
 
+function itemDisplayTitleWithInlinePage(item, pageOverride = null) {
+  const title = itemDisplayTitle(item);
+  const page = normalizeVisibleText(pageOverride ?? item?.page);
+  if (!page || titleContainsPage(title, page)) return title;
+
+  const pdfMatch = title.match(/\.pdf$/i);
+  if (pdfMatch) {
+    return `${title.slice(0, -pdfMatch[0].length)}, ${page}${pdfMatch[0]}`;
+  }
+
+  return `${title}, ${page}`;
+}
+
+function titleContainsPage(title, page) {
+  const escapedPage = escapeRegExp(page);
+  return new RegExp(`(^|[^0-9])${escapedPage}([^0-9]|$)`).test(title);
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function normalizeVisibleText(value) {
   return String(value ?? "").replace(/[\u200B-\u200D\uFEFF]/g, "").trim();
 }
@@ -4735,7 +4654,7 @@ function metaHtml(item) {
 
 function compactLibraryMetaText(item) {
   const pieces = [];
-  if (item.page) pieces.push(`p. ${item.page}`);
+  if (item.page && !titleContainsPage(itemDisplayTitle(item), item.page)) pieces.push(`p. ${item.page}`);
   const locator = item.book || item.composer || item.category || "";
   if (locator) pieces.push(locator);
   return pieces.join(" \u00b7 ");
