@@ -70,9 +70,9 @@ h3 { font-size: 1.1rem; line-height: 1.2; margin-bottom: 5px; }
 
 .main-nav { background: var(--surface); border-bottom: 1px solid var(--line); display: flex; gap: 6px; overflow: visible; padding: 6px clamp(12px, 4vw, 32px); position: sticky; top: 0px; z-index: 25; }
 
-body.pdf-open { overflow: hidden; }
+body.pdf-open { --pdf-nav-space: calc(58px + env(safe-area-inset-bottom)); overflow: hidden; }
 
-body.pdf-open .main-nav { display: none; }
+body.pdf-open .main-nav { border-bottom: 0px; border-top: 1px solid var(--line); bottom: 0px; left: 0px; overflow-x: auto; overflow-y: visible; padding-bottom: max(6px, env(safe-area-inset-bottom)); position: fixed; right: 0px; top: auto; z-index: 35; }
 
 .nav-button, .primary-button, .secondary-button, .icon-button { align-items: center; border-radius: var(--radius); border: 1px solid var(--line); display: inline-flex; justify-content: center; min-height: 40px; padding: 8px 12px; text-decoration: none; touch-action: manipulation; }
 
@@ -713,9 +713,9 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .remove-button { border-color: var(--danger-border); color: var(--danger); }
 
-.pdf-viewer { background: var(--accent-soft); display: grid; grid-template-rows: auto 1fr auto; height: 100dvh; inset: 0px; position: fixed; z-index: 20; }
+.pdf-viewer { background: var(--accent-soft); display: grid; grid-template-rows: auto 1fr; height: 100dvh; inset: 0px; position: fixed; z-index: 20; }
 
-body.pdf-open .pdf-viewer { height: 100dvh; }
+body.pdf-open .pdf-viewer { bottom: var(--pdf-nav-space); height: auto; }
 
 .pdf-toolbar { align-items: center; background: var(--surface); border-bottom: 1px solid var(--line); display: grid; gap: 8px; grid-template-columns: auto minmax(0px, 1fr) auto; padding: max(6px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 6px max(8px, env(safe-area-inset-left)); }
 
@@ -730,12 +730,6 @@ body.pdf-open .pdf-viewer { height: 100dvh; }
 .pdf-page-button:hover, .pdf-page-button:focus-visible { background: var(--accent-hover); color: var(--accent-strong); }
 
 .pdf-stage { align-items: flex-start; display: flex; justify-content: center; min-height: 0px; overflow: hidden; padding: 4px 12px 12px; position: relative; touch-action: none; }
-
-.pdf-home-bar { align-items: center; background: var(--surface); border-top: 1px solid var(--line); display: flex; justify-content: flex-start; padding: 6px max(8px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); }
-
-.pdf-home-button { background: var(--accent-soft); color: var(--accent-strong); font-size: 1.55rem; font-weight: 800; min-height: 48px; min-width: 58px; padding: 0px 14px; }
-
-.pdf-home-button:hover, .pdf-home-button:focus-visible { background: var(--accent-hover); color: var(--accent-strong); }
 
 .pdf-canvas { background: var(--surface); box-shadow: var(--shadow-pdf); display: block; max-height: 100%; max-width: 100%; transform-origin: top center; will-change: transform; }
 
