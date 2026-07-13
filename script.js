@@ -15,6 +15,7 @@ const STORAGE_KEYS = {
   quickIndexes: storageKey("quickIndexes"),
   recents: storageKey("recents"),
   settings: storageKey("settings"),
+  starterDataVersion: storageKey("starterDataVersion"),
   starterFavorites: storageKey("starterFavorites"),
   starterLists: storageKey("starterLists"),
   setlists: storageKey("setlists"),
@@ -26,6 +27,7 @@ const IMPORT_DB_VERSION = 1;
 const PDF_STORE_NAME = "pdfFiles";
 const RICH_TOGGLE_COMMANDS = ["bold", "italic", "strikeThrough", "insertUnorderedList", "insertOrderedList"];
 const FAVORITE_DIVIDER_PREFIX = "favorite-divider:";
+const STARTER_DATA_VERSION = "primary-2026-lists-v2";
 const FILE_ITEM_TYPES = new Set(["pdf", "image", "note", "index"]);
 const LIBRARY_CONTENT_TYPES = new Set(["pdf", "image", "note", "index", "card", "link"]);
 const BATCH_DELETE_SECTIONS = ["library", "cards", "links"];
@@ -1058,9 +1060,21 @@ function showLoadError(error) {
 function loadLocalState() {
   // localStorage keeps private, device-only preferences and planning state.
   // Clearing browser site data resets these values without changing library.json.
+  syncStarterDataVersion();
   state.favorites = new Set(readJson(STORAGE_KEYS.favorites, []));
   applyStarterFavorites();
   state.lists = loadUnifiedLists();
+}
+
+function syncStarterDataVersion() {
+  const savedVersion = localStorage.getItem(STORAGE_KEYS.starterDataVersion);
+  if (savedVersion === STARTER_DATA_VERSION) return;
+
+  // Keep user-created lists and favorites, but allow new built-in starter
+  // content to merge in when this package is updated.
+  localStorage.removeItem(STORAGE_KEYS.starterFavorites);
+  localStorage.removeItem(STORAGE_KEYS.starterLists);
+  localStorage.setItem(STORAGE_KEYS.starterDataVersion, STARTER_DATA_VERSION);
 }
 
 function applyStarterFavorites() {
