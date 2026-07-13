@@ -27,10 +27,11 @@ const IMPORT_DB_VERSION = 1;
 const PDF_STORE_NAME = "pdfFiles";
 const RICH_TOGGLE_COMMANDS = ["bold", "italic", "strikeThrough", "insertUnorderedList", "insertOrderedList"];
 const FAVORITE_DIVIDER_PREFIX = "favorite-divider:";
-const STARTER_DATA_VERSION = "primary-2026-lists-v2";
+const STARTER_DATA_VERSION = "primary-2026-lists-v3";
 const FILE_ITEM_TYPES = new Set(["pdf", "image", "note", "index"]);
 const LIBRARY_CONTENT_TYPES = new Set(["pdf", "image", "note", "index", "card", "link"]);
 const BATCH_DELETE_SECTIONS = ["library", "cards", "links"];
+let shouldApplyStarterListOrder = false;
 
 const BUILT_IN_LINKS = [];
 
@@ -195,22 +196,6 @@ const DEFAULT_LIBRARY_DATA = {
   "quickIndexes": [],
   "setlists": [
     {
-      "id": "primary-program-lyrics",
-      "title": "Primary Program (lyrics)",
-      "showCheckboxes": false,
-      "items": [
-        {
-          "itemId": "this-little-light-of-mine-lyrics-1028"
-        },
-        {
-          "itemId": "called-to-serve-lyrics-249"
-        },
-        {
-          "itemId": "i-will-follow-god-s-plan-lyrics-165"
-        }
-      ]
-    },
-    {
       "id": "primary-program",
       "title": "Primary Program",
       "showCheckboxes": false,
@@ -227,27 +212,18 @@ const DEFAULT_LIBRARY_DATA = {
       ]
     },
     {
-      "id": "primary-songs-2026-lyrics",
-      "title": "Primary Songs 2026 (lyrics)",
+      "id": "primary-program-lyrics",
+      "title": "Primary Program (lyrics)",
       "showCheckboxes": false,
       "items": [
         {
-          "itemId": "choose-to-serve-the-lord-lyrics"
-        },
-        {
-          "itemId": "search-ponder-and-pray-lyrics-109"
-        },
-        {
-          "itemId": "the-wise-man-and-the-foolish-man-lyrics-281"
-        },
-        {
-          "itemId": "i-will-walk-with-jesus-1004-lyrics"
-        },
-        {
-          "itemId": "i-feel-my-savior-s-love-lyrics-74"
-        },
-        {
           "itemId": "this-little-light-of-mine-lyrics-1028"
+        },
+        {
+          "itemId": "called-to-serve-lyrics-249"
+        },
+        {
+          "itemId": "i-will-follow-god-s-plan-lyrics-165"
         }
       ]
     },
@@ -273,6 +249,31 @@ const DEFAULT_LIBRARY_DATA = {
         },
         {
           "itemId": "this-little-light-of-mine-1028"
+        }
+      ]
+    },
+    {
+      "id": "primary-songs-2026-lyrics",
+      "title": "Primary Songs 2026 (lyrics)",
+      "showCheckboxes": false,
+      "items": [
+        {
+          "itemId": "choose-to-serve-the-lord-lyrics"
+        },
+        {
+          "itemId": "search-ponder-and-pray-lyrics-109"
+        },
+        {
+          "itemId": "the-wise-man-and-the-foolish-man-lyrics-281"
+        },
+        {
+          "itemId": "i-will-walk-with-jesus-1004-lyrics"
+        },
+        {
+          "itemId": "i-feel-my-savior-s-love-lyrics-74"
+        },
+        {
+          "itemId": "this-little-light-of-mine-lyrics-1028"
         }
       ]
     },
@@ -1032,7 +1033,7 @@ async function loadLibrary() {
     libraryData = cloneData(DEFAULT_LIBRARY_DATA);
   }
 
-  state.data = libraryData || cloneData(DEFAULT_LIBRARY_DATA);
+  state.data = mergeDefaultStarterData(libraryData || cloneData(DEFAULT_LIBRARY_DATA));
   const importedItems = cleanupImportedItemDuplicates();
   const baseItems = [
     ...(state.data.items || []),
@@ -1041,6 +1042,32 @@ async function loadLibrary() {
   ].filter((item) => item?.id && !deletedItemIds().has(item.id));
   state.data.items = applyLocalItemEdits(baseItems);
   state.itemsById = new Map(state.data.items.map((item) => [item.id, item]));
+}
+
+function mergeDefaultStarterData(libraryData) {
+  const merged = cloneData(libraryData || {});
+  const defaults = cloneData(DEFAULT_LIBRARY_DATA);
+
+  merged.items = mergeById(merged.items || [], defaults.items || []);
+  merged.quickIndexes = mergeById(merged.quickIndexes || [], defaults.quickIndexes || []);
+  merged.setlists = mergeById(merged.setlists || [], defaults.setlists || []);
+
+  const favorites = new Set(merged.favorites || []);
+  (defaults.favorites || []).forEach((id) => favorites.add(id));
+  merged.favorites = Array.from(favorites);
+
+  return merged;
+}
+
+function mergeById(primaryItems, fallbackItems) {
+  const merged = [...primaryItems];
+  const existingIds = new Set(merged.map((item) => item?.id).filter(Boolean));
+  fallbackItems.forEach((item) => {
+    if (!item?.id || existingIds.has(item.id)) return;
+    merged.push(item);
+    existingIds.add(item.id);
+  });
+  return merged;
 }
 
 function showLoadError(error) {
@@ -1075,6 +1102,7 @@ function syncStarterDataVersion() {
   localStorage.removeItem(STORAGE_KEYS.starterFavorites);
   localStorage.removeItem(STORAGE_KEYS.starterLists);
   localStorage.setItem(STORAGE_KEYS.starterDataVersion, STARTER_DATA_VERSION);
+  shouldApplyStarterListOrder = true;
 }
 
 function applyStarterFavorites() {
@@ -1174,6 +1202,21 @@ function syncStarterLists(lists) {
     applied.add(starter.id);
     appliedChanged = true;
   });
+
+  if (shouldApplyStarterListOrder) {
+    const starterOrder = new Map(starterLists.map((list, index) => [list.id, index]));
+    const originalOrder = new Map(lists.map((list, index) => [list.id, index]));
+    lists.sort((a, b) => {
+      const aStarter = starterOrder.has(a.id);
+      const bStarter = starterOrder.has(b.id);
+      if (aStarter && bStarter) return starterOrder.get(a.id) - starterOrder.get(b.id);
+      if (aStarter) return -1;
+      if (bStarter) return 1;
+      return originalOrder.get(a.id) - originalOrder.get(b.id);
+    });
+    listsChanged = true;
+    shouldApplyStarterListOrder = false;
+  }
 
   if (appliedChanged) writeJson(STORAGE_KEYS.starterLists, Array.from(applied));
   if (listsChanged) writeJson(STORAGE_KEYS.lists, lists);

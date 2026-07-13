@@ -146,22 +146,6 @@
   "quickIndexes": [],
   "setlists": [
     {
-      "id": "primary-program-lyrics",
-      "title": "Primary Program (lyrics)",
-      "showCheckboxes": false,
-      "items": [
-        {
-          "itemId": "this-little-light-of-mine-lyrics-1028"
-        },
-        {
-          "itemId": "called-to-serve-lyrics-249"
-        },
-        {
-          "itemId": "i-will-follow-god-s-plan-lyrics-165"
-        }
-      ]
-    },
-    {
       "id": "primary-program",
       "title": "Primary Program",
       "showCheckboxes": false,
@@ -178,27 +162,18 @@
       ]
     },
     {
-      "id": "primary-songs-2026-lyrics",
-      "title": "Primary Songs 2026 (lyrics)",
+      "id": "primary-program-lyrics",
+      "title": "Primary Program (lyrics)",
       "showCheckboxes": false,
       "items": [
         {
-          "itemId": "choose-to-serve-the-lord-lyrics"
-        },
-        {
-          "itemId": "search-ponder-and-pray-lyrics-109"
-        },
-        {
-          "itemId": "the-wise-man-and-the-foolish-man-lyrics-281"
-        },
-        {
-          "itemId": "i-will-walk-with-jesus-1004-lyrics"
-        },
-        {
-          "itemId": "i-feel-my-savior-s-love-lyrics-74"
-        },
-        {
           "itemId": "this-little-light-of-mine-lyrics-1028"
+        },
+        {
+          "itemId": "called-to-serve-lyrics-249"
+        },
+        {
+          "itemId": "i-will-follow-god-s-plan-lyrics-165"
         }
       ]
     },
@@ -224,6 +199,31 @@
         },
         {
           "itemId": "this-little-light-of-mine-1028"
+        }
+      ]
+    },
+    {
+      "id": "primary-songs-2026-lyrics",
+      "title": "Primary Songs 2026 (lyrics)",
+      "showCheckboxes": false,
+      "items": [
+        {
+          "itemId": "choose-to-serve-the-lord-lyrics"
+        },
+        {
+          "itemId": "search-ponder-and-pray-lyrics-109"
+        },
+        {
+          "itemId": "the-wise-man-and-the-foolish-man-lyrics-281"
+        },
+        {
+          "itemId": "i-will-walk-with-jesus-1004-lyrics"
+        },
+        {
+          "itemId": "i-feel-my-savior-s-love-lyrics-74"
+        },
+        {
+          "itemId": "this-little-light-of-mine-lyrics-1028"
         }
       ]
     },
