@@ -1,9 +1,9 @@
-const CACHE_NAME = "primary-music-helper-shell-v171";
+const CACHE_NAME = "primary-music-helper-shell-v172";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=primary-2026-8",
-  "./script.js?v=primary-2026-8",
+  "./styles.css?v=primary-2026-9",
+  "./script.js?v=primary-2026-9",
   "./library.json",
   "./manifest.json",
   "./favicon.ico",
@@ -12,22 +12,22 @@ const APP_SHELL = [
   "./assets/icon-192.png",
   "./assets/icon-512.png",
   "./music/Primary-2026/Called to Serve - lyrics, 249.pdf",
-  "./music/Primary-2026/Called to Serve (hymnbook) ♫, 174.pdf",
-  "./music/Primary-2026/Called to Serve ♫, 249.pdf",
+  "./music/Primary-2026/Called to Serve (hymnbook), 174.pdf",
+  "./music/Primary-2026/Called to Serve, 249.pdf",
   "./music/Primary-2026/Choose to Serve the Lord - lyrics.pdf",
-  "./music/Primary-2026/Choose to Serve the Lord ♪ ♫.pdf",
-  "./music/Primary-2026/I Feel My Savior's Love ♫, 74.pdf",
-  "./music/Primary-2026/I Feel My Savior’s Love, lyrics, 74.pdf",
-  "./music/Primary-2026/I Will Follow God’s Plan - lyrics, 165.pdf",
-  "./music/Primary-2026/I Will Follow God's Plan for Me ♫, 165.pdf",
+  "./music/Primary-2026/Choose to Serve the Lord.pdf",
+  "./music/Primary-2026/I Feel My Savior's Love, 74.pdf",
+  "./music/Primary-2026/I Feel My Savior's Love, lyrics, 74.pdf",
+  "./music/Primary-2026/I Will Follow God's Plan - lyrics, 165.pdf",
+  "./music/Primary-2026/I Will Follow God's Plan for Me, 165.pdf",
   "./music/Primary-2026/I Will Walk with Jesus, 1004 - lyrics.pdf",
-  "./music/Primary-2026/I Will Walk with Jesus, 1004 ♫.pdf",
+  "./music/Primary-2026/I Will Walk with Jesus, 1004.pdf",
   "./music/Primary-2026/Search, Ponder, and Pray - lyrics, 109.pdf",
-  "./music/Primary-2026/Search, Ponder, and Pray ♫, 109.pdf",
-  "./music/Primary-2026/The Wise Man and the Foolish Man ♫, 281.pdf",
+  "./music/Primary-2026/Search, Ponder, and Pray, 109.pdf",
+  "./music/Primary-2026/The Wise Man and the Foolish Man, 281.pdf",
   "./music/Primary-2026/The Wise Man and the Foolish Man, lyrics, 281.pdf",
   "./music/Primary-2026/This Little Light of Mine - lyrics, 1028.pdf",
-  "./music/Primary-2026/This Little Light of Mine ♫, 1028.pdf"
+  "./music/Primary-2026/This Little Light of Mine, 1028.pdf"
 ];
 
 self.addEventListener("install", (event) => {

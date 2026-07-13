@@ -56,16 +56,16 @@ const DEFAULT_LIBRARY_DATA = {
     },
     {
       "id": "called-to-serve-hymnbook-174",
-      "title": "Called to Serve (hymnbook) ♫, 174",
+      "title": "Called to Serve (hymnbook), 174",
       "type": "pdf",
-      "file": "music/Primary-2026/Called to Serve (hymnbook) ♫, 174.pdf",
+      "file": "music/Primary-2026/Called to Serve (hymnbook), 174.pdf",
       "page": 174
     },
     {
       "id": "called-to-serve-249",
-      "title": "Called to Serve ♫, 249",
+      "title": "Called to Serve, 249",
       "type": "pdf",
-      "file": "music/Primary-2026/Called to Serve ♫, 249.pdf",
+      "file": "music/Primary-2026/Called to Serve, 249.pdf",
       "page": 249
     },
     {
@@ -76,36 +76,36 @@ const DEFAULT_LIBRARY_DATA = {
     },
     {
       "id": "choose-to-serve-the-lord",
-      "title": "Choose to Serve the Lord ♪ ♫",
+      "title": "Choose to Serve the Lord",
       "type": "pdf",
-      "file": "music/Primary-2026/Choose to Serve the Lord ♪ ♫.pdf"
+      "file": "music/Primary-2026/Choose to Serve the Lord.pdf"
     },
     {
       "id": "i-feel-my-saviors-love-74",
-      "title": "I Feel My Savior's Love ♫, 74",
+      "title": "I Feel My Savior's Love, 74",
       "type": "pdf",
-      "file": "music/Primary-2026/I Feel My Savior's Love ♫, 74.pdf",
+      "file": "music/Primary-2026/I Feel My Savior's Love, 74.pdf",
       "page": 74
     },
     {
       "id": "i-feel-my-savior-s-love-lyrics-74",
-      "title": "I Feel My Savior’s Love, lyrics, 74",
+      "title": "I Feel My Savior's Love, lyrics, 74",
       "type": "pdf",
-      "file": "music/Primary-2026/I Feel My Savior’s Love, lyrics, 74.pdf",
+      "file": "music/Primary-2026/I Feel My Savior's Love, lyrics, 74.pdf",
       "page": 74
     },
     {
       "id": "i-will-follow-god-s-plan-lyrics-165",
-      "title": "I Will Follow God’s Plan - lyrics, 165",
+      "title": "I Will Follow God's Plan - lyrics, 165",
       "type": "pdf",
-      "file": "music/Primary-2026/I Will Follow God’s Plan - lyrics, 165.pdf",
+      "file": "music/Primary-2026/I Will Follow God's Plan - lyrics, 165.pdf",
       "page": 165
     },
     {
       "id": "i-will-follow-gods-plan-for-me-165",
-      "title": "I Will Follow God's Plan for Me ♫, 165",
+      "title": "I Will Follow God's Plan for Me, 165",
       "type": "pdf",
-      "file": "music/Primary-2026/I Will Follow God's Plan for Me ♫, 165.pdf",
+      "file": "music/Primary-2026/I Will Follow God's Plan for Me, 165.pdf",
       "page": 165
     },
     {
@@ -117,9 +117,9 @@ const DEFAULT_LIBRARY_DATA = {
     },
     {
       "id": "i-will-walk-with-jesus-1004",
-      "title": "I Will Walk with Jesus, 1004 ♫",
+      "title": "I Will Walk with Jesus, 1004",
       "type": "pdf",
-      "file": "music/Primary-2026/I Will Walk with Jesus, 1004 ♫.pdf",
+      "file": "music/Primary-2026/I Will Walk with Jesus, 1004.pdf",
       "page": 1004
     },
     {
@@ -131,16 +131,16 @@ const DEFAULT_LIBRARY_DATA = {
     },
     {
       "id": "search-ponder-and-pray-109",
-      "title": "Search, Ponder, and Pray ♫, 109",
+      "title": "Search, Ponder, and Pray, 109",
       "type": "pdf",
-      "file": "music/Primary-2026/Search, Ponder, and Pray ♫, 109.pdf",
+      "file": "music/Primary-2026/Search, Ponder, and Pray, 109.pdf",
       "page": 109
     },
     {
       "id": "the-wise-man-and-the-foolish-man-281",
-      "title": "The Wise Man and the Foolish Man ♫, 281",
+      "title": "The Wise Man and the Foolish Man, 281",
       "type": "pdf",
-      "file": "music/Primary-2026/The Wise Man and the Foolish Man ♫, 281.pdf",
+      "file": "music/Primary-2026/The Wise Man and the Foolish Man, 281.pdf",
       "page": 281
     },
     {
@@ -159,9 +159,9 @@ const DEFAULT_LIBRARY_DATA = {
     },
     {
       "id": "this-little-light-of-mine-1028",
-      "title": "This Little Light of Mine ♫, 1028",
+      "title": "This Little Light of Mine, 1028",
       "type": "pdf",
-      "file": "music/Primary-2026/This Little Light of Mine ♫, 1028.pdf",
+      "file": "music/Primary-2026/This Little Light of Mine, 1028.pdf",
       "page": 1028
     },
     {
