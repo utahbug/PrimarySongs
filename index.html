@@ -14,9 +14,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-18">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-19">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="script.js?v=primary-2026-18" defer></script>
+    <script src="script.js?v=primary-2026-19" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -189,6 +189,9 @@
         <button id="pdfTapLeft" class="pdf-tap-zone pdf-tap-left" type="button" aria-label="Previous page; top-left jumps to first page"></button>
         <button id="pdfTapRight" class="pdf-tap-zone pdf-tap-right" type="button" aria-label="Next page; top-right jumps to last page"></button>
       </div>
+      <footer class="pdf-home-bar" aria-label="PDF viewer navigation">
+        <button id="pdfHomeButton" class="icon-button pdf-home-button" type="button" aria-label="Return to app" title="Return to app">&#8962;</button>
+      </footer>
     </section>
 
     <template id="emptyStateTemplate">

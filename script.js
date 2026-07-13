@@ -518,6 +518,7 @@ function collectElements() {
   el.pdfViewer = document.getElementById("pdfViewer");
   el.pdfPrevButton = document.getElementById("pdfPrevButton");
   el.pdfNextButton = document.getElementById("pdfNextButton");
+  el.pdfHomeButton = document.getElementById("pdfHomeButton");
   el.pdfTitle = document.getElementById("pdfTitle");
   el.pdfPageStatus = document.getElementById("pdfPageStatus");
   el.pdfStage = document.getElementById("pdfStage");
@@ -717,6 +718,7 @@ function wireEvents() {
 
   el.pdfPrevButton.addEventListener("click", previousPdfPage);
   el.pdfNextButton.addEventListener("click", nextPdfPage);
+  el.pdfHomeButton.addEventListener("click", returnFromPdfViewer);
 
   el.pdfTapLeft.addEventListener("click", (event) => handlePdfTapZoneClick(event, "previous"));
   el.pdfTapRight.addEventListener("click", (event) => handlePdfTapZoneClick(event, "next"));
@@ -4039,6 +4041,13 @@ function closePdfViewer() {
   releasePdfObjectUrl();
   state.currentPdf.doc = null;
   state.currentPdf.item = null;
+}
+
+function returnFromPdfViewer() {
+  const targetSection = state.activeSection && state.activeSection !== "detail"
+    ? state.activeSection
+    : state.previousSection || "lists";
+  showSection(targetSection);
 }
 
 function handlePdfTapZoneClick(event, direction) {
