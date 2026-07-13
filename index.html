@@ -14,9 +14,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-23">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-25">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="script.js?v=primary-2026-23" defer></script>
+    <script src="script.js?v=primary-2026-25" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -176,19 +176,30 @@
 
     <section id="pdfViewer" class="pdf-viewer hidden" aria-label="PDF viewer">
       <header class="pdf-toolbar">
-        <button id="pdfPrevButton" class="icon-button pdf-page-button" type="button" aria-label="Previous page" title="Previous page">&lt;</button>
+        <button id="pdfTopHomeButton" class="icon-button pdf-home-icon" type="button" aria-label="Home" title="Home">&#8962;</button>
+        <button id="pdfPrevButton" class="icon-button pdf-page-button pdf-prev-page-button" type="button" aria-label="Previous page" title="Previous page">&lt;</button>
         <div class="pdf-title-wrap">
           <h2 id="pdfTitle">PDF</h2>
           <p id="pdfPageStatus">Page 1 of 1</p>
         </div>
-        <button id="pdfNextButton" class="icon-button pdf-page-button" type="button" aria-label="Next page" title="Next page">&gt;</button>
+        <button id="pdfNextButton" class="icon-button pdf-page-button pdf-next-page-button" type="button" aria-label="Next page" title="Next page">&gt;</button>
       </header>
       <div id="pdfStage" class="pdf-stage">
         <div id="pdfLoading" class="pdf-message">Loading PDF...</div>
         <canvas id="pdfCanvas" class="pdf-canvas"></canvas>
         <button id="pdfTapLeft" class="pdf-tap-zone pdf-tap-left" type="button" aria-label="Previous page; top-left jumps to first page"></button>
         <button id="pdfTapRight" class="pdf-tap-zone pdf-tap-right" type="button" aria-label="Next page; top-right jumps to last page"></button>
+        <div class="pdf-zone-tips" aria-hidden="true">
+          <div class="pdf-zone-tip pdf-zone-tip-first">tap to jump to first page</div>
+          <div class="pdf-zone-tip pdf-zone-tip-last">tap to jump to last page</div>
+          <div class="pdf-zone-tip pdf-zone-tip-prev">tap to flip the page</div>
+          <div class="pdf-zone-tip pdf-zone-tip-next">tap to flip the page</div>
+        </div>
       </div>
+      <footer class="pdf-action-bar" aria-label="PDF viewer actions">
+        <button id="pdfHomeButton" class="pdf-action-button" type="button">HOME</button>
+        <button id="pdfTipsButton" class="pdf-action-button" type="button" aria-pressed="false">TIPS</button>
+      </footer>
     </section>
 
     <template id="emptyStateTemplate">

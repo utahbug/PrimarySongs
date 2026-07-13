@@ -424,7 +424,8 @@ const state = {
     zoom: 1,
     panX: 0,
     panY: 0,
-    suppressClick: false
+    suppressClick: false,
+    tipsTimer: null
   }
 };
 
@@ -516,6 +517,9 @@ function collectElements() {
   el.detailContent = document.getElementById("detailContent");
 
   el.pdfViewer = document.getElementById("pdfViewer");
+  el.pdfTopHomeButton = document.getElementById("pdfTopHomeButton");
+  el.pdfHomeButton = document.getElementById("pdfHomeButton");
+  el.pdfTipsButton = document.getElementById("pdfTipsButton");
   el.pdfPrevButton = document.getElementById("pdfPrevButton");
   el.pdfNextButton = document.getElementById("pdfNextButton");
   el.pdfTitle = document.getElementById("pdfTitle");
@@ -715,6 +719,9 @@ function wireEvents() {
   document.body.addEventListener("pointerup", handleSwipePointerUp);
   document.body.addEventListener("pointercancel", handleSwipePointerUp);
 
+  el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
+  el.pdfHomeButton.addEventListener("click", returnFromPdfViewer);
+  el.pdfTipsButton.addEventListener("click", togglePdfTips);
   el.pdfPrevButton.addEventListener("click", previousPdfPage);
   el.pdfNextButton.addEventListener("click", nextPdfPage);
 
@@ -2616,6 +2623,7 @@ function itemDeleteActionHtml(item) {
 function compactItemRowHtml(item, options = {}) {
   const meta = options.favoriteList ? "" : compactLibraryMetaText(item);
   const title = options.favoriteList ? itemDisplayTitleWithInlinePage(item) : itemDisplayTitle(item);
+  const typeLabel = compactTypeLabel(item);
   const compactAction = options.compactAction === "edit"
     ? `
     <button class="icon-button info-button compact-info-button" type="button" data-edit-item="${escapeHtml(item.id)}" aria-label="Edit ${escapeHtml(title)}" title="Edit">
@@ -2630,6 +2638,7 @@ function compactItemRowHtml(item, options = {}) {
       <span class="compact-item-line">
         <span class="compact-title">${escapeHtml(title)}</span>
         ${meta ? `<span class="compact-meta">${escapeHtml(meta)}</span>` : ""}
+        <span class="type-pill compact-type">${escapeHtml(typeLabel)}</span>
       </span>
     </button>
     ${compactAction}
@@ -2861,6 +2870,7 @@ function renderInlineListItems(list) {
       ${entries.map((entry) => {
         const title = itemDisplayTitleWithInlinePage(entry.item, entry.page);
         const favorite = state.favorites.has(entry.item.id);
+        const typeLabel = compactTypeLabel(entry.item);
         return `
           <div class="inline-list-row">
             <button class="icon-button favorite-toggle inline-list-favorite ${favorite ? "favorite-on" : ""}" type="button" data-favorite="${escapeHtml(entry.item.id)}" aria-label="Toggle favorite for ${escapeHtml(title)}" title="Toggle favorite">
@@ -2868,6 +2878,7 @@ function renderInlineListItems(list) {
             </button>
             <button class="inline-list-item" type="button" data-open="${escapeHtml(entry.item.id)}">
               <span class="compact-title">${escapeHtml(title)}</span>
+              <span class="type-pill compact-type">${escapeHtml(typeLabel)}</span>
             </button>
             <button class="icon-button inline-list-edit-button" type="button" data-edit-item="${escapeHtml(entry.item.id)}" data-edit-context="lists" aria-label="Edit ${escapeHtml(title)}" title="Edit item">&#9998;</button>
           </div>
@@ -3876,6 +3887,7 @@ async function openPdf(item) {
   showPdfMessage("Loading PDF...");
   document.body.classList.add("pdf-open");
   el.pdfViewer.classList.remove("hidden");
+  hidePdfTips();
 
   if (!window.pdfjsLib) {
     showPdfMessage("PDF.js could not be loaded. Check your internet connection or download PDF.js for local use.");
@@ -4006,6 +4018,36 @@ function updatePdfStatus() {
   el.pdfPageStatus.textContent = `Page ${state.currentPdf.pageNumber} of ${state.currentPdf.pageCount}`;
 }
 
+function returnFromPdfViewer() {
+  const targetSection = state.activeSection && state.activeSection !== "detail"
+    ? state.activeSection
+    : state.previousSection || "lists";
+  closePdfViewer();
+  showSection(targetSection);
+}
+
+function togglePdfTips() {
+  const showTips = !el.pdfViewer.classList.contains("show-tips");
+  setPdfTipsVisible(showTips);
+}
+
+function setPdfTipsVisible(showTips) {
+  window.clearTimeout(state.currentPdf.tipsTimer);
+  state.currentPdf.tipsTimer = null;
+  el.pdfViewer.classList.toggle("show-tips", showTips);
+  el.pdfTipsButton.setAttribute("aria-pressed", showTips ? "true" : "false");
+  if (showTips) {
+    state.currentPdf.tipsTimer = window.setTimeout(() => {
+      setPdfTipsVisible(false);
+    }, 4500);
+  }
+}
+
+function hidePdfTips() {
+  if (!el.pdfViewer || !el.pdfTipsButton) return;
+  setPdfTipsVisible(false);
+}
+
 function previousPdfPage() {
   if (!state.currentPdf.doc || state.currentPdf.pageNumber <= 1) return;
   goToPdfPage(state.currentPdf.pageNumber - 1);
@@ -4033,6 +4075,7 @@ function goToPdfPage(pageNumber) {
 }
 
 function closePdfViewer() {
+  hidePdfTips();
   el.pdfViewer.classList.add("hidden");
   document.body.classList.remove("pdf-open");
   resetPdfZoom();
@@ -4825,6 +4868,10 @@ function compactLibraryMetaText(item) {
   const locator = item.book || item.composer || item.category || "";
   if (locator) pieces.push(locator);
   return pieces.join(" \u00b7 ");
+}
+
+function compactTypeLabel(item) {
+  return item?.type || "item";
 }
 
 function setlistMeta(item, entry) {
