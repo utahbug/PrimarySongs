@@ -1138,9 +1138,11 @@ function syncStarterLists(lists) {
 
   starterLists.forEach((starter) => {
     const starterEntries = (starter.entries || []).filter((entry) => state.itemsById.has(entry.itemId));
-    if (applied.has(starter.id) || !starterEntries.length) return;
+    if (!starterEntries.length) return;
 
     const existing = listById.get(starter.id);
+    if (applied.has(starter.id) && existing) return;
+
     if (existing) {
       const existingItems = new Set((existing.entries || []).map((entry) => entry.itemId));
       starterEntries.forEach((entry) => {
