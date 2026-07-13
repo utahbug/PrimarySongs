@@ -368,7 +368,7 @@ const state = {
   importReturnSection: "",
   modalDrag: null,
   cardEditorRange: null,
-  activeSection: "library",
+  activeSection: "lists",
   previousSection: "library",
   activeListId: "",
   expandedListId: "",
@@ -1312,7 +1312,7 @@ function populateSelect(select, options) {
 
 function openInitialSection() {
   if (!showSectionFromHash()) {
-    showSection("favorites");
+    showSection("lists");
   }
 }
 
