@@ -273,6 +273,19 @@ const DEFAULT_LIBRARY_DATA = {
           "itemId": "this-little-light-of-mine-1028"
         }
       ]
+    },
+    {
+      "id": "lds-library",
+      "title": "LDS Library",
+      "showCheckboxes": false,
+      "items": [
+        {
+          "itemId": "childrens-songbook-link"
+        },
+        {
+          "itemId": "new-hymns-link"
+        }
+      ]
     }
   ]
 };
