@@ -96,7 +96,7 @@ const DEFAULT_LIBRARY_DATA = {
     },
     {
       "id": "i-will-follow-god-s-plan-lyrics-165",
-      "title": "I Will Follow God's Plan - lyrics, 165",
+      "title": "I Will Follow God's Plan for Me - lyrics, 165",
       "type": "pdf",
       "file": "music/Primary-2026/i-will-follow-god-s-plan-lyrics-165.pdf",
       "page": 165
@@ -177,9 +177,104 @@ const DEFAULT_LIBRARY_DATA = {
       "url": "https://www.churchofjesuschrist.org/media/music/collections/hymns-for-home-and-church?lang=eng"
     }
   ],
-  "favorites": [],
+  "favorites": [
+    "this-little-light-of-mine-1028",
+    "called-to-serve-249",
+    "i-will-follow-gods-plan-for-me-165",
+    "favorite-divider:primary-2026-1",
+    "choose-to-serve-the-lord",
+    "search-ponder-and-pray-109",
+    "the-wise-man-and-the-foolish-man-281",
+    "i-feel-my-saviors-love-74",
+    "favorite-divider:primary-2026-2",
+    "childrens-songbook-link",
+    "new-hymns-link"
+  ],
   "quickIndexes": [],
-  "setlists": []
+  "setlists": [
+    {
+      "id": "primary-program-lyrics",
+      "title": "Primary Program (lyrics)",
+      "showCheckboxes": false,
+      "items": [
+        {
+          "itemId": "this-little-light-of-mine-lyrics-1028"
+        },
+        {
+          "itemId": "called-to-serve-lyrics-249"
+        },
+        {
+          "itemId": "i-will-follow-god-s-plan-lyrics-165"
+        }
+      ]
+    },
+    {
+      "id": "primary-program",
+      "title": "Primary Program",
+      "showCheckboxes": false,
+      "items": [
+        {
+          "itemId": "this-little-light-of-mine-1028"
+        },
+        {
+          "itemId": "called-to-serve-249"
+        },
+        {
+          "itemId": "i-will-follow-gods-plan-for-me-165"
+        }
+      ]
+    },
+    {
+      "id": "primary-songs-2026-lyrics",
+      "title": "Primary Songs 2026 (lyrics)",
+      "showCheckboxes": false,
+      "items": [
+        {
+          "itemId": "choose-to-serve-the-lord-lyrics"
+        },
+        {
+          "itemId": "search-ponder-and-pray-lyrics-109"
+        },
+        {
+          "itemId": "the-wise-man-and-the-foolish-man-lyrics-281"
+        },
+        {
+          "itemId": "i-will-walk-with-jesus-1004-lyrics"
+        },
+        {
+          "itemId": "i-feel-my-savior-s-love-lyrics-74"
+        },
+        {
+          "itemId": "this-little-light-of-mine-lyrics-1028"
+        }
+      ]
+    },
+    {
+      "id": "primary-songs-2026",
+      "title": "Primary Songs 2026",
+      "showCheckboxes": false,
+      "items": [
+        {
+          "itemId": "choose-to-serve-the-lord"
+        },
+        {
+          "itemId": "search-ponder-and-pray-109"
+        },
+        {
+          "itemId": "the-wise-man-and-the-foolish-man-281"
+        },
+        {
+          "itemId": "i-will-walk-with-jesus-1004-lyrics"
+        },
+        {
+          "itemId": "i-feel-my-saviors-love-74"
+        },
+        {
+          "itemId": "this-little-light-of-mine-1028"
+        }
+      ]
+    }
+  ]
 };
 
 const THEME_PRESETS = {
