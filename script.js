@@ -3888,6 +3888,7 @@ async function openPdf(item) {
   document.body.classList.add("pdf-open");
   el.pdfViewer.classList.remove("hidden");
   hidePdfTips();
+  updatePdfTipsAvailability();
 
   if (!window.pdfjsLib) {
     showPdfMessage("PDF.js could not be loaded. Check your internet connection or download PDF.js for local use.");
@@ -3901,6 +3902,7 @@ async function openPdf(item) {
     state.currentPdf.doc = await loadingTask.promise;
     state.currentPdf.pageCount = state.currentPdf.doc.numPages;
     state.currentPdf.pageNumber = clamp(state.currentPdf.pageNumber, 1, state.currentPdf.pageCount);
+    updatePdfTipsAvailability();
     resetPdfZoom();
     await renderPdfPage(state.currentPdf.pageNumber);
     savePdfPage();
@@ -3911,6 +3913,7 @@ async function openPdf(item) {
       : getBundledPdfErrorMessage();
     showPdfMessage(message);
     el.pdfPageStatus.textContent = "PDF unavailable";
+    updatePdfTipsAvailability();
   }
 }
 
@@ -4018,6 +4021,21 @@ function updatePdfStatus() {
   el.pdfPageStatus.textContent = `Page ${state.currentPdf.pageNumber} of ${state.currentPdf.pageCount}`;
 }
 
+function pdfTipsAreAvailable() {
+  return state.currentPdf.pageCount > 1;
+}
+
+function updatePdfTipsAvailability() {
+  if (!el.pdfTipsButton) return;
+  const available = pdfTipsAreAvailable();
+  el.pdfTipsButton.classList.toggle("hidden", !available);
+  el.pdfTipsButton.disabled = !available;
+  el.pdfTipsButton.setAttribute("aria-hidden", available ? "false" : "true");
+  if (!available) {
+    setPdfTipsVisible(false);
+  }
+}
+
 function returnFromPdfViewer() {
   const targetSection = state.activeSection && state.activeSection !== "detail"
     ? state.activeSection
@@ -4027,19 +4045,24 @@ function returnFromPdfViewer() {
 }
 
 function togglePdfTips() {
+  if (!pdfTipsAreAvailable()) {
+    setPdfTipsVisible(false);
+    return;
+  }
   const showTips = !el.pdfViewer.classList.contains("show-tips");
   setPdfTipsVisible(showTips);
 }
 
 function setPdfTipsVisible(showTips) {
+  const shouldShow = showTips && pdfTipsAreAvailable();
   window.clearTimeout(state.currentPdf.tipsTimer);
   state.currentPdf.tipsTimer = null;
-  el.pdfViewer.classList.toggle("show-tips", showTips);
-  el.pdfTipsButton.setAttribute("aria-pressed", showTips ? "true" : "false");
-  if (showTips) {
+  el.pdfViewer.classList.toggle("show-tips", shouldShow);
+  el.pdfTipsButton.setAttribute("aria-pressed", shouldShow ? "true" : "false");
+  if (shouldShow) {
     state.currentPdf.tipsTimer = window.setTimeout(() => {
       setPdfTipsVisible(false);
-    }, 4500);
+    }, 9000);
   }
 }
 
