@@ -31,7 +31,6 @@ const STARTER_DATA_VERSION = "primary-2026-lists-v3";
 const FILE_ITEM_TYPES = new Set(["pdf", "image", "note", "index"]);
 const LIBRARY_CONTENT_TYPES = new Set(["pdf", "image", "note", "index", "card", "link"]);
 const BATCH_DELETE_SECTIONS = ["library", "cards", "links"];
-let shouldApplyStarterListOrder = false;
 
 const BUILT_IN_LINKS = [];
 
@@ -1105,11 +1104,11 @@ function syncStarterDataVersion() {
   if (savedVersion === STARTER_DATA_VERSION) return;
 
   // Keep user-created lists and favorites, but allow new built-in starter
-  // content to merge in when this package is updated.
+  // content to merge in when this package is updated. Do not reorder the
+  // user's saved list arrangement while doing that merge.
   localStorage.removeItem(STORAGE_KEYS.starterFavorites);
   localStorage.removeItem(STORAGE_KEYS.starterLists);
   localStorage.setItem(STORAGE_KEYS.starterDataVersion, STARTER_DATA_VERSION);
-  shouldApplyStarterListOrder = true;
 }
 
 function applyStarterFavorites() {
@@ -1209,21 +1208,6 @@ function syncStarterLists(lists) {
     applied.add(starter.id);
     appliedChanged = true;
   });
-
-  if (shouldApplyStarterListOrder) {
-    const starterOrder = new Map(starterLists.map((list, index) => [list.id, index]));
-    const originalOrder = new Map(lists.map((list, index) => [list.id, index]));
-    lists.sort((a, b) => {
-      const aStarter = starterOrder.has(a.id);
-      const bStarter = starterOrder.has(b.id);
-      if (aStarter && bStarter) return starterOrder.get(a.id) - starterOrder.get(b.id);
-      if (aStarter) return -1;
-      if (bStarter) return 1;
-      return originalOrder.get(a.id) - originalOrder.get(b.id);
-    });
-    listsChanged = true;
-    shouldApplyStarterListOrder = false;
-  }
 
   if (appliedChanged) writeJson(STORAGE_KEYS.starterLists, Array.from(applied));
   if (listsChanged) writeJson(STORAGE_KEYS.lists, lists);
