@@ -14,9 +14,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-30">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-31">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="script.js?v=primary-2026-30" defer></script>
+    <script src="script.js?v=primary-2026-31" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -55,6 +55,9 @@
           <button id="overflowMenuButton" class="nav-button nav-icon-button" type="button" aria-label="More" title="More" aria-expanded="false" aria-controls="overflowMenu">&hellip;</button>
           <div id="overflowMenu" class="overflow-menu hidden" role="menu" aria-label="More">
             <button type="button" role="menuitem" data-menu-section="search">Search</button>
+          <button type="button" role="menuitem" data-menu-section="metronome">Metronome</button>
+          <button type="button" role="menuitem" data-menu-section="tuner">Tuner</button>
+          <button type="button" role="menuitem" data-menu-section="pitch">Pitch</button>
             <span class="menu-separator" aria-hidden="true"></span>
             <button id="exportBackupButton" type="button" role="menuitem">Export data + files</button>
             <button id="importBackupButton" type="button" role="menuitem">Import data + files</button>
@@ -168,6 +171,114 @@
           <div id="searchContent" class="stack"></div>
         </section>
 
+        <section id="metronomeSection" class="view metronome-view" data-view="metronome" aria-labelledby="metronomeTitle">
+          <div class="metronome-panel">
+            <div class="metronome-header">
+              <h2 id="metronomeTitle">Metronome</h2>
+              <span id="metronomeStatus" class="metronome-status">Stopped</span>
+            </div>
+            <div class="metronome-display" aria-live="polite">
+              <button id="metronomeMinusButton" class="icon-button" type="button" aria-label="Decrease tempo" title="Decrease tempo">-</button>
+              <div class="metronome-bpm-wrap">
+                <output id="metronomeBpmOutput" for="metronomeBpm">90</output>
+                <span>BPM</span>
+              </div>
+              <button id="metronomePlusButton" class="icon-button" type="button" aria-label="Increase tempo" title="Increase tempo">+</button>
+            </div>
+            <input id="metronomeBpm" class="metronome-slider" type="range" min="40" max="220" step="1" value="90" aria-label="Tempo">
+            <div class="metronome-controls">
+              <button id="metronomeStartButton" class="primary-button" type="button">Start</button>
+              <button id="metronomeTapButton" class="secondary-button" type="button">Tap tempo</button>
+            </div>
+            <label class="metronome-beats-field">
+              <span>Beats</span>
+              <select id="metronomeBeats">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4" selected>4</option>
+                <option value="6">6</option>
+              </select>
+            </label>
+            <div id="metronomeBeatDots" class="metronome-beat-dots" aria-hidden="true"></div>
+          </div>
+        </section>
+
+        <section id="tunerSection" class="view tuner-view" data-view="tuner" aria-labelledby="tunerTitle">
+          <div class="tuner-panel">
+            <div class="tuner-header">
+              <h2 id="tunerTitle">Tuner</h2>
+              <span id="tunerStatus" class="tuner-status">Microphone off</span>
+            </div>
+            <label class="tuner-field">
+              <span>Instrument</span>
+              <select id="tunerInstrument">
+                <option value="chromatic">Chromatic</option>
+                <option value="guitar">Guitar</option>
+                <option value="ukulele">Ukulele</option>
+                <option value="clarinet">Clarinet</option>
+                <option value="violin">Violin</option>
+                <option value="flute">Flute</option>
+              </select>
+            </label>
+            <div class="tuner-readout" aria-live="polite">
+              <div id="tunerNote" class="tuner-note">--</div>
+              <div id="tunerFrequency" class="tuner-frequency">Tap Start and play a note</div>
+              <div id="tunerTarget" class="tuner-target"></div>
+            </div>
+            <div class="tuner-meter" aria-hidden="true">
+              <div class="tuner-meter-track">
+                <span class="tuner-meter-center"></span>
+                <span id="tunerNeedle" class="tuner-needle"></span>
+              </div>
+              <div class="tuner-meter-labels">
+                <span>Flat</span>
+                <span>In tune</span>
+                <span>Sharp</span>
+              </div>
+            </div>
+            <div id="tunerStrings" class="tuner-strings" aria-hidden="true"></div>
+            <div class="tuner-controls">
+              <button id="tunerStartButton" class="primary-button" type="button">Start tuner</button>
+            </div>
+            <p id="tunerMessage" class="tuner-message">Use HTTPS for microphone access on iPhone.</p>
+          </div>
+        </section>
+
+        <section id="pitchSection" class="view pitch-view" data-view="pitch" aria-labelledby="pitchTitle">
+          <div class="pitch-panel">
+            <div class="pitch-header">
+              <h2 id="pitchTitle">Pitch</h2>
+              <span id="pitchStatus" class="pitch-status">Ready</span>
+            </div>
+            <div class="pitch-fields">
+              <label class="pitch-field">
+                <span>Preset</span>
+                <select id="pitchPreset">
+                  <option value="chromatic">Chromatic</option>
+                  <option value="guitar">Guitar</option>
+                  <option value="ukulele">Ukulele</option>
+                  <option value="clarinet">Clarinet</option>
+                  <option value="violin">Violin</option>
+                  <option value="flute">Flute</option>
+                </select>
+              </label>
+              <label class="pitch-field">
+                <span>Pitch</span>
+                <select id="pitchNote"></select>
+              </label>
+            </div>
+            <div class="pitch-readout" aria-live="polite">
+              <div id="pitchNoteName" class="pitch-note-name">A4</div>
+              <div id="pitchFrequency" class="pitch-frequency">440.0 Hz</div>
+            </div>
+            <div id="pitchQuickButtons" class="pitch-quick-buttons" aria-label="Quick pitch choices"></div>
+            <div class="pitch-controls">
+              <button id="pitchPlayButton" class="primary-button" type="button">Play pitch</button>
+              <button id="pitchStopButton" class="secondary-button" type="button">Stop</button>
+            </div>
+          </div>
+        </section>
+
         <section id="detailSection" class="view detail-view" data-view="detail" aria-labelledby="detailTitle">
           <div id="detailContent"></div>
         </section>
@@ -190,15 +301,16 @@
         <button id="pdfTapLeft" class="pdf-tap-zone pdf-tap-left" type="button" aria-label="Previous page; top-left jumps to first page"></button>
         <button id="pdfTapRight" class="pdf-tap-zone pdf-tap-right" type="button" aria-label="Next page; top-right jumps to last page"></button>
         <div class="pdf-zone-tips" aria-hidden="true">
-          <div class="pdf-zone-tip pdf-zone-tip-first">Tap to jump to page 1</div>
-          <div class="pdf-zone-tip pdf-zone-tip-last">Tap to skip to last page</div>
-          <div class="pdf-zone-tip pdf-zone-tip-prev">Tap to go back a page</div>
-          <div class="pdf-zone-tip pdf-zone-tip-next">Tap to advance to the next page</div>
+          <div class="pdf-zone-tip pdf-zone-tip-first">tap to jump to first page</div>
+          <div class="pdf-zone-tip pdf-zone-tip-last">tap to jump to last page</div>
+          <div class="pdf-zone-tip pdf-zone-tip-prev">tap to flip the page</div>
+          <div class="pdf-zone-tip pdf-zone-tip-next">tap to flip the page</div>
         </div>
       </div>
       <footer class="pdf-action-bar" aria-label="PDF viewer actions">
         <button id="pdfHomeButton" class="pdf-action-button" type="button">HOME</button>
         <button id="pdfTipsButton" class="pdf-action-button" type="button" aria-pressed="false">TIPS</button>
+        <button id="pdfMetronomeButton" class="pdf-action-button pdf-icon-action" type="button" aria-label="Metronome" title="Metronome"><span class="metronome-mini-icon" aria-hidden="true"></span></button>
       </footer>
     </section>
 
