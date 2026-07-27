@@ -132,7 +132,7 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 
 .compact-topbar { align-items: end; gap: 8px; margin-bottom: 10px; }
 
-.files-toolbar { display: grid; grid-template-columns: minmax(0px, 1fr) minmax(150px, 220px); }
+.files-toolbar { display: grid; grid-template-columns: minmax(220px, 360px) minmax(150px, 220px); justify-content: start; }
 
 .lists-toolbar { align-items: end; display: flex; gap: 8px; justify-content: flex-end; }
 
