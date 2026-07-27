@@ -425,7 +425,7 @@ const state = {
   listEditMode: false,
   listPickerOpen: false,
   listPickerMessage: "",
-  listEditSort: localStorage.getItem(STORAGE_KEYS.listEditSort) === "title" ? "title" : "type",
+  listEditSort: normalizeListEditSort(localStorage.getItem(STORAGE_KEYS.listEditSort)),
   favoriteReorderMode: false,
   listReorderMode: false,
   editingListId: "",
@@ -825,7 +825,7 @@ function wireEvents() {
   el.listEditDeleteButton.addEventListener("click", handleDeleteListFromForm);
   el.listEditForm.addEventListener("submit", saveListEditModal);
   el.listEditSort.addEventListener("change", () => {
-    state.listEditSort = el.listEditSort.value === "title" ? "title" : "type";
+    state.listEditSort = normalizeListEditSort(el.listEditSort.value);
     localStorage.setItem(STORAGE_KEYS.listEditSort, state.listEditSort);
     renderListEditResults();
   });
@@ -5430,6 +5430,7 @@ function renderListEditResults() {
   const items = state.data.items
     .filter(isLibraryContentItem)
     .filter((item) => matchesQuery(item, query))
+    .filter((item) => !["pdf", "card", "link"].includes(state.listEditSort) || item.type === state.listEditSort)
     .sort(state.listEditSort === "title" ? compareTitle : compareListPickerType)
     .slice(0, 80);
 
@@ -5462,6 +5463,10 @@ function listPickerTypeGroup(item) {
   if (item.type === "card") return "Cards";
   if (item.type === "link") return "Links";
   return "Files";
+}
+
+function normalizeListEditSort(value) {
+  return ["type", "title", "pdf", "card", "link"].includes(value) ? value : "type";
 }
 
 function compareListPickerType(a, b) {
