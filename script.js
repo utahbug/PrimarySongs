@@ -3006,6 +3006,7 @@ function renderLists() {
   el.listEditButton.innerHTML = state.listEditMode ? "&#10003;" : "&#9998;";
   el.listEditButton.setAttribute("aria-label", state.listEditMode ? "Save list changes" : "Edit list");
   el.listEditButton.title = state.listEditMode ? "Save list changes" : "Edit list";
+  el.listEditButton.classList.toggle("primary-icon", state.listEditMode);
   el.listEditButton.disabled = false;
   el.listMoreButton.disabled = false;
   el.listItemAddButton.disabled = true;
