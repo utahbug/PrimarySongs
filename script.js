@@ -2819,7 +2819,7 @@ function itemDeleteActionHtml(item) {
 }
 
 function compactItemRowHtml(item, options = {}) {
-  const meta = options.favoriteList ? "" : compactLibraryMetaText(item);
+  const meta = options.favoriteList || options.hideMeta ? "" : compactLibraryMetaText(item);
   const title = options.favoriteList ? itemDisplayTitleWithInlinePage(item) : itemDisplayTitle(item);
   const typeLabel = compactTypeLabel(item);
   const compactAction = options.favoriteList
@@ -3289,6 +3289,8 @@ function renderCards() {
   el.cardsContent.classList.remove("cards-grid");
   renderItemList(el.cardsContent, cards, {
     compact: true,
+    compactAction: "edit",
+    hideMeta: true,
     batchDeleteSection: "cards",
     emptyTitle: "Turn words into a rehearsal aid",
     emptyMessage: "Add a Card for lyrics, cues, actions, or teaching notes that need to be easy to read."
