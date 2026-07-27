@@ -4729,7 +4729,7 @@ function updateTunerReadout(frequency) {
     return;
   }
   const measurement = getTunerMeasurement(frequency);
-  const cents = clampNumber(measurement.cents, -50, 50);
+  const cents = clamp(measurement.cents, -50, 50);
   el.tunerNote.textContent = measurement.noteLabel;
   el.tunerFrequency.textContent = `${frequency.toFixed(1)} Hz`;
   el.tunerTarget.textContent = measurement.targetLabel;
@@ -4817,7 +4817,7 @@ function loadMetronomeSettings() {
   const saved = readJson(STORAGE_KEYS.metronome, {});
   const savedBpm = Number(saved.bpm);
   const savedBeats = Number(saved.beatsPerMeasure);
-  state.metronome.bpm = clampNumber(Number.isFinite(savedBpm) ? savedBpm : 90, 40, 220);
+  state.metronome.bpm = clamp(Number.isFinite(savedBpm) ? savedBpm : 90, 40, 220);
   state.metronome.beatsPerMeasure = [2, 3, 4, 6].includes(savedBeats) ? savedBeats : 4;
 }
 
@@ -4851,7 +4851,7 @@ function renderMetronomeDots(activeBeat) {
 }
 
 function setMetronomeBpm(value) {
-  state.metronome.bpm = clampNumber(Math.round(Number(value) || 90), 40, 220);
+  state.metronome.bpm = clamp(Math.round(Number(value) || 90), 40, 220);
   saveMetronomeSettings();
   renderMetronome();
 }
