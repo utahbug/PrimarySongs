@@ -778,9 +778,10 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 
 .pdf-page-button:hover, .pdf-page-button:focus-visible { background: var(--accent-hover); color: var(--accent-strong); }
 
-.pdf-home-icon { background: var(--accent-soft); color: var(--accent-strong); font-size: 1.15rem; font-weight: 800; min-height: 36px; min-width: 36px; padding: 0px; }
+.pdf-home-icon { background: var(--accent-strong); border-color: var(--accent-strong); color: #FFFFFF; font-weight: 800; min-height: 38px; min-width: 38px; padding: 7px; }
 
-.pdf-home-icon:hover, .pdf-home-icon:focus-visible { background: var(--accent-hover); color: var(--accent-strong); }
+.pdf-home-icon:hover, .pdf-home-icon:focus-visible { background: var(--accent); border-color: var(--accent-strong); color: #FFFFFF; }
+.pdf-home-glyph { display: block; fill: currentColor; height: 24px; width: 24px; }
 
 .pdf-prev-page-button { margin-left: clamp(10px, 4vw, 42px); }
 
@@ -832,6 +833,9 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-action-button { align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; box-shadow: 0 2px 7px color-mix(in srgb, var(--ink) 9%, transparent); color: var(--accent-strong); display: inline-flex; flex-direction: column; font-size: 1.2rem; font-weight: 800; gap: 0px; justify-content: center; min-height: 46px; min-width: 62px; padding: 4px 10px; }
 .pdf-action-button small { color: var(--muted); font-size: 0.62rem; font-weight: 750; line-height: 1.05; }
 .pdf-action-button:hover, .pdf-action-button:focus-visible, .pdf-action-button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
+.pdf-home-action { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent-strong) 55%, var(--line)); color: var(--accent-strong); }
+.pdf-home-action .pdf-home-glyph { height: 26px; width: 26px; }
+.pdf-home-action small { color: var(--accent-strong); font-weight: 850; }
 .pdf-tempo-box { align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; box-shadow: 0 2px 7px color-mix(in srgb, var(--ink) 9%, transparent); display: flex; gap: 6px; min-height: 46px; padding: 4px 5px 4px 8px; }
 .pdf-tempo-box label { align-items: center; display: flex; gap: 5px; }
 .pdf-tempo-box label > span { color: var(--muted); font-size: 0.62rem; font-weight: 800; }
