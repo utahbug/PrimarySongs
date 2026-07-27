@@ -40,23 +40,7 @@ body.identity-condensed .identity-name { font-size: 0.98rem; }
 
 .header-refresh-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; color: rgba(255, 255, 255, 0.88); display: inline-flex; flex: 0 0 auto; font-size: 1.05rem; height: 30px; justify-content: center; line-height: 1; padding: 4px; width: 30px; }
 
-.header-refresh-button:hover, .header-refresh-button:focus-visible, .app-header .theme-dot-button:hover, .app-header .theme-dot-button:focus-visible, .app-header .background-toggle-button:hover, .app-header .background-toggle-button:focus-visible { background: rgba(255, 255, 255, 0.16); color: #FFFFFF; }
-
-.theme-dot-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; display: inline-flex; height: 30px; justify-content: center; padding: 4px; width: 30px; }
-
-.theme-dot-button span { background: var(--active-theme-color, var(--accent)); border: 1px solid var(--line); border-radius: 999px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--surface) 70%, transparent); display: block; height: 18px; width: 18px; }
-
-.theme-dot-button:hover, .theme-dot-button:focus-visible { background: var(--accent-hover); }
-
-.theme-dot-menu { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-strong); display: grid; gap: 2px; min-width: 162px; padding: 6px; position: absolute; right: 0px; top: calc(100% + 6px); z-index: 100; }
-
-.theme-dot-menu button { align-items: center; background: transparent; border: 0px; border-radius: 6px; color: var(--ink); display: grid; gap: 8px; grid-template-columns: auto minmax(0px, 1fr); min-height: 34px; padding: 7px 8px; text-align: left; width: 100%; }
-
-.theme-dot-menu button:hover, .theme-dot-menu button:focus-visible { background: var(--accent-hover); }
-
-.theme-dot-menu button[aria-checked="true"] { background: var(--accent-soft); color: var(--accent-strong); font-weight: 700; }
-
-.theme-dot-swatch { background: var(--swatch-color); border: 1px solid color-mix(in srgb, var(--swatch-color) 78%, var(--line)); border-radius: 999px; display: inline-block; height: 14px; width: 14px; }
+.header-refresh-button:hover, .header-refresh-button:focus-visible, .app-header .background-toggle-button:hover, .app-header .background-toggle-button:focus-visible { background: rgba(255, 255, 255, 0.16); color: #FFFFFF; }
 
 .background-toggle-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; display: inline-flex; flex: 0 0 auto; height: 30px; justify-content: center; padding: 4px; width: 30px; }
 
@@ -725,13 +709,6 @@ body.dark-background .modal-heading .form-close-button:hover, body.dark-backgrou
 
 .settings-section { border-top: 1px solid var(--line); display: grid; gap: 10px; padding-top: 10px; }
 
-.theme-choice-grid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); }
-
-.theme-choice { align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); display: grid; font-size: 0.95rem; font-weight: 700; gap: 8px; grid-template-columns: auto auto minmax(0px, 1fr); min-height: 46px; padding: 8px 10px; }
-
-.theme-choice:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); }
-
-.theme-choice input { margin: 0px; }
 
 .theme-swatch { background: var(--swatch-color); border: 1px solid color-mix(in srgb, var(--swatch-color) 80%, var(--surface)); border-radius: 999px; display: inline-block; height: 22px; width: 22px; }
 

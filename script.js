@@ -358,63 +358,12 @@ const DEFAULT_LIBRARY_DATA = {
   ]
 };
 
-const THEME_PRESETS = {
-  blue: {
-    label: "Blue",
-    primary: "#2B5F9E",
-    dark: "#214A78",
-    light: "#EAF2FB",
-    hover: "#D8E7F7",
-    border: "#B7CCE0"
-  },
-  teal: {
-    label: "Teal",
-    primary: "#046983",
-    dark: "#03576D",
-    light: "#E6F2F5",
-    hover: "#D2E7ED",
-    border: "#B6CCD4"
-  },
-  slate: {
-    label: "Slate",
-    primary: "#4D6573",
-    dark: "#3C505C",
-    light: "#EDF3F5",
-    hover: "#DCE8EC",
-    border: "#BCCBD0"
-  },
-  green: {
-    label: "Green",
-    primary: "#4D7358",
-    dark: "#3D5B46",
-    light: "#EDF5EF",
-    hover: "#DCEBDD",
-    border: "#BED1C2"
-  },
-  burgundy: {
-    label: "Burgundy",
-    primary: "#7B3F4A",
-    dark: "#62333C",
-    light: "#F6EAEC",
-    hover: "#EBD7DB",
-    border: "#D2B8BE"
-  },
-  pink: {
-    label: "Pink",
-    primary: "#B64F7C",
-    dark: "#923E64",
-    light: "#F8EAF1",
-    hover: "#F0D3E1",
-    border: "#DDB7C9"
-  },
-  gold: {
-    label: "Gold",
-    primary: "#8B6F35",
-    dark: "#70592A",
-    light: "#F7F1E5",
-    hover: "#ECE0C7",
-    border: "#D5C39B"
-  }
+const APP_THEME = {
+  primary: "#2B5F9E",
+  dark: "#214A78",
+  light: "#EAF2FB",
+  hover: "#D8E7F7",
+  border: "#B7CCE0"
 };
 
 const state = {
@@ -551,8 +500,6 @@ async function init() {
 
 function collectElements() {
   el.appShell = document.getElementById("appShell");
-  el.themeDotButton = document.getElementById("themeDotButton");
-  el.themeDotMenu = document.getElementById("themeDotMenu");
   el.backgroundToggleButton = document.getElementById("backgroundToggleButton");
   el.homeTitleButton = document.getElementById("homeTitleButton");
   el.welcomeSection = document.getElementById("welcomeSection");
@@ -727,10 +674,6 @@ function collectElements() {
   el.listEditStatus = document.getElementById("listEditStatus");
   el.listEditResults = document.getElementById("listEditResults");
 
-  el.settingsModal = document.getElementById("settingsModal");
-  el.settingsPanel = document.getElementById("settingsPanel");
-  el.settingsCloseButton = document.getElementById("settingsCloseButton");
-  el.settingsThemeChoices = document.getElementById("settingsThemeChoices");
 
   el.helpModal = document.getElementById("helpModal");
   el.helpPanel = document.getElementById("helpPanel");
@@ -766,8 +709,6 @@ function collectElements() {
 }
 
 function wireEvents() {
-  el.themeDotButton.addEventListener("click", toggleThemeDotMenu);
-  el.themeDotMenu.addEventListener("click", handleThemeDotMenuClick);
   el.backgroundToggleButton.addEventListener("click", toggleBackgroundMode);
   el.homeTitleButton.addEventListener("click", goHome);
 
@@ -829,8 +770,6 @@ function wireEvents() {
     localStorage.setItem(STORAGE_KEYS.listEditSort, state.listEditSort);
     renderListEditResults();
   });
-  el.settingsCloseButton.addEventListener("click", closeSettingsModal);
-  el.settingsThemeChoices.addEventListener("change", handleSettingsThemeChange);
   el.helpCloseButton.addEventListener("click", closeHelpModal);
   el.aboutCloseButton.addEventListener("click", closeAboutModal);
   el.metronomeMinusButton.addEventListener("click", () => setMetronomeBpm(state.metronome.bpm - 1));
@@ -946,7 +885,6 @@ function toggleOverflowMenu(event) {
   } else {
     closeOverflowMenu();
   }
-  closeThemeDotMenu();
   closeListMoreMenu();
 }
 
@@ -956,37 +894,6 @@ function closeOverflowMenu({ restoreActive = true } = {}) {
   if (restoreActive) {
     setNavHighlight(state.activeSection);
   }
-}
-
-function toggleThemeDotMenu(event) {
-  event?.stopPropagation();
-  const isOpening = el.themeDotMenu.classList.contains("hidden");
-  if (isOpening) {
-    renderThemeDotMenu();
-    el.themeDotMenu.classList.remove("hidden");
-    el.themeDotButton.setAttribute("aria-expanded", "true");
-    closeOverflowMenu();
-    closeListMoreMenu();
-  } else {
-    closeThemeDotMenu();
-  }
-}
-
-function closeThemeDotMenu() {
-  el.themeDotMenu.classList.add("hidden");
-  el.themeDotButton.setAttribute("aria-expanded", "false");
-}
-
-function openSettingsModal() {
-  renderSettingsThemeChoices();
-  closeOverflowMenu();
-  el.settingsModal.classList.remove("hidden");
-  fitOpenMobileModals();
-}
-
-function closeSettingsModal() {
-  el.settingsModal.classList.add("hidden");
-  fitOpenMobileModals();
 }
 
 function openHelpModal() {
@@ -1038,51 +945,6 @@ async function refreshAppShell() {
   window.location.replace(url.toString());
 }
 
-function renderSettingsThemeChoices() {
-  const settings = readJson(STORAGE_KEYS.settings, {});
-  const activeTheme = settings.tabTheme && THEME_PRESETS[settings.tabTheme] ? settings.tabTheme : "blue";
-  el.settingsThemeChoices.innerHTML = Object.entries(THEME_PRESETS).map(([key, theme]) => `
-    <label class="theme-choice">
-      <input type="radio" name="tabTheme" value="${escapeHtml(key)}" ${key === activeTheme ? "checked" : ""}>
-      <span class="theme-swatch" style="--swatch-color: ${escapeHtml(theme.primary)}" aria-hidden="true"></span>
-      <span>${escapeHtml(theme.label)}</span>
-    </label>
-  `).join("");
-}
-
-function renderThemeDotMenu() {
-  const settings = readJson(STORAGE_KEYS.settings, {});
-  const activeTheme = settings.tabTheme && THEME_PRESETS[settings.tabTheme] ? settings.tabTheme : "blue";
-  el.themeDotMenu.innerHTML = Object.entries(THEME_PRESETS).map(([key, theme]) => `
-    <button type="button" role="menuitemradio" aria-checked="${key === activeTheme ? "true" : "false"}" data-theme-dot="${escapeHtml(key)}">
-      <span class="theme-dot-swatch" style="--swatch-color: ${escapeHtml(theme.primary)}" aria-hidden="true"></span>
-      <span>${escapeHtml(theme.label)}</span>
-    </button>
-  `).join("");
-}
-
-function handleThemeDotMenuClick(event) {
-  const button = event.target.closest("[data-theme-dot]");
-  if (!button) return;
-  setTabTheme(button.dataset.themeDot);
-  closeThemeDotMenu();
-}
-
-function handleSettingsThemeChange(event) {
-  if (event.target.name !== "tabTheme") return;
-  setTabTheme(event.target.value);
-}
-
-function setTabTheme(themeName) {
-  const tabTheme = THEME_PRESETS[themeName] ? themeName : "blue";
-  const settings = {
-    ...readJson(STORAGE_KEYS.settings, {}),
-    tabTheme
-  };
-  writeJson(STORAGE_KEYS.settings, settings);
-  applyAppSettings(settings);
-}
-
 function toggleBackgroundMode() {
   const settings = readJson(STORAGE_KEYS.settings, {});
   const nextSettings = {
@@ -1094,8 +956,7 @@ function toggleBackgroundMode() {
 }
 
 function applyAppSettings(settings = readJson(STORAGE_KEYS.settings, {})) {
-  const themeName = settings.tabTheme && THEME_PRESETS[settings.tabTheme] ? settings.tabTheme : "blue";
-  const theme = THEME_PRESETS[themeName];
+  const theme = APP_THEME;
   const root = document.documentElement;
   root.style.setProperty("--color-primary", theme.primary);
   root.style.setProperty("--color-primary-dark", theme.dark);
@@ -1103,18 +964,9 @@ function applyAppSettings(settings = readJson(STORAGE_KEYS.settings, {})) {
   root.style.setProperty("--color-primary-hover", theme.hover);
   root.style.setProperty("--color-border", theme.border);
   document.body.classList.toggle("dark-background", Boolean(settings.darkBackground));
-  updateThemeDot(themeName, theme);
   updateBackgroundToggle(Boolean(settings.darkBackground));
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme.primary);
   updateNavPlacement();
-}
-
-function updateThemeDot(themeName, theme) {
-  if (!el.themeDotButton) return;
-  el.themeDotButton.style.setProperty("--active-theme-color", theme.primary);
-  el.themeDotButton.setAttribute("aria-label", `Change tab color. Current color: ${theme.label}`);
-  el.themeDotButton.title = `Change tab color: ${theme.label}`;
-  el.themeDotButton.dataset.activeTheme = themeName;
 }
 
 function updateBackgroundToggle(isDark) {
@@ -1149,7 +1001,6 @@ function toggleListMoreMenu(event) {
   const isOpening = el.listMoreMenu.classList.contains("hidden");
   el.listMoreMenu.classList.toggle("hidden", !isOpening);
   el.listMoreButton.setAttribute("aria-expanded", String(isOpening));
-  closeThemeDotMenu();
   closeOverflowMenu();
 }
 
@@ -1160,11 +1011,9 @@ function closeListMoreMenu() {
 
 function handleDocumentKeydown(event) {
   if (event.key !== "Escape") return;
-  closeThemeDotMenu();
   closeOverflowMenu();
   closeListMoreMenu();
   closeListEditModal();
-  closeSettingsModal();
   closeHelpModal();
   closeAboutModal();
 }
@@ -1618,7 +1467,6 @@ function fitOpenMobileModals() {
   const openPanels = [
     [el.importModal, el.modalPanel],
     [el.listEditModal, el.listEditPanel],
-    [el.settingsModal, el.settingsPanel],
     [el.helpModal, el.helpPanel],
     [el.aboutModal, el.aboutPanel]
   ].filter(([modal, panel]) => modal && panel && !modal.classList.contains("hidden"));
@@ -3540,10 +3388,6 @@ async function handleBodyClick(event) {
     return;
   }
 
-  if (!event.target.closest(".theme-dot-wrap")) {
-    closeThemeDotMenu();
-  }
-
   const cardExitButton = event.target.closest("[data-exit-card]");
   if (cardExitButton) {
     returnFromCardDetail();
@@ -3558,12 +3402,6 @@ async function handleBodyClick(event) {
   const menuSectionButton = event.target.closest("[data-menu-section]");
   if (menuSectionButton) {
     showSection(menuSectionButton.dataset.menuSection);
-    return;
-  }
-
-  const settingsButton = event.target.closest("[data-open-settings]");
-  if (settingsButton) {
-    openSettingsModal();
     return;
   }
 

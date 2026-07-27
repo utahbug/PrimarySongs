@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-72">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-73">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-72" defer></script>
-    <script src="script.js?v=primary-2026-72" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-73" defer></script>
+    <script src="script.js?v=primary-2026-73" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -35,12 +35,6 @@
           <button id="headerRefreshButton" class="header-refresh-button" type="button" aria-label="Refresh app" title="Refresh app" data-refresh-app>
             <span aria-hidden="true">&#8635;</span>
           </button>
-          <div class="display-preference-wrap theme-dot-wrap">
-            <button id="themeDotButton" class="theme-dot-button" type="button" aria-label="Change tab color" title="Change tab color" aria-expanded="false" aria-controls="themeDotMenu">
-              <span aria-hidden="true"></span>
-            </button>
-            <div id="themeDotMenu" class="theme-dot-menu hidden" role="menu" aria-label="Tab colors"></div>
-          </div>
           <button id="backgroundToggleButton" class="background-toggle-button" type="button" aria-label="Use black background" title="Use black background" aria-pressed="false">
             <span aria-hidden="true"></span>
           </button>
@@ -508,26 +502,6 @@
 
           <button class="form-apply-button" type="submit" aria-label="Apply changes" title="Apply changes">Apply</button>
         </form>
-      </div>
-    </div>
-
-    <div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-      <div id="settingsPanel" class="modal-panel settings-panel">
-        <div class="import-form">
-          <div class="modal-heading">
-            <button id="settingsCloseButton" class="icon-button form-close-button" type="button" aria-label="Close" title="Close">&times;</button>
-            <h2 id="settingsTitle">Settings</h2>
-          </div>
-
-          <section class="settings-section" aria-label="Tab color">
-            <div class="picker-heading">
-              <strong>Tab color</strong>
-            </div>
-            <div id="settingsThemeChoices" class="theme-choice-grid"></div>
-            <p class="quick-meta">This changes the active tab and main accent color on this device.</p>
-          </section>
-
-        </div>
       </div>
     </div>
 
