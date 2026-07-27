@@ -92,7 +92,7 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 .nav-button { --tab-accent: var(--accent); background: color-mix(in srgb, var(--tab-accent) 10%, var(--surface)); border-color: color-mix(in srgb, var(--tab-accent) 32%, var(--line)); color: var(--ink); flex: 0 0 auto; font-weight: 700; gap: 6px; }
 .nav-button[data-section="lists"] { --tab-accent: #2B67B1; }
 .nav-button[data-section="library"] { --tab-accent: #6C56A5; }
-.nav-button[data-section="cards"] { --tab-accent: #B07A24; }
+.nav-button[data-section="cards"] { --tab-accent: #B83280; }
 .nav-button[data-section="links"] { --tab-accent: #2F7A55; }
 .nav-button[data-section="favorites"] { --tab-accent: #A8874A; }
 .tab-icon { color: var(--tab-accent); font-size: 1rem; line-height: 1; }
@@ -159,7 +159,7 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 .welcome-action:hover, .welcome-action:focus-visible { box-shadow: var(--shadow-strong); transform: translateY(-2px); }
 .welcome-action-files > span { background: #6C56A5; }
 .welcome-action-lists > span { background: #2B67B1; }
-.welcome-action-cards > span { background: #B07A24; }
+.welcome-action-cards > span { background: #B83280; }
 .welcome-hint { color: var(--muted); font-size: 0.9rem; margin: 20px 0 0; }
 
 .view { display: none; }
