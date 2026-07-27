@@ -2892,7 +2892,7 @@ function renderLists() {
   state.activeListId = active.id;
   state.expandedListIds = state.expandedListIds
     .filter((listId) => state.lists.some((list) => list.id === listId))
-    .slice(-2);
+    .slice(-1);
   if (state.lists.length < 2) {
     state.listReorderMode = false;
   }
@@ -5172,8 +5172,8 @@ function selectList(listId) {
   const isExpanded = state.expandedListIds.includes(listId);
   state.activeListId = listId;
   state.expandedListIds = isExpanded
-    ? state.expandedListIds.filter((id) => id !== listId)
-    : [...state.expandedListIds.filter((id) => id !== listId), listId].slice(-2);
+    ? []
+    : [listId];
   el.listSelect.value = listId;
   state.listPickerOpen = false;
   state.listPickerMessage = "";
@@ -5193,7 +5193,7 @@ function openListEditModal(listId) {
   if (!list) return;
 
   state.activeListId = list.id;
-  state.expandedListIds = [...state.expandedListIds.filter((id) => id !== list.id), list.id].slice(-2);
+  state.expandedListIds = [list.id];
   state.editingListId = list.id;
   state.listEditMode = false;
   state.listReorderMode = false;
