@@ -1026,7 +1026,7 @@ function setNavHighlight(sectionName) {
   el.navButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.section === sectionName);
   });
-  el.overflowMenuButton.classList.toggle("active", ["tuner", "pitch"].includes(sectionName));
+  el.overflowMenuButton.classList.toggle("active", ["metronome", "tuner", "pitch"].includes(sectionName));
   el.infoMenuButton.classList.remove("active");
 }
 

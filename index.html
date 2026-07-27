@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-75">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-76">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-75" defer></script>
-    <script src="script.js?v=primary-2026-75" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-76" defer></script>
+    <script src="script.js?v=primary-2026-76" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -50,9 +50,6 @@
         <button class="nav-button" type="button" data-section="library" aria-label="Files" title="Files"><span class="tab-icon" aria-hidden="true">&#9638;</span><span>Files</span></button>
         <button class="nav-button" type="button" data-section="cards" aria-label="Cards" title="Cards"><span class="tab-icon" aria-hidden="true">&#9645;</span><span>Cards</span></button>
         <button class="nav-button" type="button" data-section="links" aria-label="Links" title="Links"><span class="tab-icon" aria-hidden="true">&#8599;</span><span>Links</span></button>
-        <button class="nav-button nav-icon-button nav-search-button" type="button" data-section="search" aria-label="Search" title="Search">
-          <span class="search-icon-mark" aria-hidden="true"></span>
-        </button>
         <div class="overflow-wrap nav-overflow-wrap nav-tools-wrap">
           <button id="overflowMenuButton" class="nav-button nav-icon-button nav-tools-button" type="button" aria-label="Music tools" title="Music tools" aria-expanded="false" aria-controls="overflowMenu">
             <svg class="tuning-fork-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -61,6 +58,7 @@
           </button>
           <div id="overflowMenu" class="overflow-menu tools-menu hidden" role="menu" aria-label="Music tools">
             <strong class="menu-heading">Music Tools</strong>
+            <button type="button" role="menuitem" data-menu-section="metronome">Metronome</button>
             <button type="button" role="menuitem" data-menu-section="tuner">Tuner</button>
             <button type="button" role="menuitem" data-menu-section="pitch">Pitch</button>
           </div>

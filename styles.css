@@ -88,13 +88,8 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 .nav-help-button { --tab-accent: #245A78; min-width: 40px; padding-inline: 7px; }
 .info-icon-mark { align-items: center; border: 2px solid currentcolor; border-radius: 999px; color: var(--accent-strong); display: inline-flex; font-family: Georgia, serif; font-size: 0.88rem; font-style: italic; font-weight: 800; height: 21px; justify-content: center; line-height: 1; width: 21px; }
 .nav-help-button:hover .info-icon-mark, .nav-help-button:focus-visible .info-icon-mark { color: var(--accent-strong); }
-.nav-search-button { --tab-accent: #356A8A; }
 .nav-tools-button { --tab-accent: #2F7A6B; min-width: 40px; padding-inline: 7px; }
 .tuning-fork-icon { fill: none; height: 23px; stroke: currentcolor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; width: 23px; }
-
-.search-icon-mark { border: 2px solid; border-radius: 999px; display: inline-block; height: 15px; position: relative; width: 15px; }
-
-.search-icon-mark::after { background: currentcolor; border-radius: 999px; content: ""; height: 7px; left: 11px; position: absolute; top: 11px; transform: rotate(45deg); transform-origin: center top; width: 2px; }
 
 .star-icon-mark { display: inline-block; font-size: 1.1rem; line-height: 1; }
 
