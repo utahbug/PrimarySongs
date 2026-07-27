@@ -212,6 +212,15 @@ textarea { resize: vertical; }
 
 .rich-card-content { margin-top: 0px; }
 
+.lyrics-card-detail { align-content: start; min-height: calc(100dvh - 150px); }
+.lyrics-card-title { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.55rem, 7vw, 2.4rem); font-weight: 500; line-height: 1.15; margin: 0; }
+.lyrics-card-content { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.18rem, 5.2vw, 1.65rem); line-height: 1.5; overflow-wrap: anywhere; }
+.lyrics-card-content div { min-height: 1.5em; }
+.lyrics-card-content .lyrics-verse { margin: 1.15em 0 0; }
+.lyrics-card-content .lyrics-verse:first-child { margin-top: 0; }
+.lyrics-card-content .lyrics-chorus-label { margin: 1em 0 0.15em; }
+.lyrics-card-preview { font-size: clamp(1rem, 4vw, 1.2rem); max-height: 320px; overflow: hidden; }
+
 .rich-card-preview { max-height: 320px; }
 
 .rich-card-editor img, .rich-card-content img { border: 1px solid var(--line); border-radius: 6px; display: block; height: auto; margin: 8px 0px; max-width: 100%; }

@@ -1192,10 +1192,12 @@ async function loadLibrary() {
 function mergeDefaultStarterData(libraryData) {
   const merged = cloneData(libraryData || {});
   const defaults = cloneData(DEFAULT_LIBRARY_DATA);
+  const lyricCards = cloneData(window.PRIMARY_LYRIC_CARDS || []);
+  const lyricLists = cloneData(window.PRIMARY_LYRIC_LISTS || []);
 
-  merged.items = mergeById(merged.items || [], defaults.items || []);
+  merged.items = mergeById(mergeById(merged.items || [], defaults.items || []), lyricCards);
   merged.quickIndexes = mergeById(merged.quickIndexes || [], defaults.quickIndexes || []);
-  merged.setlists = mergeById(merged.setlists || [], defaults.setlists || []);
+  merged.setlists = mergeById(mergeById(merged.setlists || [], defaults.setlists || []), lyricLists);
 
   const favorites = new Set(merged.favorites || []);
   (defaults.favorites || []).forEach((id) => favorites.add(id));
@@ -1704,7 +1706,7 @@ function prefillImportForm(item) {
   el.importTags.value = (item.tags || []).join(", ");
   el.importNotes.value = item.notes || "";
   if (item.type === "card") {
-    const cardHtml = item.cardHtml || plainCardLinesToHtml(item.content || []);
+    const cardHtml = item.cardHtml || (item.lyricsText ? lyricsTextToHtml(item.lyricsText) : plainCardLinesToHtml(item.content || []));
     el.importCardEditor.innerHTML = sanitizeCardHtml(cardHtml);
     syncCardEditorToHiddenField();
   } else {
@@ -1883,6 +1885,20 @@ function plainCardLinesToHtml(lines = []) {
     .join("");
 }
 
+function lyricsTextToHtml(text = "") {
+  return String(text)
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .split("\n")
+    .map((line) => {
+      const verse = line.match(/^(\d+\.)\s+(.*)$/);
+      if (verse) return `<p><strong>${escapeHtml(verse[1])}</strong> ${escapeHtml(verse[2])}</p>`;
+      if (/^chorus:?$/i.test(line)) return `<p><strong>${escapeHtml(line)}</strong></p>`;
+      return line ? `<div>${escapeHtml(line)}</div>` : "<div><br></div>";
+    })
+    .join("");
+}
+
 function sanitizeCardHtml(html = "") {
   const template = document.createElement("template");
   template.innerHTML = html || "";
@@ -1950,6 +1966,7 @@ async function handleImportSubmit(event) {
       const editedFields = buildEditableFieldsFromForm(item.type, itemDisplayTitle(item));
       if (item.type === "card") {
         await addCardImageFromForm(state.editingItemId, editedFields);
+        if (item.lyricsCard) editedFields.lyricsText = "";
       }
       saveItemEdit(state.editingItemId, editedFields);
       item = state.itemsById.get(state.editingItemId);
@@ -3929,14 +3946,18 @@ function detailHtml(item) {
     const cardTitle = visibleTitle
       ? `<span id="detailTitle" class="compact-detail-title">${escapeHtml(title)}</span>`
       : `<span id="detailTitle" class="sr-only">Card</span>`;
+    const lyricHeading = item.lyricsCard && visibleTitle
+      ? `<h2 id="detailTitle" class="lyrics-card-title">${escapeHtml(title)}</h2>`
+      : "";
     return `
-      <article class="detail-card card-detail-card">
+      <article class="detail-card card-detail-card${item.lyricsCard ? " lyrics-card-detail" : ""}">
+        ${lyricHeading}
         ${item.imageFileId ? localImageSlotHtml(item) : ""}
         ${cardContentHtml(item)}
         ${cardFactsHtml(item)}
         ${item.notes ? `<p class="item-notes">${escapeHtml(item.notes)}</p>` : ""}
         <div class="detail-actions card-detail-actions">
-          ${cardTitle}
+          ${item.lyricsCard ? "" : cardTitle}
           ${favoriteAction}
           ${deleteAction}
           ${editAction}
@@ -3997,8 +4018,18 @@ function cardFactsHtml(item) {
 }
 
 function cardContentHtml(item, options = {}) {
+  if (item.lyricsCard && item.lyricsText) {
+    const lines = String(item.lyricsText).replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+    const html = lines.map((line) => {
+      const verse = line.match(/^(\d+\.)\s+(.*)$/);
+      if (verse) return `<p class="lyrics-verse"><strong>${escapeHtml(verse[1])}</strong> ${escapeHtml(verse[2])}</p>`;
+      if (/^chorus:?$/i.test(line)) return `<p class="lyrics-chorus-label"><strong>${escapeHtml(line)}</strong></p>`;
+      return line ? `<div>${escapeHtml(line)}</div>` : "<div><br></div>";
+    }).join("");
+    return `<div class="lyrics-card-content${options.preview ? " lyrics-card-preview" : ""}">${html}</div>`;
+  }
   if (item.cardHtml) {
-    return `<div class="rich-card-content${options.preview ? " rich-card-preview" : ""}">${sanitizeCardHtml(item.cardHtml)}</div>`;
+    return `<div class="rich-card-content${item.lyricsCard ? " lyrics-card-content" : ""}${options.preview ? " rich-card-preview" : ""}">${sanitizeCardHtml(item.cardHtml)}</div>`;
   }
   const lines = options.preview ? (item.content || []).slice(0, 10) : (item.content || []);
   return lines.length ? `<pre class="chord-sheet">${escapeHtml(lines.join("\n"))}</pre>` : "";
