@@ -700,6 +700,7 @@ function collectElements() {
   el.listEditPanel = document.getElementById("listEditPanel");
   el.listEditForm = document.getElementById("listEditForm");
   el.listEditCloseButton = document.getElementById("listEditCloseButton");
+  el.listEditDeleteButton = document.getElementById("listEditDeleteButton");
   el.listEditTitle = document.getElementById("listEditTitle");
   el.listEditTitleField = document.getElementById("listEditTitleField");
   el.listEditItems = document.getElementById("listEditItems");
@@ -804,6 +805,7 @@ function wireEvents() {
   el.importCardEditor.addEventListener("input", syncCardEditorToHiddenField);
   el.importForm.addEventListener("submit", handleImportSubmit);
   el.listEditCloseButton.addEventListener("click", closeListEditModal);
+  el.listEditDeleteButton.addEventListener("click", handleDeleteListFromForm);
   el.listEditForm.addEventListener("submit", saveListEditModal);
   el.listEditSort.addEventListener("change", () => {
     state.listEditSort = el.listEditSort.value === "title" ? "title" : "type";
@@ -5300,6 +5302,12 @@ function saveCurrentModalListTitle() {
   updateListTitle(state.editingListId, el.listEditTitleField.value);
 }
 
+function handleDeleteListFromForm() {
+  const listId = state.editingListId;
+  if (!listId) return;
+  if (deleteList(listId)) closeListEditModal();
+}
+
 function renderListEditModal() {
   const list = state.lists.find((candidate) => candidate.id === state.editingListId);
   if (!list) {
@@ -5458,9 +5466,9 @@ function createList(title = "", entries = []) {
 
 function deleteList(listId) {
   const list = state.lists.find((candidate) => candidate.id === listId);
-  if (!list) return;
+  if (!list) return false;
   const ok = window.confirm(`Delete "${list.title}"? This only removes the list, not the songs.`);
-  if (!ok) return;
+  if (!ok) return false;
 
   state.lists = state.lists.filter((candidate) => candidate.id !== listId);
   state.activeListId = state.lists[0]?.id || "";
@@ -5468,6 +5476,7 @@ function deleteList(listId) {
   populateSelect(el.listSelect, state.lists);
   el.listSelect.value = state.activeListId;
   renderLists();
+  return true;
 }
 
 function addItemToList(listId, itemId, pageValue = "") {
