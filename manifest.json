@@ -1,12 +1,12 @@
 ﻿{
-    "name":  "MusicDocs",
-    "short_name":  "MusicDocs",
-    "description":  "A private, local music helper for PDFs, lists, song cards, notes, links, setlists, and favorites.",
+    "name":  "Primary Music",
+    "short_name":  "Primary Music",
+    "description":  "A fast, local-first Primary music helper for songs, rehearsal lists, lyric cards, and pianist tools.",
     "start_url":  "./index.html",
     "scope":  "./",
     "display":  "standalone",
     "background_color":  "#F7FAFB",
-    "theme_color":  "#2F7A55",
+    "theme_color":  "#245A9A",
     "icons":  [
                   {
                       "src":  "assets/icon-192.png",

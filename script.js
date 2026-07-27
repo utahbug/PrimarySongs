@@ -18,6 +18,7 @@ const STORAGE_KEYS = {
   metronome: storageKey("metronome"),
   tuner: storageKey("tuner"),
   pitch: storageKey("pitch"),
+  welcomeSeen: storageKey("welcomeSeen"),
   starterDataVersion: storageKey("starterDataVersion"),
   starterFavorites: storageKey("starterFavorites"),
   starterLists: storageKey("starterLists"),
@@ -534,11 +535,14 @@ function collectElements() {
   el.themeDotMenu = document.getElementById("themeDotMenu");
   el.backgroundToggleButton = document.getElementById("backgroundToggleButton");
   el.homeTitleButton = document.getElementById("homeTitleButton");
+  el.welcomeSection = document.getElementById("welcomeSection");
+  el.welcomeButtons = Array.from(document.querySelectorAll("[data-welcome-section]"));
   el.navButtons = Array.from(document.querySelectorAll(".nav-button"));
   el.overflowMenuButton = document.getElementById("overflowMenuButton");
   el.overflowMenu = document.getElementById("overflowMenu");
 
   el.sections = {
+    welcome: document.getElementById("welcomeSection"),
     library: document.getElementById("librarySection"),
     lists: document.getElementById("listsSection"),
     cards: document.getElementById("cardsSection"),
@@ -632,6 +636,7 @@ function collectElements() {
   el.pdfHomeButton = document.getElementById("pdfHomeButton");
   el.pdfTipsButton = document.getElementById("pdfTipsButton");
   el.pdfMetronomeButton = document.getElementById("pdfMetronomeButton");
+  el.pdfTempoInput = document.getElementById("pdfTempoInput");
   el.pdfPrevButton = document.getElementById("pdfPrevButton");
   el.pdfNextButton = document.getElementById("pdfNextButton");
   el.pdfTitle = document.getElementById("pdfTitle");
@@ -743,6 +748,12 @@ function wireEvents() {
 
   el.navButtons.forEach((button) => {
     button.addEventListener("click", () => showSection(button.dataset.section));
+  });
+  el.welcomeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      localStorage.setItem(STORAGE_KEYS.welcomeSeen, "1");
+      showSection(button.dataset.welcomeSection);
+    });
   });
 
   el.libraryAddButton.addEventListener("click", () => openImportModal(null, "pdf", "library"));
@@ -859,7 +870,14 @@ function wireEvents() {
   el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfTipsButton.addEventListener("click", togglePdfTips);
-  el.pdfMetronomeButton.addEventListener("click", openMetronomeFromPdf);
+  el.pdfMetronomeButton.addEventListener("click", toggleMetronome);
+  el.pdfTempoInput.addEventListener("change", () => setMetronomeBpm(Number(el.pdfTempoInput.value)));
+  el.pdfTempoInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      setMetronomeBpm(Number(el.pdfTempoInput.value));
+      el.pdfTempoInput.blur();
+    }
+  });
   el.pdfPrevButton.addEventListener("click", previousPdfPage);
   el.pdfNextButton.addEventListener("click", nextPdfPage);
 
@@ -871,6 +889,7 @@ function wireEvents() {
   el.pdfStage.addEventListener("touchend", handlePdfTouchEnd, { passive: false });
   el.pdfStage.addEventListener("touchcancel", handlePdfTouchEnd, { passive: false });
   window.addEventListener("hashchange", showSectionFromHash);
+  window.addEventListener("scroll", updateIdentityBar, { passive: true });
   const handleViewportChange = debounce(() => {
     if (!el.pdfViewer.classList.contains("hidden") && state.currentPdf.doc) {
       renderPdfPage(state.currentPdf.pageNumber);
@@ -1459,7 +1478,7 @@ function populateSelect(select, options) {
 
 function openInitialSection() {
   if (!showSectionFromHash()) {
-    showSection("lists");
+    showSection(localStorage.getItem(STORAGE_KEYS.welcomeSeen) ? "lists" : "welcome");
   }
 }
 
@@ -2644,6 +2663,10 @@ function goHome() {
   showSection("favorites");
 }
 
+function updateIdentityBar() {
+  document.body.classList.toggle("identity-condensed", window.scrollY > 28);
+}
+
 function showSection(sectionName) {
   if (!el.sections[sectionName]) return;
   if (sectionName !== "tuner") stopTuner();
@@ -2663,7 +2686,7 @@ function showSection(sectionName) {
 
   if (sectionName !== "detail") {
     state.activeSection = sectionName;
-    window.location.hash = sectionName;
+    if (sectionName !== "welcome") window.location.hash = sectionName;
   }
 
   updateNavPlacement(sectionName);
@@ -2676,7 +2699,9 @@ function renderLibrary() {
   renderItemList(el.libraryContent, sortLibraryItems(filtered, el.librarySort.value), {
     compact: true,
     compactAction: "edit",
-    batchDeleteSection: "library"
+    batchDeleteSection: "library",
+    emptyTitle: query ? "No matching files" : "Your music shelf is ready",
+    emptyMessage: query ? "Try a shorter title or clear the search box." : "Add a PDF or photo of music to open it quickly during rehearsal."
   });
   updateBatchDeleteControls("library");
 }
@@ -2715,7 +2740,7 @@ function renderItemList(container, items, options = {}) {
   container.classList.toggle("favorite-reorder-list", Boolean(options.reorderFavorites));
   container.classList.toggle("batch-delete-list", isBatchDeleteMode(options.batchDeleteSection));
   if (!items.length) {
-    container.appendChild(emptyState());
+    container.appendChild(emptyState(options.emptyTitle, options.emptyMessage));
     return;
   }
   items.forEach((item) => container.appendChild(createItemCard(item, options)));
@@ -3243,7 +3268,12 @@ function updateListPickerOptions(listId = state.activeListId) {
 function renderCards() {
   const cards = state.data.items.filter((item) => item.type === "card").sort(compareTitle);
   el.cardsContent.classList.remove("cards-grid");
-  renderItemList(el.cardsContent, cards, { compact: true, batchDeleteSection: "cards" });
+  renderItemList(el.cardsContent, cards, {
+    compact: true,
+    batchDeleteSection: "cards",
+    emptyTitle: "Turn words into a rehearsal aid",
+    emptyMessage: "Add a Card for lyrics, cues, actions, or teaching notes that need to be easy to read."
+  });
   updateBatchDeleteControls("cards");
 }
 
@@ -3284,7 +3314,12 @@ function renderCardPreviews() {
 
 function renderLinks() {
   const links = state.data.items.filter((item) => item.type === "link").sort(compareTitle);
-  renderItemList(el.linksContent, links, { compact: true, batchDeleteSection: "links" });
+  renderItemList(el.linksContent, links, {
+    compact: true,
+    batchDeleteSection: "links",
+    emptyTitle: "Keep useful music links close",
+    emptyMessage: "Add a link to a song collection, recording, or rehearsal resource."
+  });
   updateBatchDeleteControls("links");
 }
 
@@ -3299,7 +3334,7 @@ function renderFavorites() {
     el.favoritesContent.classList.remove("compact-index-list");
     el.favoritesContent.classList.remove("favorite-list");
     el.favoritesContent.classList.remove("favorite-reorder-list");
-    el.favoritesContent.innerHTML = `<div class="empty-state compact-empty"><p>No favorites yet.</p></div>`;
+    el.favoritesContent.innerHTML = `<div class="empty-state compact-empty"><h3>Your quickest songs live here</h3><p>Tap a star beside any file, Card, or link to add it to Favorites.</p></div>`;
     return;
   }
   renderFavoriteRows(favoriteRows);
@@ -4028,6 +4063,7 @@ function cardContentHtml(item, options = {}) {
     }).join("");
     return `<div class="lyrics-card-content${options.preview ? " lyrics-card-preview" : ""}">${html}</div>`;
   }
+
   if (item.cardHtml) {
     return `<div class="rich-card-content${item.lyricsCard ? " lyrics-card-content" : ""}${options.preview ? " rich-card-preview" : ""}">${sanitizeCardHtml(item.cardHtml)}</div>`;
   }
@@ -4058,7 +4094,7 @@ async function openPdf(item) {
   showPdfMessage("Loading PDF...");
   document.body.classList.add("pdf-open");
   el.pdfViewer.classList.remove("hidden");
-  hidePdfTips();
+  setPdfTipsVisible(true, 10000);
 
   if (!window.pdfjsLib) {
     showPdfMessage("PDF.js could not be loaded. Check your internet connection or download PDF.js for local use.");
@@ -4189,10 +4225,6 @@ function updatePdfStatus() {
   el.pdfPageStatus.textContent = `Page ${state.currentPdf.pageNumber} of ${state.currentPdf.pageCount}`;
 }
 
-function openMetronomeFromPdf() {
-  closePdfViewer();
-  showSection("metronome");
-}
 function returnFromPdfViewer() {
   const targetSection = state.activeSection && state.activeSection !== "detail"
     ? state.activeSection
@@ -4203,10 +4235,10 @@ function returnFromPdfViewer() {
 
 function togglePdfTips() {
   const showTips = !el.pdfViewer.classList.contains("show-tips");
-  setPdfTipsVisible(showTips);
+  setPdfTipsVisible(showTips, 10000);
 }
 
-function setPdfTipsVisible(showTips) {
+function setPdfTipsVisible(showTips, duration = 10000) {
   window.clearTimeout(state.currentPdf.tipsTimer);
   state.currentPdf.tipsTimer = null;
   el.pdfViewer.classList.toggle("show-tips", showTips);
@@ -4214,7 +4246,7 @@ function setPdfTipsVisible(showTips) {
   if (showTips) {
     state.currentPdf.tipsTimer = window.setTimeout(() => {
       setPdfTipsVisible(false);
-    }, 4500);
+    }, duration);
   }
 }
 
@@ -4863,9 +4895,16 @@ function renderMetronome() {
   if (!el.metronomeBpm) return;
   el.metronomeBpm.value = String(state.metronome.bpm);
   el.metronomeBpmOutput.value = String(state.metronome.bpm);
+  if (el.pdfTempoInput) el.pdfTempoInput.value = String(state.metronome.bpm);
   el.metronomeBeats.value = String(state.metronome.beatsPerMeasure);
   el.metronomeStartButton.textContent = state.metronome.running ? "Stop" : "Start";
   el.metronomeStatus.textContent = state.metronome.running ? "Playing" : "Stopped";
+  if (el.pdfMetronomeButton) {
+    el.pdfMetronomeButton.classList.toggle("is-playing", state.metronome.running);
+    el.pdfMetronomeButton.setAttribute("aria-label", state.metronome.running ? "Stop metronome" : "Start metronome");
+    el.pdfMetronomeButton.title = state.metronome.running ? "Stop metronome" : "Start metronome";
+    el.pdfMetronomeButton.innerHTML = `<span aria-hidden="true">${state.metronome.running ? "■" : "▶"}</span>`;
+  }
   renderMetronomeDots(state.metronome.running ? state.metronome.currentBeat : -1);
 }
 
@@ -5622,8 +5661,11 @@ function libraryOptionsHtml() {
     .join("");
 }
 
-function emptyState() {
-  return document.getElementById("emptyStateTemplate").content.firstElementChild.cloneNode(true);
+function emptyState(title = "Nothing here yet", message = "Add something of your own or choose another section to explore the starter content.") {
+  const node = document.getElementById("emptyStateTemplate").content.firstElementChild.cloneNode(true);
+  node.querySelector("h3").textContent = title;
+  node.querySelector("p").textContent = message;
+  return node;
 }
 
 function normalize(value) {

@@ -5,26 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#2B5F9E">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="MusicDocs">
+    <meta name="apple-mobile-web-app-title" content="Primary Music">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>MusicDocs</title>
+    <title>Primary Music</title>
     <link rel="manifest" href="manifest.json">
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-35">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-36">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-35" defer></script>
-    <script src="script.js?v=primary-2026-35" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-36" defer></script>
+    <script src="script.js?v=primary-2026-36" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
       <header class="app-header">
         <div class="app-title-row">
+          <img class="identity-logo" src="assets/icon.svg" alt="" aria-hidden="true">
           <h1>
-            <button id="homeTitleButton" class="app-title-button" type="button" aria-label="Go to Favorites" title="Go to Favorites">MusicDocs</button>
+            <button id="homeTitleButton" class="app-title-button" type="button" aria-label="Go to Favorites" title="Go to Favorites">
+              <span class="identity-name">Primary Music</span>
+              <span class="identity-subtitle">Songs, lists, and rehearsal tools</span>
+            </button>
           </h1>
         </div>
         <div class="header-actions">
@@ -48,10 +52,10 @@
           <span class="star-icon-mark" aria-hidden="true">&#9733;</span>
           <span class="sr-only">Favorites</span>
         </button>
-        <button class="nav-button active" type="button" data-section="lists" aria-label="Lists" title="Lists">Lists</button>
-        <button class="nav-button" type="button" data-section="library" aria-label="Files" title="Files">Files</button>
-        <button class="nav-button" type="button" data-section="cards" aria-label="Cards" title="Cards">Cards</button>
-        <button class="nav-button" type="button" data-section="links" aria-label="Links" title="Links">Links</button>
+        <button class="nav-button active" type="button" data-section="lists" aria-label="Lists" title="Lists"><span class="tab-icon" aria-hidden="true">&#9776;</span><span>Lists</span></button>
+        <button class="nav-button" type="button" data-section="library" aria-label="Files" title="Files"><span class="tab-icon" aria-hidden="true">&#9638;</span><span>Files</span></button>
+        <button class="nav-button" type="button" data-section="cards" aria-label="Cards" title="Cards"><span class="tab-icon" aria-hidden="true">&#9645;</span><span>Cards</span></button>
+        <button class="nav-button" type="button" data-section="links" aria-label="Links" title="Links"><span class="tab-icon" aria-hidden="true">&#8599;</span><span>Links</span></button>
         <div class="overflow-wrap nav-overflow-wrap">
           <button id="overflowMenuButton" class="nav-button nav-icon-button" type="button" aria-label="More" title="More" aria-expanded="false" aria-controls="overflowMenu">&hellip;</button>
           <div id="overflowMenu" class="overflow-menu hidden" role="menu" aria-label="More">
@@ -70,6 +74,21 @@
       </nav>
 
       <main class="main-content">
+        <section id="welcomeSection" class="view welcome-view" data-view="welcome" aria-labelledby="welcomeTitle">
+          <div class="welcome-card">
+            <div class="welcome-mark" aria-hidden="true"><img src="assets/icon.svg" alt=""></div>
+            <p class="welcome-eyebrow">Ready for Primary</p>
+            <h2 id="welcomeTitle">Music at your fingertips</h2>
+            <p class="welcome-copy">Open music quickly, organize a rehearsal list, or use large lyric cards on a phone.</p>
+            <div class="welcome-actions">
+              <button class="welcome-action welcome-action-files" type="button" data-welcome-section="library"><span aria-hidden="true">&#9835;</span><strong>Open a song</strong><small>Browse sheet music</small></button>
+              <button class="welcome-action welcome-action-lists" type="button" data-welcome-section="lists"><span aria-hidden="true">&#9776;</span><strong>Choose a list</strong><small>Plan and rehearse</small></button>
+              <button class="welcome-action welcome-action-cards" type="button" data-welcome-section="cards"><span aria-hidden="true">&#9645;</span><strong>View lyric cards</strong><small>Readable on a phone</small></button>
+            </div>
+            <p class="welcome-hint">New here? Open <strong>Try this: Piano &amp; Lyrics</strong> in Lists for a quick tour.</p>
+          </div>
+        </section>
+
         <section id="librarySection" class="view" data-view="library" aria-label="Files">
           <div class="toolbar compact-topbar files-toolbar">
             <label class="search-field">
@@ -302,22 +321,27 @@
         <button id="pdfTapLeft" class="pdf-tap-zone pdf-tap-left" type="button" aria-label="Previous page; top-left jumps to first page"></button>
         <button id="pdfTapRight" class="pdf-tap-zone pdf-tap-right" type="button" aria-label="Next page; top-right jumps to last page"></button>
         <div class="pdf-zone-tips" aria-hidden="true">
-          <div class="pdf-zone-tip pdf-zone-tip-first">tap to jump to first page</div>
-          <div class="pdf-zone-tip pdf-zone-tip-last">tap to jump to last page</div>
-          <div class="pdf-zone-tip pdf-zone-tip-prev">tap to flip the page</div>
-          <div class="pdf-zone-tip pdf-zone-tip-next">tap to flip the page</div>
+          <div class="pdf-zone-tip pdf-zone-tip-first"><strong>First page</strong><span>Tap upper left</span></div>
+          <div class="pdf-zone-tip pdf-zone-tip-last"><strong>Last page</strong><span>Tap upper right</span></div>
+          <div class="pdf-zone-tip pdf-zone-tip-prev"><strong>Previous page</strong><span>Tap lower left</span></div>
+          <div class="pdf-zone-tip pdf-zone-tip-next"><strong>Next page</strong><span>Tap lower right</span></div>
+          <div class="pdf-zone-tip-center"><strong>Four quick zones</strong><span>Tap the lightbulb any time to see this guide again.</span></div>
         </div>
       </div>
       <footer class="pdf-action-bar" aria-label="PDF viewer actions">
-        <button id="pdfHomeButton" class="pdf-action-button" type="button">HOME</button>
-        <button id="pdfTipsButton" class="pdf-action-button" type="button" aria-pressed="false">TIPS</button>
-        <button id="pdfMetronomeButton" class="pdf-action-button pdf-icon-action" type="button" aria-label="Metronome" title="Metronome"><span class="metronome-mini-icon" aria-hidden="true"></span></button>
+        <button id="pdfHomeButton" class="pdf-action-button pdf-home-action" type="button" aria-label="Return to app" title="Return to app"><span aria-hidden="true">&#8962;</span><small>Home</small></button>
+        <button id="pdfTipsButton" class="pdf-action-button pdf-tips-action" type="button" aria-label="Show four-zone guide" title="Show four-zone guide" aria-pressed="false"><span aria-hidden="true">&#128161;</span><small>Guide</small></button>
+        <div class="pdf-tempo-box" aria-label="Metronome tempo">
+          <label for="pdfTempoInput"><span>BPM</span><input id="pdfTempoInput" type="number" min="40" max="220" step="1" inputmode="numeric" value="90" aria-label="Metronome tempo"></label>
+          <button id="pdfMetronomeButton" class="pdf-tempo-toggle" type="button" aria-label="Start metronome" title="Start metronome"><span aria-hidden="true">&#9654;</span></button>
+        </div>
       </footer>
     </section>
 
     <template id="emptyStateTemplate">
       <div class="empty-state">
-        <p>No items found.</p>
+        <h3>Nothing here yet</h3>
+        <p>Add something of your own or choose another section to explore the starter content.</p>
       </div>
     </template>
 

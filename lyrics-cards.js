@@ -78,6 +78,22 @@ window.PRIMARY_LYRIC_CARDS = [
 
 window.PRIMARY_LYRIC_LISTS = [
   {
+    "id": "try-this-piano-and-lyrics",
+    "title": "Try this: Piano & Lyrics",
+    "showCheckboxes": false,
+    "items": [
+      {
+        "itemId": "choose-to-serve-the-lord"
+      },
+      {
+        "itemId": "lyrics-card-choose-to-serve-the-lord"
+      },
+      {
+        "itemId": "lyrics-card-this-little-light-of-mine-1028"
+      }
+    ]
+  },
+  {
     "id": "primary-program-lyrics-cards",
     "title": "Primary Program - Lyrics Cards",
     "showCheckboxes": false,
