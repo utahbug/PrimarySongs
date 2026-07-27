@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-76">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-77">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-76" defer></script>
-    <script src="script.js?v=primary-2026-76" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-77" defer></script>
+    <script src="script.js?v=primary-2026-77" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -53,7 +53,16 @@
         <div class="overflow-wrap nav-overflow-wrap nav-tools-wrap">
           <button id="overflowMenuButton" class="nav-button nav-icon-button nav-tools-button" type="button" aria-label="Music tools" title="Music tools" aria-expanded="false" aria-controls="overflowMenu">
             <svg class="tuning-fork-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M7 3v6a5 5 0 0 0 10 0V3M12 14v7M9 21h6"></path>
+              <defs>
+                <linearGradient id="tuningForkGradient" x1="5" y1="3" x2="18" y2="21" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#26A69A"></stop>
+                  <stop offset="0.52" stop-color="#2C7F99"></stop>
+                  <stop offset="1" stop-color="#315FA8"></stop>
+                </linearGradient>
+              </defs>
+              <path class="tuning-fork-shadow" d="M7 3v6a5 5 0 0 0 10 0V3M12 14v7M9 21h6"></path>
+              <path class="tuning-fork-main" d="M7 3v6a5 5 0 0 0 10 0V3M12 14v7M9 21h6"></path>
+              <path class="tuning-fork-highlight" d="M7 3v6a5 5 0 0 0 5 5M12 14v7"></path>
             </svg>
           </button>
           <div id="overflowMenu" class="overflow-menu tools-menu hidden" role="menu" aria-label="Music tools">
