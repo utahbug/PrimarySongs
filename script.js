@@ -438,7 +438,7 @@ const state = {
   previousSection: "library",
   previousScrollY: 0,
   activeListId: "",
-  expandedListId: "",
+  expandedListIds: [],
   batchDeleteMode: {
     library: false,
     cards: false,
@@ -3033,16 +3033,16 @@ function renderLists() {
     el.listPickerPanel.classList.add("hidden");
     el.listPickerPanel.innerHTML = "";
     el.listContent.innerHTML = `<div class="empty-state"><p>No lists yet.</p></div>`;
-    state.expandedListId = "";
+    state.expandedListIds = [];
     return;
   }
 
   const active = getActiveList();
   if (!active) return;
   state.activeListId = active.id;
-  if (state.expandedListId && !state.lists.some((list) => list.id === state.expandedListId)) {
-    state.expandedListId = "";
-  }
+  state.expandedListIds = state.expandedListIds
+    .filter((listId) => state.lists.some((list) => list.id === listId))
+    .slice(-2);
   if (state.lists.length < 2) {
     state.listReorderMode = false;
   }
@@ -3072,9 +3072,10 @@ function renderListTabs(active) {
   el.listTabs.innerHTML = state.lists.map((list, index) => {
     const itemCount = getResolvedListEntries(list).length;
     const activeClass = list.id === active.id ? " active" : "";
-    const expandedClass = list.id === state.expandedListId ? " expanded" : "";
+    const isExpanded = state.expandedListIds.includes(list.id);
+    const expandedClass = isExpanded ? " expanded" : "";
     const reorderClass = state.listReorderMode ? " list-reorder-row" : "";
-    const expanded = list.id === state.expandedListId ? "true" : "false";
+    const expanded = isExpanded ? "true" : "false";
     const selected = list.id === active.id ? "true" : "false";
     const title = list.title || "Untitled List";
     const reorderHandle = state.listReorderMode
@@ -3090,7 +3091,7 @@ function renderListTabs(active) {
         <button class="icon-button list-row-edit-button" type="button" data-edit-list-row="${escapeHtml(list.id)}" aria-label="Edit ${escapeHtml(title)}" title="Edit list">&#9998;</button>
         ${reorderHandle}
         </div>
-        ${list.id === state.expandedListId ? renderInlineListItems(list) : ""}
+        ${isExpanded ? renderInlineListItems(list) : ""}
       </div>
     `;
   }).join("");
@@ -5299,9 +5300,11 @@ function toggleListPicker() {
 
 function selectList(listId) {
   if (!state.lists.some((list) => list.id === listId)) return;
-  const shouldCollapse = state.activeListId === listId && state.expandedListId === listId;
+  const isExpanded = state.expandedListIds.includes(listId);
   state.activeListId = listId;
-  state.expandedListId = shouldCollapse ? "" : listId;
+  state.expandedListIds = isExpanded
+    ? state.expandedListIds.filter((id) => id !== listId)
+    : [...state.expandedListIds.filter((id) => id !== listId), listId].slice(-2);
   el.listSelect.value = listId;
   state.listPickerOpen = false;
   state.listPickerMessage = "";
@@ -5321,7 +5324,7 @@ function openListEditModal(listId) {
   if (!list) return;
 
   state.activeListId = list.id;
-  state.expandedListId = list.id;
+  state.expandedListIds = [...state.expandedListIds.filter((id) => id !== list.id), list.id].slice(-2);
   state.editingListId = list.id;
   state.listEditMode = false;
   state.listReorderMode = false;
