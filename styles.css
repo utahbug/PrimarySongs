@@ -60,7 +60,7 @@ body.identity-condensed .identity-name { font-size: 0.98rem; }
 
 .background-toggle-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; display: inline-flex; flex: 0 0 auto; height: 30px; justify-content: center; padding: 4px; width: 30px; }
 
-.background-toggle-button span { background: linear-gradient(90deg, #050505 0 50%, #FFFFFF 50% 100%); border: 1px solid var(--line); border-radius: 999px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--surface) 70%, transparent); display: block; height: 18px; width: 18px; }
+.background-toggle-button span { background: linear-gradient(45deg, #050505 0 50%, #FFFFFF 50% 100%); border: 1px solid var(--line); border-radius: 999px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--surface) 70%, transparent); display: block; height: 18px; width: 18px; }
 
 .background-toggle-button:hover, .background-toggle-button:focus-visible { background: var(--accent-hover); }
 
