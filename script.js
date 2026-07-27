@@ -3054,6 +3054,7 @@ function renderLists() {
   el.listReorderButton.classList.toggle("hidden", state.lists.length < 2);
   el.listReorderButton.classList.toggle("active-tool", state.listReorderMode);
   el.listReorderButton.setAttribute("aria-pressed", state.listReorderMode ? "true" : "false");
+  updateReorderToggle(el.listReorderButton, state.listReorderMode, "lists");
   el.listEditButton.innerHTML = state.listEditMode ? "&#10003;" : "&#9998;";
   el.listEditButton.setAttribute("aria-label", state.listEditMode ? "Save list changes" : "Edit list");
   el.listEditButton.title = state.listEditMode ? "Save list changes" : "Edit list";
@@ -3410,6 +3411,7 @@ function renderFavorites() {
   el.favoriteDividerAddButton.classList.toggle("hidden", favoriteItemCount < 3);
   el.favoritesReorderButton.classList.toggle("active-tool", state.favoriteReorderMode);
   el.favoritesReorderButton.setAttribute("aria-pressed", state.favoriteReorderMode ? "true" : "false");
+  updateReorderToggle(el.favoritesReorderButton, state.favoriteReorderMode, "favorites");
   if (!favoriteRows.length) {
     el.favoritesContent.classList.remove("compact-index-list");
     el.favoritesContent.classList.remove("favorite-list");
@@ -3505,6 +3507,13 @@ function toggleFavoriteReorderMode() {
   state.favoriteReorderMode = !state.favoriteReorderMode;
   closeSwipeRows();
   renderFavorites();
+}
+
+function updateReorderToggle(button, isActive, itemName) {
+  if (!button) return;
+  button.textContent = isActive ? "\u2713 Done" : "\u2195 Rearrange";
+  button.setAttribute("aria-label", isActive ? `Finish rearranging ${itemName}` : `Rearrange ${itemName}`);
+  button.title = isActive ? `Finish rearranging ${itemName}` : `Rearrange ${itemName}`;
 }
 
 function renderSearch() {
