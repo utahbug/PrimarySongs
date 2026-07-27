@@ -579,13 +579,16 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .detail-header h2 { margin-bottom: 8px; }
 
-.card-detail-card { display: grid; gap: 12px; }
+.card-detail-card { display: grid; gap: 12px; padding-top: 6px; }
 
 .card-detail-card .chord-sheet, .card-detail-card .song-card-image { margin-top: 0px; }
 
 .image-detail-card .song-card-image { margin-top: 0px; }
 
-.card-detail-actions { align-items: center; justify-content: flex-end; margin-top: 0px; }
+.detail-actions.card-detail-actions { align-items: center; display: grid; gap: 8px; grid-template-columns: auto minmax(0px, 1fr) auto auto auto; margin-top: 0px; }
+.card-toolbar-spacer { min-width: 0px; }
+.card-exit-button { color: var(--accent-strong); font-size: 1.25rem; font-weight: 800; }
+.card-detail-footer-actions { display: flex; justify-content: flex-start; padding-top: 4px; }
 
 .compact-detail-card { display: grid; gap: 12px; padding: 12px 14px; }
 

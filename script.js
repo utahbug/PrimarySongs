@@ -419,6 +419,7 @@ const state = {
   cardEditorRange: null,
   activeSection: "lists",
   previousSection: "library",
+  previousScrollY: 0,
   activeListId: "",
   expandedListId: "",
   batchDeleteMode: {
@@ -3474,6 +3475,12 @@ async function handleBodyClick(event) {
     closeThemeDotMenu();
   }
 
+  const cardExitButton = event.target.closest("[data-exit-card]");
+  if (cardExitButton) {
+    returnFromCardDetail();
+    return;
+  }
+
   if (!event.target.closest(".overflow-wrap")) {
     closeOverflowMenu();
     closeListMoreMenu();
@@ -3982,6 +3989,7 @@ function openDetail(id) {
   rememberOpened(item);
 
   state.previousSection = state.activeSection;
+  state.previousScrollY = window.scrollY;
   el.detailContent.innerHTML = detailHtml(item);
   setFavoriteIcons(el.detailContent);
   hydrateLocalImages(el.detailContent);
@@ -3998,6 +4006,11 @@ function detailHtml(item) {
   const favoriteAction = `
     <button class="icon-button favorite-toggle ${favorite ? "favorite-on" : ""}" type="button" data-favorite="${escapeHtml(item.id)}" aria-label="Toggle favorite">
       ${favorite ? "&#9733;" : "&#9734;"}
+    </button>
+  `;
+  const cardExitAction = `
+    <button class="icon-button card-exit-button" type="button" data-exit-card aria-label="Exit card and return" title="Return">
+      &#8592;
     </button>
   `;
   const compactHeader = `
@@ -4025,7 +4038,8 @@ function detailHtml(item) {
     return `
       <article class="detail-card card-detail-card${item.lyricsCard ? " lyrics-card-detail" : ""}">
         <div class="detail-actions card-detail-actions">
-          ${item.lyricsCard ? "" : cardTitle}
+          ${cardExitAction}
+          ${item.lyricsCard ? `<span class="card-toolbar-spacer" aria-hidden="true"></span>` : cardTitle}
           ${favoriteAction}
           ${deleteAction}
           ${editAction}
@@ -4035,6 +4049,9 @@ function detailHtml(item) {
         ${cardContentHtml(item)}
         ${cardFactsHtml(item)}
         ${item.notes ? `<p class="item-notes">${escapeHtml(item.notes)}</p>` : ""}
+        <div class="card-detail-footer-actions">
+          ${cardExitAction}
+        </div>
       </article>
     `;
   }
@@ -4079,6 +4096,13 @@ function detailHtml(item) {
       ${compactHeader}
     </article>
   `;
+}
+
+function returnFromCardDetail() {
+  const targetSection = state.previousSection || "cards";
+  el.detailContent.innerHTML = "";
+  showSection(targetSection);
+  window.requestAnimationFrame(() => window.scrollTo(0, state.previousScrollY || 0));
 }
 
 function cardFactsHtml(item) {
