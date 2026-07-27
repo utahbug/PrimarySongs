@@ -507,6 +507,8 @@ function collectElements() {
   el.navButtons = Array.from(document.querySelectorAll(".nav-button[data-section]"));
   el.overflowMenuButton = document.getElementById("overflowMenuButton");
   el.overflowMenu = document.getElementById("overflowMenu");
+  el.infoMenuButton = document.getElementById("infoMenuButton");
+  el.infoMenu = document.getElementById("infoMenu");
 
   el.sections = {
     welcome: document.getElementById("welcomeSection"),
@@ -736,12 +738,15 @@ function wireEvents() {
   el.favoritesReorderButton.addEventListener("click", toggleFavoriteReorderMode);
   el.favoriteDividerAddButton.addEventListener("click", addFavoriteDivider);
   el.overflowMenuButton.addEventListener("click", toggleOverflowMenu);
+  el.infoMenuButton.addEventListener("click", toggleInfoMenu);
   el.exportBackupButton.addEventListener("click", () => {
     closeOverflowMenu();
+    closeInfoMenu();
     exportBackup();
   });
   el.importBackupButton.addEventListener("click", () => {
     closeOverflowMenu();
+    closeInfoMenu();
     el.backupFileInput.click();
   });
   el.backupFileInput.addEventListener("change", importBackupFromFile);
@@ -882,6 +887,7 @@ function toggleOverflowMenu(event) {
     el.overflowMenuButton.setAttribute("aria-expanded", "true");
     clearNavHighlight();
     el.overflowMenuButton.classList.add("active");
+    closeInfoMenu({ restoreActive: false });
   } else {
     closeOverflowMenu();
   }
@@ -896,8 +902,31 @@ function closeOverflowMenu({ restoreActive = true } = {}) {
   }
 }
 
+function toggleInfoMenu(event) {
+  event?.stopPropagation();
+  const isOpening = el.infoMenu.classList.contains("hidden");
+  if (isOpening) {
+    el.infoMenu.classList.remove("hidden");
+    el.infoMenuButton.setAttribute("aria-expanded", "true");
+    clearNavHighlight();
+    el.infoMenuButton.classList.add("active");
+    closeOverflowMenu({ restoreActive: false });
+    closeListMoreMenu();
+  } else {
+    closeInfoMenu();
+  }
+}
+
+function closeInfoMenu({ restoreActive = true } = {}) {
+  el.infoMenu.classList.add("hidden");
+  el.infoMenuButton.setAttribute("aria-expanded", "false");
+  el.infoMenuButton.classList.remove("active");
+  if (restoreActive) setNavHighlight(state.activeSection);
+}
+
 function openHelpModal() {
   closeOverflowMenu();
+  closeInfoMenu();
   el.helpModal.classList.remove("hidden");
   fitOpenMobileModals();
 }
@@ -909,6 +938,7 @@ function closeHelpModal() {
 
 function openAboutModal() {
   closeOverflowMenu();
+  closeInfoMenu();
   el.aboutModal.classList.remove("hidden");
   fitOpenMobileModals();
 }
@@ -920,6 +950,7 @@ function closeAboutModal() {
 
 async function refreshAppShell() {
   closeOverflowMenu();
+  closeInfoMenu();
   closeListMoreMenu();
 
   try {
@@ -987,13 +1018,16 @@ function updateNavPlacement() {
 
 function clearNavHighlight() {
   el.navButtons.forEach((button) => button.classList.remove("active"));
+  el.overflowMenuButton.classList.remove("active");
+  el.infoMenuButton.classList.remove("active");
 }
 
 function setNavHighlight(sectionName) {
   el.navButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.section === sectionName);
   });
-  el.overflowMenuButton.classList.toggle("active", ["search", "metronome", "tuner", "pitch"].includes(sectionName));
+  el.overflowMenuButton.classList.toggle("active", ["tuner", "pitch"].includes(sectionName));
+  el.infoMenuButton.classList.remove("active");
 }
 
 function toggleListMoreMenu(event) {
@@ -1002,6 +1036,7 @@ function toggleListMoreMenu(event) {
   el.listMoreMenu.classList.toggle("hidden", !isOpening);
   el.listMoreButton.setAttribute("aria-expanded", String(isOpening));
   closeOverflowMenu();
+  closeInfoMenu();
 }
 
 function closeListMoreMenu() {
@@ -1012,6 +1047,7 @@ function closeListMoreMenu() {
 function handleDocumentKeydown(event) {
   if (event.key !== "Escape") return;
   closeOverflowMenu();
+  closeInfoMenu();
   closeListMoreMenu();
   closeListEditModal();
   closeHelpModal();
@@ -2561,6 +2597,7 @@ function goHome() {
   state.listEditMode = false;
   closeSwipeRows();
   closeOverflowMenu();
+  closeInfoMenu();
   closeListMoreMenu();
   renderLists();
   showSection("favorites");
@@ -2585,6 +2622,7 @@ function showSection(sectionName) {
 
   setNavHighlight(sectionName);
   closeOverflowMenu({ restoreActive: false });
+  closeInfoMenu({ restoreActive: false });
   closeListMoreMenu();
 
   if (sectionName !== "detail") {
@@ -3396,11 +3434,13 @@ async function handleBodyClick(event) {
 
   if (!event.target.closest(".overflow-wrap")) {
     closeOverflowMenu();
+    closeInfoMenu();
     closeListMoreMenu();
   }
 
   const menuSectionButton = event.target.closest("[data-menu-section]");
   if (menuSectionButton) {
+    closeInfoMenu();
     showSection(menuSectionButton.dataset.menuSection);
     return;
   }

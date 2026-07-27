@@ -88,6 +88,9 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 .nav-help-button { --tab-accent: #245A78; min-width: 40px; padding-inline: 7px; }
 .info-icon-mark { align-items: center; border: 2px solid currentcolor; border-radius: 999px; color: var(--accent-strong); display: inline-flex; font-family: Georgia, serif; font-size: 0.88rem; font-style: italic; font-weight: 800; height: 21px; justify-content: center; line-height: 1; width: 21px; }
 .nav-help-button:hover .info-icon-mark, .nav-help-button:focus-visible .info-icon-mark { color: var(--accent-strong); }
+.nav-search-button { --tab-accent: #356A8A; }
+.nav-tools-button { --tab-accent: #2F7A6B; min-width: 40px; padding-inline: 7px; }
+.tuning-fork-icon { fill: none; height: 23px; stroke: currentcolor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; width: 23px; }
 
 .search-icon-mark { border: 2px solid; border-radius: 999px; display: inline-block; height: 15px; position: relative; width: 15px; }
 
@@ -123,6 +126,7 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 .overflow-menu button { background: transparent; border: 0px; border-radius: 6px; color: var(--ink); min-height: 38px; padding: 8px 10px; text-align: left; width: 100%; }
 
 .overflow-menu button:hover, .overflow-menu button:focus-visible { background: var(--accent-hover); }
+.menu-heading { color: var(--accent-strong); font-size: 0.78rem; letter-spacing: 0.04em; padding: 5px 10px 3px; text-transform: uppercase; }
 
 .menu-separator { border-top: 1px solid var(--line); display: block; margin: 3px 0px; }
 
@@ -716,9 +720,19 @@ body.dark-background .modal-heading .form-close-button:hover, body.dark-backgrou
 
 .help-topic-grid { display: grid; gap: 10px; }
 
-.help-topic { border-top: 1px solid var(--line); display: grid; gap: 4px; padding-top: 9px; }
+.help-topic { border-top: 1px solid var(--line); }
 
-.help-topic h3 { color: var(--accent-strong); font-size: 0.95rem; margin-bottom: 0px; }
+.help-topic summary { align-items: center; color: var(--accent-strong); cursor: pointer; display: flex; font-size: 0.95rem; font-weight: 750; gap: 9px; list-style: none; min-height: 46px; padding: 8px 4px; }
+
+.help-topic summary::-webkit-details-marker { display: none; }
+
+.help-topic summary::before { color: var(--accent); content: "\203A"; flex: 0 0 auto; font-size: 1.3rem; font-weight: 800; line-height: 1; transform: rotate(0deg); transition: transform 150ms ease; }
+
+.help-topic[open] summary::before { transform: rotate(90deg); }
+
+.help-topic summary:hover, .help-topic summary:focus-visible { background: var(--accent-hover); border-radius: 6px; color: var(--accent-strong); outline: 2px solid transparent; }
+
+.help-topic-content { padding: 0px 8px 10px 23px; }
 
 .help-topic ul { margin: 0px; padding-left: 14px; }
 

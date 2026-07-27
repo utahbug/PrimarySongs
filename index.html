@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-74">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-75">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-74" defer></script>
-    <script src="script.js?v=primary-2026-74" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-75" defer></script>
+    <script src="script.js?v=primary-2026-75" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -50,23 +50,35 @@
         <button class="nav-button" type="button" data-section="library" aria-label="Files" title="Files"><span class="tab-icon" aria-hidden="true">&#9638;</span><span>Files</span></button>
         <button class="nav-button" type="button" data-section="cards" aria-label="Cards" title="Cards"><span class="tab-icon" aria-hidden="true">&#9645;</span><span>Cards</span></button>
         <button class="nav-button" type="button" data-section="links" aria-label="Links" title="Links"><span class="tab-icon" aria-hidden="true">&#8599;</span><span>Links</span></button>
-        <div class="overflow-wrap nav-overflow-wrap">
-          <button id="overflowMenuButton" class="nav-button nav-icon-button" type="button" aria-label="More" title="More" aria-expanded="false" aria-controls="overflowMenu">&hellip;</button>
-          <div id="overflowMenu" class="overflow-menu hidden" role="menu" aria-label="More">
-            <button type="button" role="menuitem" data-menu-section="search">Search</button>
-          <button type="button" role="menuitem" data-menu-section="metronome">Metronome</button>
-          <button type="button" role="menuitem" data-menu-section="tuner">Tuner</button>
-          <button type="button" role="menuitem" data-menu-section="pitch">Pitch</button>
+        <button class="nav-button nav-icon-button nav-search-button" type="button" data-section="search" aria-label="Search" title="Search">
+          <span class="search-icon-mark" aria-hidden="true"></span>
+        </button>
+        <div class="overflow-wrap nav-overflow-wrap nav-tools-wrap">
+          <button id="overflowMenuButton" class="nav-button nav-icon-button nav-tools-button" type="button" aria-label="Music tools" title="Music tools" aria-expanded="false" aria-controls="overflowMenu">
+            <svg class="tuning-fork-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 3v6a5 5 0 0 0 10 0V3M12 14v7M9 21h6"></path>
+            </svg>
+          </button>
+          <div id="overflowMenu" class="overflow-menu tools-menu hidden" role="menu" aria-label="Music tools">
+            <strong class="menu-heading">Music Tools</strong>
+            <button type="button" role="menuitem" data-menu-section="tuner">Tuner</button>
+            <button type="button" role="menuitem" data-menu-section="pitch">Pitch</button>
+          </div>
+        </div>
+        <div class="overflow-wrap nav-overflow-wrap nav-info-wrap">
+          <button id="infoMenuButton" class="nav-button nav-icon-button nav-help-button" type="button" aria-label="Information" title="Information" aria-expanded="false" aria-controls="infoMenu">
+            <span class="info-icon-mark" aria-hidden="true">i</span>
+          </button>
+          <div id="infoMenu" class="overflow-menu info-menu hidden" role="menu" aria-label="Information">
+            <strong class="menu-heading">Information</strong>
+            <button type="button" role="menuitem" data-open-help>Help</button>
+            <button type="button" role="menuitem" data-open-about>About</button>
             <span class="menu-separator" aria-hidden="true"></span>
             <button id="exportBackupButton" type="button" role="menuitem">Export data + files</button>
             <button id="importBackupButton" type="button" role="menuitem">Import data + files</button>
-            <button type="button" role="menuitem" data-open-about>About</button>
           </div>
           <input id="backupFileInput" class="hidden" type="file" accept="application/json,.json">
         </div>
-        <button class="nav-button nav-icon-button nav-help-button" type="button" data-open-help aria-label="Help and information" title="Help">
-          <span class="info-icon-mark" aria-hidden="true">i</span>
-        </button>
       </nav>
 
       <main class="main-content">
@@ -514,49 +526,61 @@
           </div>
 
           <div class="help-topic-grid">
-            <section class="help-topic">
-              <h3>PDF Page Turning</h3>
-              <ul>
-                <li>Flip pages by tapping the left or bottom part of the screen.</li>
-                <li class="help-subitem">Tap the top-left to jump to page 1.</li>
-                <li class="help-subitem">Tap the top-right to jump to the last page.</li>
-              </ul>
-            </section>
+            <details class="help-topic">
+              <summary>PDF Page Turning</summary>
+              <div class="help-topic-content">
+                <ul>
+                  <li>Flip pages by tapping the left or bottom part of the screen.</li>
+                  <li class="help-subitem">Tap the top-left to jump to page 1.</li>
+                  <li class="help-subitem">Tap the top-right to jump to the last page.</li>
+                </ul>
+              </div>
+            </details>
 
-            <section class="help-topic">
-              <h3>Favorites</h3>
-              <ul>
-                <li>Tap the star to add or remove favorites.</li>
-              </ul>
-            </section>
+            <details class="help-topic">
+              <summary>Favorites</summary>
+              <div class="help-topic-content">
+                <ul>
+                  <li>Tap the star to add or remove favorites.</li>
+                </ul>
+              </div>
+            </details>
 
-            <section class="help-topic">
-              <h3>Lists</h3>
-              <ul>
-                <li>Categorize documents into groups.</li>
-              </ul>
-            </section>
+            <details class="help-topic">
+              <summary>Lists</summary>
+              <div class="help-topic-content">
+                <ul>
+                  <li>Categorize documents into groups.</li>
+                </ul>
+              </div>
+            </details>
 
-            <section class="help-topic">
-              <h3>Cards</h3>
-              <ul>
-                <li>Add your own text or an image.</li>
-              </ul>
-            </section>
+            <details class="help-topic">
+              <summary>Cards</summary>
+              <div class="help-topic-content">
+                <ul>
+                  <li>Add your own text or an image.</li>
+                </ul>
+              </div>
+            </details>
 
-            <section class="help-topic">
-              <h3>Links</h3>
-              <ul>
-                <li>Online music resources.</li>
-              </ul>
-            </section>
+            <details class="help-topic">
+              <summary>Links</summary>
+              <div class="help-topic-content">
+                <ul>
+                  <li>Online music resources.</li>
+                </ul>
+              </div>
+            </details>
 
-            <section class="help-topic">
-              <h3>Search</h3>
-              <ul>
-                <li>Find documents by title, author, genre or tag.</li>
-              </ul>
-            </section>
+            <details class="help-topic">
+              <summary>Search</summary>
+              <div class="help-topic-content">
+                <ul>
+                  <li>Find documents by title, author, genre or tag.</li>
+                </ul>
+              </div>
+            </details>
           </div>
         </div>
       </div>
