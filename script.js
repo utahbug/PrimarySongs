@@ -11,6 +11,7 @@ const STORAGE_KEYS = {
   itemEdits: storageKey("itemEdits"),
   lastOpened: storageKey("lastOpened"),
   lists: storageKey("lists"),
+  listEditSort: storageKey("listEditSort"),
   pdfPages: storageKey("pdfPages"),
   quickIndexes: storageKey("quickIndexes"),
   recents: storageKey("recents"),
@@ -407,6 +408,7 @@ const state = {
   listEditMode: false,
   listPickerOpen: false,
   listPickerMessage: "",
+  listEditSort: localStorage.getItem(STORAGE_KEYS.listEditSort) === "title" ? "title" : "type",
   favoriteReorderMode: false,
   listReorderMode: false,
   editingListId: "",
@@ -702,6 +704,7 @@ function collectElements() {
   el.listEditTitleField = document.getElementById("listEditTitleField");
   el.listEditItems = document.getElementById("listEditItems");
   el.listEditSearch = document.getElementById("listEditSearch");
+  el.listEditSort = document.getElementById("listEditSort");
   el.listEditStatus = document.getElementById("listEditStatus");
   el.listEditResults = document.getElementById("listEditResults");
 
@@ -802,6 +805,11 @@ function wireEvents() {
   el.importForm.addEventListener("submit", handleImportSubmit);
   el.listEditCloseButton.addEventListener("click", closeListEditModal);
   el.listEditForm.addEventListener("submit", saveListEditModal);
+  el.listEditSort.addEventListener("change", () => {
+    state.listEditSort = el.listEditSort.value === "title" ? "title" : "type";
+    localStorage.setItem(STORAGE_KEYS.listEditSort, state.listEditSort);
+    renderListEditResults();
+  });
   el.settingsCloseButton.addEventListener("click", closeSettingsModal);
   el.settingsThemeChoices.addEventListener("change", handleSettingsThemeChange);
   el.helpCloseButton.addEventListener("click", closeHelpModal);
@@ -5302,6 +5310,7 @@ function renderListEditModal() {
 
   el.listEditTitle.textContent = "Edit list";
   el.listEditTitleField.value = list.title || "";
+  el.listEditSort.value = state.listEditSort;
   renderListEditItems(list);
   renderListEditResults();
 }
@@ -5350,7 +5359,7 @@ function renderListEditResults() {
   const items = state.data.items
     .filter(isLibraryContentItem)
     .filter((item) => matchesQuery(item, query))
-    .sort(compareTitle)
+    .sort(state.listEditSort === "title" ? compareTitle : compareListPickerType)
     .slice(0, 80);
 
   if (!items.length) {
@@ -5358,7 +5367,14 @@ function renderListEditResults() {
     return;
   }
 
-  el.listEditResults.innerHTML = items.map((item) => `
+  let currentGroup = "";
+  el.listEditResults.innerHTML = items.map((item) => {
+    const group = listPickerTypeGroup(item);
+    const groupHeading = state.listEditSort === "type" && group !== currentGroup
+      ? `<div class="picker-type-heading">${escapeHtml(group)}</div>`
+      : "";
+    currentGroup = group;
+    return `${groupHeading}
     <label class="checklist-row">
       <input class="setlist-check" type="checkbox" data-list-modal-check="${escapeHtml(item.id)}" ${existingIds.has(item.id) ? "checked" : ""}>
       <span class="checklist-main">
@@ -5367,7 +5383,20 @@ function renderListEditResults() {
       </span>
       <span class="type-pill compact-type">${escapeHtml(item.type)}</span>
     </label>
-  `).join("");
+  `;
+  }).join("");
+}
+
+function listPickerTypeGroup(item) {
+  if (item.type === "card") return "Cards";
+  if (item.type === "link") return "Links";
+  return "Files";
+}
+
+function compareListPickerType(a, b) {
+  const order = { Cards: 0, Files: 1, Links: 2 };
+  const groupDifference = order[listPickerTypeGroup(a)] - order[listPickerTypeGroup(b)];
+  return groupDifference || compareTitle(a, b);
 }
 
 function toggleListItemFromModal(itemId, checked) {

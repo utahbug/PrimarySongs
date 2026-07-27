@@ -709,7 +709,10 @@ body.dark-background .modal-heading .form-close-button:hover, body.dark-backgrou
 
 .list-edit-item-actions .icon-button { min-height: 36px; min-width: 36px; padding: 0px; }
 
-.list-edit-add-grid { grid-template-columns: minmax(0px, 1fr); }
+.list-edit-add-grid { grid-template-columns: minmax(0px, 1fr) minmax(104px, 140px); }
+.list-edit-sort-field { min-width: 0px; }
+.picker-type-heading { color: var(--accent-strong); font-size: 0.76rem; font-weight: 850; letter-spacing: 0.08em; margin: 8px 2px 0px; text-transform: uppercase; }
+.picker-type-heading:first-child { margin-top: 0px; }
 
 .settings-panel { max-width: 520px; min-width: min(360px, calc(100vw - 32px)); width: min(50vw, 520px); }
 
@@ -895,6 +898,7 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
   .rich-toolbar { max-width: 100%; overflow: hidden; }
   .rich-toolbar button { flex: 0 0 40px; min-height: 40px; min-width: 40px; padding: 0px; width: 40px; }
   .form-grid { grid-template-columns: 1fr; }
+  .list-edit-add-grid { grid-template-columns: minmax(0px, 1fr) 108px; }
   .danger-button { justify-self: start; }
   .editor-grid { grid-template-columns: 1fr; }
   .list-name-editor { grid-template-columns: 1fr; }
