@@ -89,13 +89,13 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 .info-icon-mark { align-items: center; border: 2px solid currentcolor; border-radius: 999px; color: var(--accent-strong); display: inline-flex; font-family: Georgia, serif; font-size: 0.88rem; font-style: italic; font-weight: 800; height: 21px; justify-content: center; line-height: 1; width: 21px; }
 .nav-help-button:hover .info-icon-mark, .nav-help-button:focus-visible .info-icon-mark { color: var(--accent-strong); }
 .nav-tools-button { --tab-accent: #2F7A6B; min-width: 40px; padding-inline: 7px; }
-.tuning-fork-icon { fill: none; filter: drop-shadow(0.7px 1px 0.8px rgba(30, 63, 86, 0.34)); height: 23px; overflow: visible; stroke-linecap: round; stroke-linejoin: round; transform: rotate(-82deg); transform-origin: 50% 50%; width: 23px; }
-.tuning-fork-shadow { opacity: 0.42; stroke: #173F5F; stroke-width: 3.1; transform: translate(0.75px, 0.65px); }
-.tuning-fork-main { stroke: url("#tuningForkGradient"); stroke-width: 2.7; }
-.tuning-fork-highlight { opacity: 0.58; stroke: rgba(255, 255, 255, 0.9); stroke-width: 0.7; transform: translate(-0.45px, -0.2px); }
+.tuning-fork-icon { filter: drop-shadow(0.8px 1px 0.9px rgba(28, 47, 61, 0.38)); height: 24px; overflow: visible; stroke-linecap: round; stroke-linejoin: round; transform: rotate(82deg); transform-origin: 50% 50%; width: 24px; }
+.tuning-fork-shadow { fill: #344957; opacity: 0.46; transform: translate(0.65px, 0.75px); }
+.tuning-fork-main { fill: url("#tuningForkGradient"); stroke: #526777; stroke-width: 0.35; }
+.tuning-fork-highlight { fill: none; opacity: 0.72; stroke: rgba(255, 255, 255, 0.96); stroke-width: 0.65; transform: translate(-0.25px, -0.15px); }
 .nav-tools-button.active .tuning-fork-icon { filter: none; }
-.nav-tools-button.active .tuning-fork-shadow { opacity: 0.2; stroke: #123E5C; }
-.nav-tools-button.active .tuning-fork-main { stroke: #FFFFFF; }
+.nav-tools-button.active .tuning-fork-shadow { fill: #183E52; opacity: 0.22; }
+.nav-tools-button.active .tuning-fork-main { fill: #FFFFFF; stroke: rgba(255, 255, 255, 0.8); }
 .nav-tools-button.active .tuning-fork-highlight { opacity: 0.48; }
 
 .star-icon-mark { display: inline-block; font-size: 1.1rem; line-height: 1; }
