@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-42">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-43">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-42" defer></script>
-    <script src="script.js?v=primary-2026-42" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-43" defer></script>
+    <script src="script.js?v=primary-2026-43" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -412,9 +412,8 @@
                 <button type="button" data-rich-command="strikeThrough" aria-label="Strikeout" title="Strikeout" aria-pressed="false"><span class="strikeout-icon" aria-hidden="true"><span>S</span></span></button>
                 <button type="button" data-rich-command="insertOrderedList" aria-label="Numbered list" title="Numbered list" aria-pressed="false"><span class="toolbar-icon numbered-list-icon" aria-hidden="true"></span></button>
                 <button type="button" data-rich-command="insertUnorderedList" aria-label="Bulleted list" title="Bulleted list" aria-pressed="false"><span class="toolbar-icon bullet-list-icon" aria-hidden="true"></span></button>
-                <button type="button" data-rich-command="photo" aria-label="Insert photo" title="Insert photo"><span class="toolbar-icon photo-icon" aria-hidden="true"></span></button>
               </div>
-              <input id="inlineCardImageInput" class="sr-only" type="file" accept="image/*" aria-label="Insert photo into card text">
+              <input id="inlineCardImageInput" type="file" accept="image/*" hidden>
               <div id="importCardEditor" class="rich-card-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Card text"></div>
               <textarea id="importCardContent" class="hidden" rows="10"></textarea>
             </div>
