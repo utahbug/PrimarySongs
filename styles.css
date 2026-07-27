@@ -309,7 +309,7 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .list-tab-group.active > .list-tab-row { background: linear-gradient(110deg, #237C7A 0%, #2D768A 45%, #3667A8 76%, #245A9A 100%); border-color: #2D6F91; color: #FFFFFF; }
 
-.list-tab-main { align-items: center; background: transparent; border: 0px; color: inherit; display: flex; flex: 0 0 var(--list-title-column-width, auto); gap: 8px; justify-content: flex-start; min-height: 50px; min-width: 0px; padding: 3px 4px 3px 10px; text-align: left; width: var(--list-title-column-width, auto); }
+.list-tab-main { align-items: center; background: transparent; border: 0px; color: inherit; display: flex; flex: 1 1 auto; gap: 8px; justify-content: flex-start; min-height: 50px; min-width: 0px; padding: 3px 4px 3px 10px; text-align: left; width: auto; }
 
 .list-tab-main:hover, .list-tab-main:focus-visible, .list-row-edit-button:hover, .list-row-edit-button:focus-visible { background: var(--accent-hover); }
 
@@ -319,14 +319,13 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 .list-tab-group.active .list-title-mark { background: rgba(255, 255, 255, 0.16); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); }
 .list-tab-title { color: inherit; flex: 1 1 auto; font-size: 0.96rem; font-weight: 700; min-width: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.list-tab-count { color: var(--muted); flex: 0 0 auto; font-size: 0.82rem; font-weight: 750; }
-.list-tab-spacer { flex: 1 1 auto; min-width: 0px; }
+.list-tab-count { color: var(--muted); flex: 0 0 auto; font-size: 0.82rem; font-weight: 750; margin-left: 5px; }
 
 .list-tab-group.active .list-tab-count { color: inherit; opacity: 0.85; }
 
-.list-row-edit-button { align-self: center; background: transparent; border-color: transparent; color: var(--muted); flex: 0 0 34px; font-size: 0.86rem; min-height: 42px; min-width: 34px; padding: 0px; }
+.list-row-edit-button { align-self: center; background: transparent; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); flex: 0 0 30px; font-size: 0.86rem; height: 30px; margin: 0px 7px 0px 5px; min-height: 30px; min-width: 30px; padding: 0px; width: 30px; }
 
-.list-tab-group.active .list-row-edit-button { color: #FFFFFF; }
+.list-tab-group.active .list-row-edit-button { border-color: rgba(255, 255, 255, 0.5); color: #FFFFFF; }
 
 .list-tab-group.active .reorder-step-controls { border-color: rgba(255, 255, 255, 0.34); color: #FFFFFF; }
 
