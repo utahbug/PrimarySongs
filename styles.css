@@ -439,15 +439,11 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .favorite-divider-row { background: transparent; border-bottom: 1px solid var(--line); min-height: 34px; }
 
-.favorite-divider-content { align-items: center; display: grid; grid-template-columns: minmax(0px, 1fr); min-height: 34px; padding: 0px 8px 0px 42px; }
+.favorite-divider-content { align-items: center; display: grid; grid-template-columns: minmax(0px, 1fr); min-height: 50px; padding: 3px 8px 3px 42px; }
 
-.favorite-divider-editing { grid-template-columns: minmax(0px, 1fr) 70px 34px; padding-left: 42px; padding-right: 0px; }
+.favorite-divider-editing { grid-template-columns: minmax(0px, 1fr) 70px; padding-right: 0px; }
 
 .favorite-divider-line { display: block; min-height: 1px; width: 100%; }
-
-.favorite-divider-remove { align-self: stretch; background: transparent; border-color: transparent; color: var(--muted); font-size: 1.1rem; min-height: 34px; min-width: 34px; padding: 0px; }
-
-.favorite-divider-remove:hover, .favorite-divider-remove:focus-visible { background: var(--accent-hover); color: var(--accent-strong); }
 
 .list-row.swipe-row { display: block; padding: 0px; }
 

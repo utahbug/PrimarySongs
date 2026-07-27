@@ -3420,22 +3420,19 @@ function renderFavoriteRows(rows) {
 
 function createFavoriteDividerRow(id, options = {}) {
   const article = document.createElement("article");
-  article.className = `favorite-divider-row${options.reorderFavorites ? " favorite-reorder-row" : ""}`;
+  article.className = `favorite-divider-row swipe-row${options.reorderFavorites ? " favorite-reorder-row" : ""}`;
   article.dataset.id = id;
   if (options.reorderFavorites) article.dataset.favoriteRow = id;
 
-  const removeButton = options.reorderFavorites
-    ? `<button class="icon-button favorite-divider-remove" type="button" data-remove-favorite-divider="${escapeHtml(id)}" aria-label="Remove divider" title="Remove divider">&times;</button>`
-    : "";
   const reorderHandle = options.reorderFavorites
     ? reorderStepControlsHtml("favorite", id, "divider", options.reorderIndex, options.reorderCount)
     : "";
 
   article.innerHTML = `
-    <div class="favorite-divider-content${options.reorderFavorites ? " favorite-divider-editing" : ""}">
+    <button class="swipe-delete-action" type="button" data-remove-favorite-divider="${escapeHtml(id)}" aria-label="Delete spacer" title="Delete">&#128465;</button>
+    <div class="swipe-content favorite-divider-content${options.reorderFavorites ? " favorite-divider-editing" : ""}">
       <span class="favorite-divider-line" aria-hidden="true"></span>
       ${reorderHandle}
-      ${removeButton}
     </div>
   `;
   return article;
