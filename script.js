@@ -2767,7 +2767,7 @@ function createItemCard(item, options = {}) {
       return article;
     }
     const reorderHandle = options.reorderFavorites
-      ? `<button class="favorite-drag-handle" type="button" data-favorite-drag="${escapeHtml(item.id)}" aria-label="Drag to reorder ${escapeHtml(title)}" title="Drag to reorder"><span aria-hidden="true"></span></button>`
+      ? reorderStepControlsHtml("favorite", item.id, title, options.reorderIndex, options.reorderCount)
       : "";
     article.innerHTML = `
       ${deleteAction}
@@ -3020,7 +3020,7 @@ function renderLists() {
 
 function renderListTabs(active) {
   el.listTabs.classList.toggle("list-reorder-list", state.listReorderMode);
-  el.listTabs.innerHTML = state.lists.map((list) => {
+  el.listTabs.innerHTML = state.lists.map((list, index) => {
     const itemCount = getResolvedListEntries(list).length;
     const activeClass = list.id === active.id ? " active" : "";
     const expandedClass = list.id === state.expandedListId ? " expanded" : "";
@@ -3029,7 +3029,7 @@ function renderListTabs(active) {
     const selected = list.id === active.id ? "true" : "false";
     const title = list.title || "Untitled List";
     const reorderHandle = state.listReorderMode
-      ? `<button class="favorite-drag-handle list-drag-handle" type="button" data-list-drag="${escapeHtml(list.id)}" aria-label="Drag to reorder ${escapeHtml(title)}" title="Drag to reorder"><span aria-hidden="true"></span></button>`
+      ? reorderStepControlsHtml("list", list.id, title, index, state.lists.length)
       : "";
     return `
       <div class="list-tab-group${activeClass}${expandedClass}${reorderClass}" role="option" aria-selected="${selected}" data-list-row="${escapeHtml(list.id)}">
@@ -3389,12 +3389,22 @@ function renderFavoriteRows(rows) {
   el.favoritesContent.innerHTML = "";
   el.favoritesContent.classList.add("compact-index-list", "favorite-list");
   el.favoritesContent.classList.toggle("favorite-reorder-list", state.favoriteReorderMode);
-  rows.forEach((row) => {
+  rows.forEach((row, index) => {
     if (row.kind === "divider") {
-      el.favoritesContent.appendChild(createFavoriteDividerRow(row.id, { reorderFavorites: state.favoriteReorderMode }));
+      el.favoritesContent.appendChild(createFavoriteDividerRow(row.id, {
+        reorderFavorites: state.favoriteReorderMode,
+        reorderIndex: index,
+        reorderCount: rows.length
+      }));
       return;
     }
-    el.favoritesContent.appendChild(createItemCard(row.item, { compact: true, favoriteList: true, reorderFavorites: state.favoriteReorderMode }));
+    el.favoritesContent.appendChild(createItemCard(row.item, {
+      compact: true,
+      favoriteList: true,
+      reorderFavorites: state.favoriteReorderMode,
+      reorderIndex: index,
+      reorderCount: rows.length
+    }));
   });
 }
 
@@ -3408,7 +3418,7 @@ function createFavoriteDividerRow(id, options = {}) {
     ? `<button class="icon-button favorite-divider-remove" type="button" data-remove-favorite-divider="${escapeHtml(id)}" aria-label="Remove divider" title="Remove divider">&times;</button>`
     : "";
   const reorderHandle = options.reorderFavorites
-    ? `<button class="favorite-drag-handle" type="button" data-favorite-drag="${escapeHtml(id)}" aria-label="Drag divider to reorder" title="Drag to reorder"><span aria-hidden="true"></span></button>`
+    ? reorderStepControlsHtml("favorite", id, "divider", options.reorderIndex, options.reorderCount)
     : "";
 
   article.innerHTML = `
@@ -3619,6 +3629,18 @@ async function handleBodyClick(event) {
     return;
   }
 
+  const favoriteOrderButton = event.target.closest("[data-favorite-order-move]");
+  if (favoriteOrderButton) {
+    moveFavoriteOrderStep(favoriteOrderButton.dataset.favoriteOrderMove, favoriteOrderButton.dataset.orderDirection);
+    return;
+  }
+
+  const listOrderButton = event.target.closest("[data-list-order-move]");
+  if (listOrderButton) {
+    moveListOrderStep(listOrderButton.dataset.listOrderMove, listOrderButton.dataset.orderDirection);
+    return;
+  }
+
   const moveListButton = event.target.closest("[data-move-list]");
   if (moveListButton) {
     moveListItem(moveListButton.dataset.moveList);
@@ -3822,7 +3844,7 @@ function finishListDrag(saveOrder) {
 
 function handleSwipePointerDown(event) {
   if (event.pointerType && event.pointerType !== "touch" && event.pointerType !== "pen") return;
-  if (event.target.closest(".swipe-delete-action, .favorite-drag-handle, .list-drag-handle, input, textarea, select")) return;
+  if (event.target.closest(".swipe-delete-action, .favorite-drag-handle, .list-drag-handle, .reorder-step-controls, input, textarea, select")) return;
 
   const row = event.target.closest(".swipe-row");
   if (!row) return;
@@ -5080,6 +5102,29 @@ function saveFavoriteOrder(orderedIds) {
   renderFavorites();
 }
 
+function reorderStepControlsHtml(kind, id, label, index, count) {
+  const dataAttribute = kind === "list" ? "data-list-order-move" : "data-favorite-order-move";
+  const safeId = escapeHtml(id);
+  const safeLabel = escapeHtml(label);
+  const disableUp = index <= 0 ? " disabled" : "";
+  const disableDown = index >= count - 1 ? " disabled" : "";
+  return `
+    <span class="reorder-step-controls" role="group" aria-label="Move ${safeLabel}">
+      <button class="reorder-step-button" type="button" ${dataAttribute}="${safeId}" data-order-direction="up" aria-label="Move ${safeLabel} up" title="Move up"${disableUp}>&#9650;</button>
+      <button class="reorder-step-button" type="button" ${dataAttribute}="${safeId}" data-order-direction="down" aria-label="Move ${safeLabel} down" title="Move down"${disableDown}>&#9660;</button>
+    </span>
+  `;
+}
+
+function moveFavoriteOrderStep(id, direction) {
+  const orderedIds = Array.from(state.favorites);
+  const index = orderedIds.indexOf(id);
+  const nextIndex = direction === "up" ? index - 1 : index + 1;
+  if (index < 0 || nextIndex < 0 || nextIndex >= orderedIds.length) return;
+  [orderedIds[index], orderedIds[nextIndex]] = [orderedIds[nextIndex], orderedIds[index]];
+  saveFavoriteOrder(orderedIds);
+}
+
 function rememberOpened(item, pageNumber) {
   writeJson(STORAGE_KEYS.lastOpened, {
     id: item.id,
@@ -5143,6 +5188,15 @@ function saveListOrder(orderedIds) {
   populateSelect(el.listSelect, state.lists);
   el.listSelect.value = state.activeListId;
   renderLists();
+}
+
+function moveListOrderStep(id, direction) {
+  const orderedIds = state.lists.map((list) => list.id);
+  const index = orderedIds.indexOf(id);
+  const nextIndex = direction === "up" ? index - 1 : index + 1;
+  if (index < 0 || nextIndex < 0 || nextIndex >= orderedIds.length) return;
+  [orderedIds[index], orderedIds[nextIndex]] = [orderedIds[nextIndex], orderedIds[index]];
+  saveListOrder(orderedIds);
 }
 
 function toggleListEditMode() {
