@@ -814,7 +814,7 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 
 .pdf-tap-zone:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--accent-hover); outline-offset: 2px; }
 
-.pdf-zone-tips { background: rgba(236, 244, 251, 0.92); display: none; gap: 2px; grid-template: 1fr 1fr / 1fr 1fr; inset: 0px; pointer-events: none; position: absolute; z-index: 5; }
+.pdf-zone-tips { background: rgba(236, 244, 251, 0.92); cursor: pointer; display: none; gap: 2px; grid-template: 1fr 1fr / 1fr 1fr; inset: 0px; pointer-events: auto; position: absolute; z-index: 5; }
 .pdf-viewer.show-tips .pdf-zone-tips { animation: guide-enter 180ms ease-out; display: grid; }
 .pdf-zone-tip { align-items: center; background: color-mix(in srgb, var(--accent) 8%, rgba(255, 255, 255, 0.9)); border: 2px solid color-mix(in srgb, var(--accent) 48%, transparent); color: var(--ink); display: flex; flex-direction: column; font-size: clamp(0.82rem, 2.5vw, 1rem); justify-content: center; line-height: 1.25; padding: 12px; text-align: center; }
 .pdf-zone-tip strong { color: var(--accent-strong); font-size: 1.08em; }

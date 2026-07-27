@@ -642,6 +642,7 @@ function collectElements() {
   el.pdfTitle = document.getElementById("pdfTitle");
   el.pdfPageStatus = document.getElementById("pdfPageStatus");
   el.pdfStage = document.getElementById("pdfStage");
+  el.pdfZoneTips = document.getElementById("pdfZoneTips");
   el.pdfLoading = document.getElementById("pdfLoading");
   el.pdfCanvas = document.getElementById("pdfCanvas");
   el.pdfTapLeft = document.getElementById("pdfTapLeft");
@@ -870,6 +871,7 @@ function wireEvents() {
   el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfTipsButton.addEventListener("click", togglePdfTips);
+  el.pdfZoneTips.addEventListener("click", hidePdfTips);
   el.pdfMetronomeButton.addEventListener("click", toggleMetronome);
   el.pdfTempoInput.addEventListener("change", () => setMetronomeBpm(Number(el.pdfTempoInput.value)));
   el.pdfTempoInput.addEventListener("keydown", (event) => {
