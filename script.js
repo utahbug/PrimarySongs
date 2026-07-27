@@ -537,7 +537,7 @@ function collectElements() {
   el.homeTitleButton = document.getElementById("homeTitleButton");
   el.welcomeSection = document.getElementById("welcomeSection");
   el.welcomeButtons = Array.from(document.querySelectorAll("[data-welcome-section]"));
-  el.navButtons = Array.from(document.querySelectorAll(".nav-button"));
+  el.navButtons = Array.from(document.querySelectorAll(".nav-button[data-section]"));
   el.overflowMenuButton = document.getElementById("overflowMenuButton");
   el.overflowMenu = document.getElementById("overflowMenu");
 
