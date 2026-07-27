@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-38">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-39">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-38" defer></script>
-    <script src="script.js?v=primary-2026-38" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-39" defer></script>
+    <script src="script.js?v=primary-2026-39" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -333,6 +333,10 @@
         <button id="pdfTipsButton" class="pdf-action-button pdf-tips-action" type="button" aria-label="Show four-zone guide" title="Show four-zone guide" aria-pressed="false"><span aria-hidden="true">&#128161;</span><small>Guide</small></button>
         <div class="pdf-tempo-box" aria-label="Metronome tempo">
           <label for="pdfTempoInput"><span>BPM</span><input id="pdfTempoInput" type="number" min="40" max="220" step="1" inputmode="numeric" value="90" aria-label="Metronome tempo"></label>
+          <span class="pdf-tempo-steppers" aria-label="Adjust metronome tempo">
+            <button id="pdfTempoUpButton" type="button" aria-label="Increase tempo" title="Increase tempo">&#9650;</button>
+            <button id="pdfTempoDownButton" type="button" aria-label="Decrease tempo" title="Decrease tempo">&#9660;</button>
+          </span>
           <button id="pdfMetronomeButton" class="pdf-tempo-toggle" type="button" aria-label="Start metronome" title="Start metronome"><span aria-hidden="true">&#9654;</span></button>
         </div>
       </footer>

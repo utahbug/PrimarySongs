@@ -637,6 +637,8 @@ function collectElements() {
   el.pdfTipsButton = document.getElementById("pdfTipsButton");
   el.pdfMetronomeButton = document.getElementById("pdfMetronomeButton");
   el.pdfTempoInput = document.getElementById("pdfTempoInput");
+  el.pdfTempoUpButton = document.getElementById("pdfTempoUpButton");
+  el.pdfTempoDownButton = document.getElementById("pdfTempoDownButton");
   el.pdfPrevButton = document.getElementById("pdfPrevButton");
   el.pdfNextButton = document.getElementById("pdfNextButton");
   el.pdfTitle = document.getElementById("pdfTitle");
@@ -873,6 +875,8 @@ function wireEvents() {
   el.pdfTipsButton.addEventListener("click", togglePdfTips);
   el.pdfZoneTips.addEventListener("click", hidePdfTips);
   el.pdfMetronomeButton.addEventListener("click", toggleMetronome);
+  el.pdfTempoUpButton.addEventListener("click", () => setMetronomeBpm(state.metronome.bpm + 1));
+  el.pdfTempoDownButton.addEventListener("click", () => setMetronomeBpm(state.metronome.bpm - 1));
   el.pdfTempoInput.addEventListener("change", () => setMetronomeBpm(Number(el.pdfTempoInput.value)));
   el.pdfTempoInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
