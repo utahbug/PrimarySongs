@@ -795,7 +795,6 @@ function wireEvents() {
   el.favoritesReorderButton.addEventListener("click", toggleFavoriteReorderMode);
   el.favoriteDividerAddButton.addEventListener("click", addFavoriteDivider);
   el.overflowMenuButton.addEventListener("click", toggleOverflowMenu);
-  el.listMoreButton.addEventListener("click", toggleListMoreMenu);
   el.exportBackupButton.addEventListener("click", () => {
     closeOverflowMenu();
     exportBackup();
