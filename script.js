@@ -2715,7 +2715,6 @@ function renderLibrary() {
   renderItemList(el.libraryContent, sortLibraryItems(filtered, el.librarySort.value), {
     compact: true,
     compactAction: "edit",
-    batchDeleteSection: "library",
     emptyTitle: query ? "No matching files" : "Your music shelf is ready",
     emptyMessage: query ? "Try a shorter title or clear the search box." : "Add a PDF or photo of music to open it quickly during rehearsal."
   });
