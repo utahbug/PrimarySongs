@@ -928,6 +928,7 @@ function wireEvents() {
       renderPdfPage(state.currentPdf.pageNumber);
     }
     fitOpenMobileModals();
+    alignListTitleControls();
   }, 150);
   window.addEventListener("resize", handleViewportChange);
   window.visualViewport?.addEventListener("resize", handleViewportChange);
@@ -2744,6 +2745,7 @@ function showSection(sectionName) {
   }
 
   updateNavPlacement(sectionName);
+  if (sectionName === "lists") window.requestAnimationFrame(alignListTitleControls);
 }
 
 function renderLibrary() {
@@ -3089,14 +3091,32 @@ function renderListTabs(active) {
           <span class="list-tab-title">${escapeHtml(title)}</span>
         </button>
         <button class="icon-button list-row-edit-button" type="button" data-edit-list-row="${escapeHtml(list.id)}" aria-label="Edit ${escapeHtml(title)}" title="Edit list">&#9998;</button>
-        ${itemCount ? `<span class="list-tab-count" aria-label="${itemCount} items">${itemCount}</span>` : ""}
         <span class="list-tab-spacer" aria-hidden="true"></span>
+        ${itemCount ? `<span class="list-tab-count" aria-label="${itemCount} items">${itemCount}</span>` : ""}
         ${reorderHandle}
         </div>
         ${isExpanded ? renderInlineListItems(list) : ""}
       </div>
     `;
   }).join("");
+  window.requestAnimationFrame(alignListTitleControls);
+}
+
+function alignListTitleControls() {
+  if (!el.listTabs || !el.listTabs.clientWidth) return;
+  const titleButtons = Array.from(el.listTabs.querySelectorAll(".list-tab-main"));
+  if (!titleButtons.length) return;
+
+  const desiredWidth = Math.max(...titleButtons.map((button) => {
+    const title = button.querySelector(".list-tab-title");
+    const mark = button.querySelector(".list-title-mark");
+    return (title?.scrollWidth || 0) + (mark?.offsetWidth || 0) + 22;
+  }));
+  const countWidth = Math.max(0, ...Array.from(el.listTabs.querySelectorAll(".list-tab-count"))
+    .map((count) => count.offsetWidth));
+  const reorderWidth = state.listReorderMode ? 76 : 0;
+  const availableWidth = Math.max(116, el.listTabs.clientWidth - countWidth - reorderWidth - 58);
+  el.listTabs.style.setProperty("--list-title-column-width", `${Math.min(desiredWidth, availableWidth)}px`);
 }
 
 function renderInlineListItems(list) {
