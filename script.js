@@ -3336,7 +3336,7 @@ function renderLinks() {
   const links = state.data.items.filter((item) => item.type === "link").sort(compareTitle);
   renderItemList(el.linksContent, links, {
     compact: true,
-    batchDeleteSection: "links",
+    compactAction: "edit",
     emptyTitle: "Keep useful music links close",
     emptyMessage: "Add a link to a song collection, recording, or rehearsal resource."
   });
