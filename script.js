@@ -4024,17 +4024,17 @@ function detailHtml(item) {
       : "";
     return `
       <article class="detail-card card-detail-card${item.lyricsCard ? " lyrics-card-detail" : ""}">
-        ${lyricHeading}
-        ${item.imageFileId ? localImageSlotHtml(item) : ""}
-        ${cardContentHtml(item)}
-        ${cardFactsHtml(item)}
-        ${item.notes ? `<p class="item-notes">${escapeHtml(item.notes)}</p>` : ""}
         <div class="detail-actions card-detail-actions">
           ${item.lyricsCard ? "" : cardTitle}
           ${favoriteAction}
           ${deleteAction}
           ${editAction}
         </div>
+        ${lyricHeading}
+        ${item.imageFileId ? localImageSlotHtml(item) : ""}
+        ${cardContentHtml(item)}
+        ${cardFactsHtml(item)}
+        ${item.notes ? `<p class="item-notes">${escapeHtml(item.notes)}</p>` : ""}
       </article>
     `;
   }

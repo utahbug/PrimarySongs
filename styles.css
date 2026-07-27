@@ -585,7 +585,7 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .image-detail-card .song-card-image { margin-top: 0px; }
 
-.card-detail-actions { align-items: center; justify-content: flex-end; }
+.card-detail-actions { align-items: center; justify-content: flex-end; margin-top: 0px; }
 
 .compact-detail-card { display: grid; gap: 12px; padding: 12px 14px; }
 
