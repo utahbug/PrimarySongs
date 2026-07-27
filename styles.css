@@ -307,9 +307,9 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .list-tab-group { border-bottom: 1px solid var(--line); }
 
-.list-tab-row { align-items: center; color: var(--ink); display: grid; gap: 6px; grid-template-columns: minmax(0px, 1fr) 34px; min-height: 50px; }
+.list-tab-row { align-items: center; color: var(--ink); display: flex; gap: 4px; min-height: 50px; }
 
-.list-reorder-row .list-tab-row { grid-template-columns: minmax(0px, 1fr) 34px 70px; }
+.list-reorder-row .list-tab-row { display: flex; }
 
 .list-reorder-row.is-dragging .list-tab-row { background: var(--accent-soft); }
 
@@ -319,7 +319,7 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .list-tab-group.active > .list-tab-row { background: linear-gradient(110deg, #237C7A 0%, #2D768A 45%, #3667A8 76%, #245A9A 100%); border-color: #2D6F91; color: #FFFFFF; }
 
-.list-tab-main { align-items: center; background: transparent; border: 0px; color: inherit; display: flex; gap: 8px; justify-content: space-between; min-height: 50px; min-width: 0px; padding: 3px 10px; text-align: left; width: 100%; }
+.list-tab-main { align-items: center; background: transparent; border: 0px; color: inherit; display: flex; flex: 0 1 auto; gap: 8px; justify-content: flex-start; min-height: 50px; min-width: 0px; padding: 3px 4px 3px 10px; text-align: left; width: auto; }
 
 .list-tab-main:hover, .list-tab-main:focus-visible, .list-row-edit-button:hover, .list-row-edit-button:focus-visible { background: var(--accent-hover); }
 
@@ -328,10 +328,11 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 .list-tab-title { color: inherit; flex: 1 1 auto; font-size: 0.96rem; font-weight: 560; min-width: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .list-tab-count { color: var(--muted); flex: 0 0 auto; font-size: 0.82rem; font-weight: 750; }
+.list-tab-spacer { flex: 1 1 auto; min-width: 0px; }
 
 .list-tab-group.active .list-tab-count { color: inherit; opacity: 0.85; }
 
-.list-row-edit-button { align-self: stretch; background: transparent; border-color: transparent; color: var(--muted); font-size: 0.86rem; min-height: 42px; min-width: 34px; padding: 0px; }
+.list-row-edit-button { align-self: center; background: transparent; border-color: transparent; color: var(--muted); flex: 0 0 34px; font-size: 0.86rem; min-height: 42px; min-width: 34px; padding: 0px; }
 
 .list-tab-group.active .list-row-edit-button { color: #FFFFFF; }
 

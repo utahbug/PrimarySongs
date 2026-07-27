@@ -3086,9 +3086,10 @@ function renderListTabs(active) {
         <div class="list-tab-row">
         <button class="list-tab-main" type="button" data-select-list="${escapeHtml(list.id)}" title="${escapeHtml(title)}" aria-expanded="${expanded}">
           <span class="list-tab-title">${escapeHtml(title)}</span>
-          ${itemCount ? `<span class="list-tab-count">${itemCount}</span>` : ""}
         </button>
         <button class="icon-button list-row-edit-button" type="button" data-edit-list-row="${escapeHtml(list.id)}" aria-label="Edit ${escapeHtml(title)}" title="Edit list">&#9998;</button>
+        ${itemCount ? `<span class="list-tab-count" aria-label="${itemCount} items">${itemCount}</span>` : ""}
+        <span class="list-tab-spacer" aria-hidden="true"></span>
         ${reorderHandle}
         </div>
         ${isExpanded ? renderInlineListItems(list) : ""}
