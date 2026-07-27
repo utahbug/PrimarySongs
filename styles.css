@@ -309,7 +309,7 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .list-tab-row { align-items: center; color: var(--ink); display: grid; gap: 6px; grid-template-columns: minmax(0px, 1fr) 34px; min-height: 50px; }
 
-.list-reorder-row .list-tab-row { grid-template-columns: minmax(0px, 1fr) 34px 38px; }
+.list-reorder-row .list-tab-row { grid-template-columns: minmax(0px, 1fr) 34px 70px; }
 
 .list-reorder-row.is-dragging .list-tab-row { background: var(--accent-soft); }
 
@@ -335,9 +335,10 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .list-tab-group.active .list-row-edit-button { color: #FFFFFF; }
 
-.list-tab-group.active .reorder-step-controls { color: #FFFFFF; }
+.list-tab-group.active .reorder-step-controls { border-color: rgba(255, 255, 255, 0.34); color: #FFFFFF; }
 
 .list-tab-group.active .reorder-step-button { border-color: rgba(255, 255, 255, 0.34); color: #FFFFFF; }
+.list-tab-group.active .reorder-step-button + .reorder-step-button { border-left-color: rgba(255, 255, 255, 0.34); }
 .list-tab-group.active .reorder-step-button:hover, .list-tab-group.active .reorder-step-button:focus-visible { background: rgba(255, 255, 255, 0.16); color: #FFFFFF; }
 
 .inline-list-items { background: var(--surface); border-top: 1px solid var(--line); display: grid; margin-left: 18px; }
@@ -393,7 +394,10 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 .compact-index-list .item-card.swipe-row .item-card-content { align-items: center; gap: 6px; grid-template-columns: 34px minmax(0px, 1fr) 34px; min-height: 50px; padding: 3px 0px; }
 
 .compact-index-list .favorite-reorder-row .item-card-content,
-.compact-index-list .item-card.swipe-row.favorite-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 34px 38px; }
+.compact-index-list .item-card.swipe-row.favorite-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 70px; }
+
+.compact-index-list.favorite-list .item-card-content,
+.compact-index-list.favorite-list .item-card.swipe-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr); }
 
 .compact-index-list .batch-delete-row { display: block; padding: 0px; }
 
@@ -418,8 +422,9 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 .favorite-drag-handle:hover, .favorite-drag-handle:focus-visible { background: var(--accent-hover); color: var(--accent-strong); }
 
 .favorite-drag-handle span { background: linear-gradient(currentColor, currentColor) 0px 1px / 24px 3px no-repeat, linear-gradient(currentColor, currentColor) 0px 8px / 24px 3px no-repeat, linear-gradient(currentColor, currentColor) 0px 15px / 24px 3px no-repeat; border-radius: 999px; display: block; height: 19px; opacity: 0.55; width: 24px; }
-.reorder-step-controls { align-self: stretch; display: grid; gap: 2px; grid-template-rows: 1fr 1fr; min-height: 48px; width: 38px; }
-.reorder-step-button { align-items: center; background: transparent; border: 1px solid var(--line); border-radius: 5px; color: var(--accent-strong); display: flex; font-size: 0.62rem; justify-content: center; line-height: 1; min-height: 0px; padding: 0px; width: 38px; }
+.reorder-step-controls { align-self: center; border: 1px solid var(--line); border-radius: 9px; display: grid; grid-template-columns: 1fr 1fr; height: 42px; overflow: hidden; width: 70px; }
+.reorder-step-button { align-items: center; background: transparent; border: 0px; border-radius: 0px; color: var(--accent-strong); display: flex; font-size: 0.68rem; justify-content: center; line-height: 1; min-height: 0px; padding: 0px; width: auto; }
+.reorder-step-button + .reorder-step-button { border-left: 1px solid var(--line); }
 .reorder-step-button:hover, .reorder-step-button:focus-visible { background: var(--accent-hover); color: var(--accent-strong); }
 .reorder-step-button:disabled { cursor: default; opacity: 0.28; }
 
@@ -436,7 +441,7 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .favorite-divider-content { align-items: center; display: grid; grid-template-columns: minmax(0px, 1fr); min-height: 34px; padding: 0px 8px 0px 42px; }
 
-.favorite-divider-editing { grid-template-columns: minmax(0px, 1fr) 38px 34px; padding-left: 42px; padding-right: 0px; }
+.favorite-divider-editing { grid-template-columns: minmax(0px, 1fr) 70px 34px; padding-left: 42px; padding-right: 0px; }
 
 .favorite-divider-line { display: block; min-height: 1px; width: 100%; }
 
@@ -910,12 +915,12 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
   .compact-index-list .item-card.swipe-row { display: block; padding: 0px; }
   .compact-index-list .item-card.swipe-row .item-card-content { gap: 6px; grid-template-columns: 34px minmax(0px, 1fr) 34px; min-height: 50px; padding: 3px 0px; }
   .compact-index-list .favorite-reorder-row .item-card-content,
-  .compact-index-list .item-card.swipe-row.favorite-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 34px 38px; }
+  .compact-index-list .item-card.swipe-row.favorite-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 70px; }
   .favorite-list .compact-delete-button { display: none; }
   .compact-index-list.favorite-list .item-card-content,
-  .compact-index-list.favorite-list .item-card.swipe-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 34px; }
+  .compact-index-list.favorite-list .item-card.swipe-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr); }
   .compact-index-list.favorite-reorder-list .favorite-reorder-row .item-card-content,
-  .compact-index-list.favorite-reorder-list .item-card.swipe-row.favorite-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 34px 38px; }
+  .compact-index-list.favorite-reorder-list .item-card.swipe-row.favorite-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 70px; }
   .swipe-delete-action { background: transparent; color: var(--danger); }
   .swipe-delete-action:hover, .swipe-delete-action:focus-visible { background: transparent; color: var(--danger); }
   .compact-item-line { gap: 6px; }

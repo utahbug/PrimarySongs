@@ -2820,12 +2820,14 @@ function compactItemRowHtml(item, options = {}) {
   const meta = options.favoriteList ? "" : compactLibraryMetaText(item);
   const title = options.favoriteList ? itemDisplayTitleWithInlinePage(item) : itemDisplayTitle(item);
   const typeLabel = compactTypeLabel(item);
-  const compactAction = options.compactAction === "edit"
-    ? `
+  const compactAction = options.favoriteList
+    ? ""
+    : options.compactAction === "edit"
+      ? `
     <button class="icon-button info-button compact-info-button" type="button" data-edit-item="${escapeHtml(item.id)}" aria-label="Edit ${escapeHtml(title)}" title="Edit">
       &#9998;
     </button>`
-    : `
+      : `
     <button class="icon-button info-button compact-info-button" type="button" data-detail="${escapeHtml(item.id)}" aria-label="Show info for ${escapeHtml(title)}" title="Info">
       i
     </button>`;
