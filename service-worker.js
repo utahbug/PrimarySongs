@@ -1,10 +1,10 @@
-const CACHE_NAME = "primary-music-helper-shell-v206";
+const CACHE_NAME = "primary-music-helper-shell-v207";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=primary-2026-43",
-  "./lyrics-cards.js?v=primary-2026-43",
-  "./script.js?v=primary-2026-43",
+  "./styles.css?v=primary-2026-44",
+  "./lyrics-cards.js?v=primary-2026-44",
+  "./script.js?v=primary-2026-44",
   "./library.json",
   "./manifest.json",
   "./favicon.ico",

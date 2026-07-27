@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-43">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-44">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-43" defer></script>
-    <script src="script.js?v=primary-2026-43" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-44" defer></script>
+    <script src="script.js?v=primary-2026-44" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -397,15 +397,7 @@
           </label>
 
           <div id="cardImportFields" class="type-fields hidden">
-            <div id="importCardImageRow" class="file-picker-field">
-              <input id="importCardImage" class="sr-only" type="file" accept="image/*" aria-label="Select card image file">
-              <div class="file-picker-row">
-                <label class="secondary-button file-picker-button" for="importCardImage">Select File</label>
-                <span id="importCardImageName" class="file-picker-name">(optional)</span>
-              </div>
-            </div>
             <div id="richCardContentRow" class="rich-card-row">
-              <span>Card text</span>
               <div id="cardFormatToolbar" class="rich-toolbar" aria-label="Card text formatting">
                 <button type="button" data-rich-command="bold" aria-label="Bold" title="Bold" aria-pressed="false"><strong>B</strong></button>
                 <button type="button" data-rich-command="italic" aria-label="Italic" title="Italic" aria-pressed="false"><em>I</em></button>
@@ -466,6 +458,15 @@
             <span>Notes</span>
             <textarea id="importNotes" rows="4"></textarea>
           </label>
+
+          <div id="importCardImageRow" class="file-picker-field hidden">
+            <span class="file-picker-label">Optional image</span>
+            <input id="importCardImage" class="sr-only" type="file" accept="image/*" aria-label="Select optional card image">
+            <div class="file-picker-row">
+              <label class="secondary-button file-picker-button" for="importCardImage">Select File</label>
+              <span id="importCardImageName" class="file-picker-name">No image selected</span>
+            </div>
+          </div>
 
           <p id="importStatus" class="form-status" role="status"></p>
 

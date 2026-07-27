@@ -790,7 +790,7 @@ function wireEvents() {
     updateFilePickerName(el.importPdfFile, el.importPdfFileName);
     fillTitleFromPdfFile();
   });
-  el.importCardImage.addEventListener("change", () => updateFilePickerName(el.importCardImage, el.importCardImageName, "(optional)"));
+  el.importCardImage.addEventListener("change", () => updateFilePickerName(el.importCardImage, el.importCardImageName, "No image selected"));
   el.inlineCardImageInput.addEventListener("change", handleInlineCardImageSelected);
   el.cardFormatToolbar.addEventListener("mousedown", (event) => event.preventDefault());
   el.cardFormatToolbar.addEventListener("click", handleRichToolbarClick);
@@ -1610,7 +1610,7 @@ function resetImportForm() {
   el.importPlainContent.value = "";
   el.importCardEditor.innerHTML = "";
   updateFilePickerName(el.importPdfFile, el.importPdfFileName);
-  updateFilePickerName(el.importCardImage, el.importCardImageName, "(optional)");
+  updateFilePickerName(el.importCardImage, el.importCardImageName, "No image selected");
   el.importType.disabled = false;
   el.importDialogTitle.textContent = "Add item";
   el.importSaveButton.innerHTML = "&#10003;";

@@ -661,11 +661,13 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 #importNotesRow { order: 6; }
 
-#importTypeRow { order: 7; }
+#importCardImageRow { order: 7; }
 
-#importStatus { order: 9; }
+#importTypeRow { order: 8; }
 
-#importForm .form-apply-button { order: 8; }
+#importForm .form-apply-button { order: 9; }
+
+#importStatus { order: 10; }
 
 .modal[data-item-type="card"] #cardImportFields { order: 2; }
 
