@@ -3291,7 +3291,6 @@ function renderCards() {
     compact: true,
     compactAction: "edit",
     hideMeta: true,
-    batchDeleteSection: "cards",
     emptyTitle: "Turn words into a rehearsal aid",
     emptyMessage: "Add a Card for lyrics, cues, actions, or teaching notes that need to be easy to read."
   });
