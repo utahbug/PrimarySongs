@@ -89,7 +89,7 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 .info-icon-mark { align-items: center; border: 2px solid currentcolor; border-radius: 999px; color: var(--accent-strong); display: inline-flex; font-family: Georgia, serif; font-size: 0.88rem; font-style: italic; font-weight: 800; height: 21px; justify-content: center; line-height: 1; width: 21px; }
 .nav-help-button:hover .info-icon-mark, .nav-help-button:focus-visible .info-icon-mark { color: var(--accent-strong); }
 .nav-tools-button { --tab-accent: #2F7A6B; min-width: 40px; padding-inline: 7px; }
-.tuning-fork-icon { fill: none; filter: drop-shadow(0.7px 1px 0.8px rgba(30, 63, 86, 0.34)); height: 23px; overflow: visible; stroke-linecap: round; stroke-linejoin: round; width: 23px; }
+.tuning-fork-icon { fill: none; filter: drop-shadow(0.7px 1px 0.8px rgba(30, 63, 86, 0.34)); height: 23px; overflow: visible; stroke-linecap: round; stroke-linejoin: round; transform: rotate(-82deg); transform-origin: 50% 50%; width: 23px; }
 .tuning-fork-shadow { opacity: 0.42; stroke: #173F5F; stroke-width: 3.1; transform: translate(0.75px, 0.65px); }
 .tuning-fork-main { stroke: url("#tuningForkGradient"); stroke-width: 2.7; }
 .tuning-fork-highlight { opacity: 0.58; stroke: rgba(255, 255, 255, 0.9); stroke-width: 0.7; transform: translate(-0.45px, -0.2px); }
