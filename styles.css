@@ -852,7 +852,7 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
   .setlist-row { grid-template-columns: auto 1fr; }
   .order-buttons { grid-column: 1 / -1; justify-content: end; }
   .cards-grid { grid-template-columns: 1fr; }
-  .pdf-toolbar { gap: 6px; grid-template-columns: auto minmax(0px, 1fr) auto; }
+  .pdf-toolbar { gap: 6px; grid-template-columns: auto auto minmax(0px, 1fr) auto; }
 }
 
 @media (max-width: 420px) {
@@ -863,7 +863,7 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 }
 
 @media (orientation: landscape) and (max-height: 560px) {
-  .pdf-toolbar { grid-template-columns: auto minmax(0px, 1fr) auto; padding-bottom: 8px; padding-top: 8px; }
+  .pdf-toolbar { grid-template-columns: auto auto minmax(0px, 1fr) auto; padding-bottom: 8px; padding-top: 8px; }
   .pdf-stage { padding: 3px 8px 8px; }
 }
 
