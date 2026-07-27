@@ -75,7 +75,24 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-lists-v3";
+const STARTER_DATA_VERSION = "primary-2026-lists-v4";
+const RETIRED_STARTER_LISTS = [
+  {
+    id: "setlist-try-this-piano-and-lyrics",
+    title: "Try this: Piano & Lyrics",
+    itemIds: ["choose-to-serve-the-lord", "lyrics-card-choose-to-serve-the-lord", "lyrics-card-this-little-light-of-mine-1028"]
+  },
+  {
+    id: "setlist-primary-program-lyrics-cards",
+    title: "Primary Program - Lyrics Cards",
+    itemIds: ["lyrics-card-this-little-light-of-mine-1028", "lyrics-card-called-to-serve-249", "lyrics-card-i-will-follow-gods-plan-165"]
+  },
+  {
+    id: "setlist-primary-songs-2026-lyrics-cards",
+    title: "Primary Songs 2026 - Lyrics Cards",
+    itemIds: ["lyrics-card-choose-to-serve-the-lord", "lyrics-card-search-ponder-and-pray-109", "lyrics-card-wise-man-foolish-man-281", "lyrics-card-i-will-walk-with-jesus-1004", "lyrics-card-i-feel-my-saviors-love-74", "lyrics-card-this-little-light-of-mine-1028"]
+  }
+];
 const FILE_ITEM_TYPES = new Set(["pdf", "image", "note", "index"]);
 const LIBRARY_CONTENT_TYPES = new Set(["pdf", "image", "note", "index", "card", "link"]);
 const BATCH_DELETE_SECTIONS = ["library", "cards", "links"];
@@ -1312,7 +1329,8 @@ function applyStarterFavorites() {
 function loadUnifiedLists() {
   const savedLists = readJson(STORAGE_KEYS.lists, null);
   if (Array.isArray(savedLists) && savedLists.length) {
-    return syncStarterLists(pruneOldEmptyListShells(normalizeLists(savedLists), true));
+    const normalizedSavedLists = pruneRetiredStarterLists(normalizeLists(savedLists), true);
+    return syncStarterLists(pruneOldEmptyListShells(normalizedSavedLists, true));
   }
 
   const quickChecks = readJson(STORAGE_KEYS.quickChecks, {});
@@ -1347,7 +1365,7 @@ function loadUnifiedLists() {
     }))
   ];
 
-  const lists = syncStarterLists(normalizeLists(migrated));
+  const lists = syncStarterLists(pruneRetiredStarterLists(normalizeLists(migrated)));
   writeJson(STORAGE_KEYS.lists, lists);
   return lists;
 }
@@ -1458,6 +1476,26 @@ function normalizeLists(lists) {
     }));
 
   return normalized;
+}
+
+function pruneRetiredStarterLists(lists, persist = false) {
+  const retiredById = new Map(RETIRED_STARTER_LISTS.map((list) => [list.id, list]));
+  const pruned = lists.filter((list) => {
+    const retired = retiredById.get(list.id);
+    if (!retired || list.userCreated || list.title !== retired.title) return true;
+
+    const entries = list.entries || [];
+    const unchanged = entries.length === retired.itemIds.length && entries.every((entry, index) => {
+      const hasPersonalDetails = entry.page || entry.book || entry.notes || entry.order;
+      return entry.itemId === retired.itemIds[index] && !hasPersonalDetails;
+    });
+    return !unchanged;
+  });
+
+  if (persist && pruned.length !== lists.length) {
+    writeJson(STORAGE_KEYS.lists, pruned);
+  }
+  return pruned;
 }
 
 function pruneOldEmptyListShells(lists, persist = false) {

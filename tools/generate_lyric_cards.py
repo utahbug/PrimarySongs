@@ -48,41 +48,7 @@ cards = [
     for filename, card_id, title, source_pdf_id in CARDS
 ]
 
-lists = [
-    {
-        "id": "try-this-piano-and-lyrics",
-        "title": "Try this: Piano & Lyrics",
-        "showCheckboxes": False,
-        "items": [
-            {"itemId": "choose-to-serve-the-lord"},
-            {"itemId": "lyrics-card-choose-to-serve-the-lord"},
-            {"itemId": "lyrics-card-this-little-light-of-mine-1028"},
-        ],
-    },
-    {
-        "id": "primary-program-lyrics-cards",
-        "title": "Primary Program - Lyrics Cards",
-        "showCheckboxes": False,
-        "items": [
-            {"itemId": "lyrics-card-this-little-light-of-mine-1028"},
-            {"itemId": "lyrics-card-called-to-serve-249"},
-            {"itemId": "lyrics-card-i-will-follow-gods-plan-165"},
-        ],
-    },
-    {
-        "id": "primary-songs-2026-lyrics-cards",
-        "title": "Primary Songs 2026 - Lyrics Cards",
-        "showCheckboxes": False,
-        "items": [
-            {"itemId": "lyrics-card-choose-to-serve-the-lord"},
-            {"itemId": "lyrics-card-search-ponder-and-pray-109"},
-            {"itemId": "lyrics-card-wise-man-foolish-man-281"},
-            {"itemId": "lyrics-card-i-will-walk-with-jesus-1004"},
-            {"itemId": "lyrics-card-i-feel-my-saviors-love-74"},
-            {"itemId": "lyrics-card-this-little-light-of-mine-1028"},
-        ],
-    },
-]
+lists = []
 
 OUTPUT.write_text(
     '"use strict";\n\n'
