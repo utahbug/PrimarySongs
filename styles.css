@@ -307,7 +307,7 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .list-tab-group { border-bottom: 1px solid var(--line); }
 
-.list-tab-row { align-items: center; color: var(--ink); display: flex; gap: 4px; min-height: 50px; }
+.list-tab-row { align-items: center; background: linear-gradient(100deg, color-mix(in srgb, #237C7A 8%, var(--surface)), color-mix(in srgb, #3667A8 7%, var(--surface))); border-left: 3px solid color-mix(in srgb, #237C7A 48%, var(--line)); color: var(--ink); display: flex; gap: 4px; min-height: 50px; }
 
 .list-reorder-row .list-tab-row { display: flex; }
 
@@ -315,7 +315,7 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .list-reorder-row.is-dragging { opacity: 0.78; }
 
-.list-tab-group:hover > .list-tab-row { background: var(--accent-soft); }
+.list-tab-group:hover > .list-tab-row { background: linear-gradient(100deg, color-mix(in srgb, #237C7A 14%, var(--surface)), color-mix(in srgb, #3667A8 12%, var(--surface))); }
 
 .list-tab-group.active > .list-tab-row { background: linear-gradient(110deg, #237C7A 0%, #2D768A 45%, #3667A8 76%, #245A9A 100%); border-color: #2D6F91; color: #FFFFFF; }
 
@@ -325,7 +325,9 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .list-tab-group.active .list-tab-main:hover, .list-tab-group.active .list-tab-main:focus-visible, .list-tab-group.active .list-row-edit-button:hover, .list-tab-group.active .list-row-edit-button:focus-visible { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
 
-.list-tab-title { color: inherit; flex: 1 1 auto; font-size: 0.96rem; font-weight: 560; min-width: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.list-title-mark { align-items: center; background: linear-gradient(135deg, #237C7A, #3667A8); border-radius: 8px; color: #FFFFFF; display: inline-flex; flex: 0 0 27px; font-size: 1rem; font-weight: 900; height: 27px; justify-content: center; line-height: 1; }
+.list-tab-group.active .list-title-mark { background: rgba(255, 255, 255, 0.16); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); }
+.list-tab-title { color: inherit; flex: 1 1 auto; font-size: 0.96rem; font-weight: 700; min-width: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .list-tab-count { color: var(--muted); flex: 0 0 auto; font-size: 0.82rem; font-weight: 750; }
 .list-tab-spacer { flex: 1 1 auto; min-width: 0px; }
