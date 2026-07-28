@@ -1341,7 +1341,9 @@ function loadUnifiedLists() {
   ]);
 
   const lists = migrateRetiredLyricListEntries(
-    syncStarterLists(pruneRetiredStarterLists(normalizeLists(migrated)))
+    syncStarterLists(alphabetizeStarterListEntries(
+      pruneRetiredStarterLists(normalizeLists(migrated))
+    ))
   );
   writeJson(STORAGE_KEYS.lists, lists);
   return lists;
