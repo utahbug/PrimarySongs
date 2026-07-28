@@ -9,6 +9,7 @@ const STORAGE_KEYS = {
   favorites: storageKey("favorites"),
   importedItems: storageKey("importedItems"),
   itemEdits: storageKey("itemEdits"),
+  itemMetadataRepairVersion: storageKey("itemMetadataRepairVersion"),
   lastOpened: storageKey("lastOpened"),
   lists: storageKey("lists"),
   listEditSort: storageKey("listEditSort"),
@@ -75,7 +76,15 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-lists-v5";
+const STARTER_DATA_VERSION = "primary-2026-lists-v6";
+const ITEM_METADATA_REPAIR_VERSION = "called-to-serve-pages-v1";
+const STARTER_LIST_ORDER = [
+  "primary-program",
+  "primary-songs-2026",
+  "primary-program-lyrics",
+  "primary-songs-2026-lyrics",
+  "lds-library"
+];
 const RETIRED_LYRIC_PDF_REPLACEMENTS = {
   "called-to-serve-lyrics-249": "lyrics-card-called-to-serve-249",
   "choose-to-serve-the-lord-lyrics": "lyrics-card-choose-to-serve-the-lord",
@@ -127,14 +136,14 @@ const DEFAULT_LIBRARY_DATA = {
   "items": [
     {
       "id": "called-to-serve-hymnbook-174",
-      "title": "Called to Serve (hymnbook), 174",
+      "title": "Called to Serve (Children's Songbook), 174",
       "type": "pdf",
       "file": "music/Primary-2026/called-to-serve-hymnbook-174.pdf",
       "page": 174
     },
     {
       "id": "called-to-serve-249",
-      "title": "Called to Serve, 249",
+      "title": "Called to Serve (hymnbook), 249",
       "type": "pdf",
       "file": "music/Primary-2026/called-to-serve-249.pdf",
       "page": 249
@@ -1082,6 +1091,7 @@ async function loadLibrary() {
   }
 
   state.data = mergeDefaultStarterData(libraryData || cloneData(DEFAULT_LIBRARY_DATA));
+  repairCalledToServeMetadataEdits();
   const importedItems = cleanupImportedItemDuplicates();
   const baseItems = [
     ...(state.data.items || []),
@@ -1100,13 +1110,39 @@ function mergeDefaultStarterData(libraryData) {
 
   merged.items = mergeById(mergeById(merged.items || [], defaults.items || []), lyricCards);
   merged.quickIndexes = mergeById(merged.quickIndexes || [], defaults.quickIndexes || []);
-  merged.setlists = mergeById(mergeById(merged.setlists || [], defaults.setlists || []), lyricLists);
+  merged.setlists = sortStarterLists(
+    mergeById(mergeById(merged.setlists || [], defaults.setlists || []), lyricLists)
+  );
 
   const favorites = new Set(merged.favorites || []);
   (defaults.favorites || []).forEach((id) => favorites.add(id));
   merged.favorites = Array.from(favorites);
 
   return merged;
+}
+
+function sortStarterLists(lists = []) {
+  const order = new Map(STARTER_LIST_ORDER.map((id, index) => [id, index]));
+  return lists
+    .map((list, index) => ({ list, index }))
+    .sort((a, b) => {
+      const aOrder = order.has(a.list.id) ? order.get(a.list.id) : Number.MAX_SAFE_INTEGER;
+      const bOrder = order.has(b.list.id) ? order.get(b.list.id) : Number.MAX_SAFE_INTEGER;
+      return aOrder - bOrder || a.index - b.index;
+    })
+    .map(({ list }) => list);
+}
+
+function repairCalledToServeMetadataEdits() {
+  if (localStorage.getItem(STORAGE_KEYS.itemMetadataRepairVersion) === ITEM_METADATA_REPAIR_VERSION) return;
+  const edits = readJson(STORAGE_KEYS.itemEdits, {});
+  ["called-to-serve-hymnbook-174", "called-to-serve-249"].forEach((id) => {
+    if (!edits[id]) return;
+    ["title", "page", "category", "book"].forEach((field) => delete edits[id][field]);
+    if (!Object.keys(edits[id]).filter((key) => key !== "editedAt").length) delete edits[id];
+  });
+  writeJson(STORAGE_KEYS.itemEdits, edits);
+  localStorage.setItem(STORAGE_KEYS.itemMetadataRepairVersion, ITEM_METADATA_REPAIR_VERSION);
 }
 
 function mergeById(primaryItems, fallbackItems) {
@@ -1200,9 +1236,9 @@ function loadUnifiedLists() {
   const savedLists = readJson(STORAGE_KEYS.lists, null);
   if (Array.isArray(savedLists) && savedLists.length) {
     const normalizedSavedLists = pruneRetiredStarterLists(normalizeLists(savedLists), true);
-    const lists = migrateRetiredLyricListEntries(
+    const lists = repairPrimarySongs2026Entries(migrateRetiredLyricListEntries(
       syncStarterLists(pruneOldEmptyListShells(normalizedSavedLists, true))
-    );
+    ));
     writeJson(STORAGE_KEYS.lists, lists);
     return lists;
   }
@@ -1210,7 +1246,7 @@ function loadUnifiedLists() {
   const quickChecks = readJson(STORAGE_KEYS.quickChecks, {});
   const quickIndexes = readJson(STORAGE_KEYS.quickIndexes, state.data.quickIndexes || []);
   const setlists = readJson(STORAGE_KEYS.setlists, state.data.setlists || []);
-  const migrated = [
+  const migrated = repairPrimarySongs2026Entries([
     ...quickIndexes.map((list) => ({
       id: `quick-${list.id}`,
       title: list.title || "Untitled List",
@@ -1237,7 +1273,7 @@ function loadUnifiedLists() {
         checked: Boolean(entry.checked)
       }))
     }))
-  ];
+  ]);
 
   const lists = migrateRetiredLyricListEntries(
     syncStarterLists(pruneRetiredStarterLists(normalizeLists(migrated)))
@@ -1267,6 +1303,19 @@ function migrateRetiredLyricListEntries(lists = []) {
       return true;
     });
     return { ...list, entries };
+  });
+}
+
+function repairPrimarySongs2026Entries(lists = []) {
+  return lists.map((list) => {
+    if (list.id !== "primary-songs-2026") return list;
+    return {
+      ...list,
+      entries: (list.entries || []).filter((entry) =>
+        !String(entry.itemId || "").startsWith("lyrics-card-") &&
+        !Object.prototype.hasOwnProperty.call(RETIRED_LYRIC_PDF_REPLACEMENTS, entry.itemId)
+      )
+    };
   });
 }
 
