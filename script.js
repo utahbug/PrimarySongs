@@ -23,6 +23,7 @@ const STORAGE_KEYS = {
   welcomeSeen: storageKey("welcomeSeen"),
   starterDataVersion: storageKey("starterDataVersion"),
   starterFavorites: storageKey("starterFavorites"),
+  starterFavoritesLayoutVersion: storageKey("starterFavoritesLayoutVersion"),
   starterLists: storageKey("starterLists"),
   setlists: storageKey("setlists"),
   quickChecks: storageKey("quickChecks")
@@ -78,6 +79,7 @@ const PITCH_PRESETS = {
 };
 const STARTER_DATA_VERSION = "primary-2026-lists-v6";
 const ITEM_METADATA_REPAIR_VERSION = "called-to-serve-pages-v1";
+const STARTER_FAVORITES_LAYOUT_VERSION = "pianist-test-layout-v1";
 const STARTER_LIST_ORDER = [
   "primary-program",
   "primary-songs-2026",
@@ -218,17 +220,16 @@ const DEFAULT_LIBRARY_DATA = {
   ],
   "favorites": [
     "this-little-light-of-mine-1028",
-    "called-to-serve-249",
     "i-will-follow-gods-plan-for-me-165",
     "favorite-divider:primary-2026-1",
     "choose-to-serve-the-lord",
-    "search-ponder-and-pray-109",
-    "the-wise-man-and-the-foolish-man-281",
     "i-feel-my-saviors-love-74",
+    "i-will-walk-with-jesus-1004",
+    "the-wise-man-and-the-foolish-man-281",
+    "search-ponder-and-pray-109",
     "favorite-divider:primary-2026-2",
-    "childrens-songbook-link",
     "hymns-for-home-and-church-new-hymns",
-    "new-hymns-link"
+    "called-to-serve-hymnbook-174"
   ],
   "quickIndexes": [],
   "setlists": [
@@ -1200,6 +1201,17 @@ function applyStarterFavorites() {
   const starterFavorites = Array.isArray(state.data.favorites) ? state.data.favorites : [];
   if (!starterFavorites.length) return;
 
+  const validStarterFavorites = starterFavorites.filter((id) =>
+    state.itemsById.has(id) || isFavoriteDividerId(id)
+  );
+  if (localStorage.getItem(STORAGE_KEYS.starterFavoritesLayoutVersion) !== STARTER_FAVORITES_LAYOUT_VERSION) {
+    state.favorites = new Set(validStarterFavorites);
+    writeJson(STORAGE_KEYS.favorites, validStarterFavorites);
+    writeJson(STORAGE_KEYS.starterFavorites, validStarterFavorites);
+    localStorage.setItem(STORAGE_KEYS.starterFavoritesLayoutVersion, STARTER_FAVORITES_LAYOUT_VERSION);
+    return;
+  }
+
   const applied = new Set(readJson(STORAGE_KEYS.starterFavorites, []));
   let favoritesChanged = false;
   let appliedChanged = false;
@@ -1374,7 +1386,7 @@ function syncStarterLists(lists) {
 }
 
 function starterUnifiedLists() {
-  return normalizeLists([
+  return alphabetizeStarterListEntries(normalizeLists([
     ...(state.data.quickIndexes || []).map((list) => ({
       id: `quick-${list.id}`,
       title: list.title || "Untitled List",
@@ -1401,7 +1413,18 @@ function starterUnifiedLists() {
         checked: Boolean(entry.checked)
       }))
     }))
-  ]);
+  ]));
+}
+
+function alphabetizeStarterListEntries(lists = []) {
+  return lists.map((list) => ({
+    ...list,
+    entries: [...(list.entries || [])].sort((a, b) => {
+      const aTitle = state.itemsById.get(a.itemId)?.title || "";
+      const bTitle = state.itemsById.get(b.itemId)?.title || "";
+      return aTitle.localeCompare(bTitle, undefined, { numeric: true, sensitivity: "base" });
+    })
+  }));
 }
 
 function normalizeLists(lists) {
@@ -2158,10 +2181,23 @@ function getImportedItems() {
 function cleanupImportedItemDuplicates() {
   const imported = getImportedItems();
   const seen = new Map();
+  const builtInByTitleType = new Map();
   const duplicateMap = new Map();
   const cleaned = [];
 
+  (state.data.items || []).forEach((item) => {
+    const key = importedItemDuplicateKey(item);
+    if (key) seen.set(key, item);
+    const titleTypeKey = `${item.type}|${normalize(item.title)}`;
+    if (item.type && normalize(item.title)) builtInByTitleType.set(titleTypeKey, item);
+  });
+
   imported.forEach((item) => {
+    const builtInMatch = builtInByTitleType.get(`${item.type}|${normalize(item.title)}`);
+    if (builtInMatch) {
+      duplicateMap.set(item.id, builtInMatch.id);
+      return;
+    }
     const key = importedItemDuplicateKey(item);
     if (!key) {
       cleaned.push(item);
@@ -2187,6 +2223,12 @@ function cleanupImportedItemDuplicates() {
 
 function findDuplicateImportedItem(item, imported = getImportedItems()) {
   const key = importedItemDuplicateKey(item);
+  const titleTypeKey = `${item.type}|${normalize(item.title)}`;
+  const builtInMatch = (state.data.items || []).find((candidate) =>
+    candidate.id !== item.id &&
+    `${candidate.type}|${normalize(candidate.title)}` === titleTypeKey
+  );
+  if (builtInMatch) return builtInMatch;
   if (!key) return null;
   return imported.find((candidate) => candidate.id !== item.id && importedItemDuplicateKey(candidate) === key) || null;
 }
