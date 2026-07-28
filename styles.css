@@ -929,7 +929,7 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-zone-tip strong { color: #173F72; font-size: 1.08em; font-weight: 850; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9); }
 .pdf-zone-tip span { color: var(--muted); margin-top: 4px; }
 .pdf-zone-tip .pdf-zone-indicator { align-items: center; display: inline-flex; justify-content: center; line-height: 1; margin-top: 8px; }
-.pdf-zone-jump-indicator { background: linear-gradient(145deg, #D5B766, #A8874A); border: 1px solid #80652F; border-radius: 10px; box-shadow: 0 3px 8px rgba(85, 64, 26, 0.24); color: #FFFFFF !important; font-family: system-ui, sans-serif; font-size: 1.25rem; font-weight: 900; height: 42px; letter-spacing: -0.08em; width: 58px; }
+.pdf-zone-jump-indicator { background: linear-gradient(145deg, #3983BA, #285A9C); border: 1px solid #214A78; border-radius: 10px; box-shadow: 0 3px 8px rgba(24, 59, 98, 0.24); color: #FFFFFF !important; font-family: system-ui, sans-serif; font-size: 1.25rem; font-weight: 900; height: 42px; letter-spacing: -0.08em; width: 58px; }
 .pdf-zone-turn-indicator { background: linear-gradient(145deg, #3983BA, #285A9C); border: 1px solid #214A78; border-radius: 10px; box-shadow: 0 3px 8px rgba(24, 59, 98, 0.24); color: #FFFFFF !important; font-family: Georgia, serif; font-size: 2.55rem; font-weight: 850; height: 46px; padding-bottom: 5px; width: 52px; }
 .pdf-zone-tip-first { border-radius: 14px 4px 4px 4px; }
 .pdf-zone-tip-last { border-radius: 4px 14px 4px 4px; }
@@ -950,7 +950,7 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .help-tap-zone-grid span { color: var(--accent-strong); font-size: 1.25rem; line-height: 1; }
 .help-tap-zone-grid > div:nth-child(-n+2) span { color: #856A34; }
 .help-tap-zone-grid .help-zone-icon { align-items: center; border-radius: 7px; box-shadow: 0 2px 5px rgba(31, 65, 96, 0.2); color: #FFFFFF; display: inline-flex; font-weight: 900; height: 30px; justify-content: center; margin: 2px 0px; width: 38px; }
-.help-tap-zone-grid .help-jump-icon { background: linear-gradient(145deg, #D5B766, #A8874A); border: 1px solid #80652F; color: #FFFFFF; font-family: system-ui, sans-serif; font-size: 0.82rem; letter-spacing: -0.08em; }
+.help-tap-zone-grid .help-jump-icon { background: linear-gradient(145deg, #3983BA, #285A9C); border: 1px solid #214A78; color: #FFFFFF; font-family: system-ui, sans-serif; font-size: 0.82rem; letter-spacing: -0.08em; }
 .help-tap-zone-grid .help-turn-icon { background: linear-gradient(145deg, #3983BA, #285A9C); border: 1px solid #214A78; color: #FFFFFF; font-family: Georgia, serif; font-size: 1.55rem; padding-bottom: 2px; }
 .help-tap-zone-grid small { color: var(--muted); font-size: 0.68rem; }
 .help-tap-zone-note { color: var(--muted); font-size: 0.8rem; margin: 8px 0px 0px; }
