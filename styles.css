@@ -897,6 +897,9 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-zone-tip { align-items: center; background: color-mix(in srgb, var(--accent) 8%, rgba(255, 255, 255, 0.9)); border: 2px solid color-mix(in srgb, var(--accent) 48%, transparent); color: var(--ink); display: flex; flex-direction: column; font-size: clamp(0.82rem, 2.5vw, 1rem); justify-content: center; line-height: 1.25; padding: 12px; text-align: center; }
 .pdf-zone-tip strong { color: var(--accent-strong); font-size: 1.08em; }
 .pdf-zone-tip span { color: var(--muted); margin-top: 4px; }
+.pdf-zone-tip .pdf-zone-indicator { align-items: center; display: inline-flex; justify-content: center; line-height: 1; margin-top: 8px; }
+.pdf-zone-jump-indicator { background: color-mix(in srgb, #A8874A 16%, var(--surface)); border: 1px solid color-mix(in srgb, #A8874A 48%, var(--line)); border-radius: 999px; color: #856A34 !important; font-size: 1.15rem; font-weight: 850; height: 28px; width: 38px; }
+.pdf-zone-turn-indicator { color: var(--accent-strong) !important; font-family: Georgia, serif; font-size: 2rem; font-weight: 850; height: 30px; width: 30px; }
 .pdf-zone-tip-first { border-radius: 14px 4px 4px 4px; }
 .pdf-zone-tip-last { border-radius: 4px 14px 4px 4px; }
 .pdf-zone-tip-prev { border-radius: 4px 4px 4px 14px; }
@@ -905,6 +908,14 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-zone-tip-center strong, .pdf-zone-tip-center span { display: block; }
 .pdf-zone-tip-center strong { font-size: 1rem; }
 .pdf-zone-tip-center span { color: var(--muted); font-size: 0.8rem; margin-top: 3px; }
+.help-tap-zone-grid { display: grid; gap: 4px; grid-template: 0.7fr 1.3fr / 1fr 1fr; margin-top: 8px; }
+.help-tap-zone-grid > div { align-items: center; background: color-mix(in srgb, var(--accent) 8%, var(--surface)); border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line)); border-radius: 8px; display: grid; gap: 2px; justify-items: center; min-height: 58px; padding: 6px; text-align: center; }
+.help-tap-zone-grid > div:nth-child(-n+2) { background: color-mix(in srgb, #A8874A 9%, var(--surface)); }
+.help-tap-zone-grid strong { color: var(--ink); font-size: 0.78rem; }
+.help-tap-zone-grid span { color: var(--accent-strong); font-size: 1.25rem; line-height: 1; }
+.help-tap-zone-grid > div:nth-child(-n+2) span { color: #856A34; }
+.help-tap-zone-grid small { color: var(--muted); font-size: 0.68rem; }
+.help-tap-zone-note { color: var(--muted); font-size: 0.8rem; margin: 8px 0px 0px; }
 @keyframes guide-enter { from { opacity: 0; } to { opacity: 1; } }
 
 .pdf-action-bar { align-items: center; background: color-mix(in srgb, var(--surface) 96%, var(--accent-soft)); border-top: 1px solid var(--line); display: flex; gap: clamp(8px, 2vw, 16px); justify-content: center; padding: 7px max(10px, env(safe-area-inset-right)) max(7px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); }

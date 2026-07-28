@@ -4351,7 +4351,7 @@ async function openPdf(item) {
   showPdfMessage("Loading PDF...");
   document.body.classList.add("pdf-open");
   el.pdfViewer.classList.remove("hidden");
-  setPdfTipsVisible(true, 10000);
+  setPdfTipsVisible(true, 4000);
 
   if (!window.pdfjsLib) {
     showPdfMessage("PDF.js could not be loaded. Check your internet connection or download PDF.js for local use.");
@@ -4492,10 +4492,10 @@ function returnFromPdfViewer() {
 
 function togglePdfTips() {
   const showTips = !el.pdfViewer.classList.contains("show-tips");
-  setPdfTipsVisible(showTips, 10000);
+  setPdfTipsVisible(showTips, 4000);
 }
 
-function setPdfTipsVisible(showTips, duration = 10000) {
+function setPdfTipsVisible(showTips, duration = 4000) {
   window.clearTimeout(state.currentPdf.tipsTimer);
   state.currentPdf.tipsTimer = null;
   el.pdfViewer.classList.toggle("show-tips", showTips);

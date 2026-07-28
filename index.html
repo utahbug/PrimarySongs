@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-95">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-96">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-95" defer></script>
-    <script src="script.js?v=primary-2026-95" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-96" defer></script>
+    <script src="script.js?v=primary-2026-96" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -319,10 +319,10 @@
         <button id="pdfTapLeft" class="pdf-tap-zone pdf-tap-left" type="button" aria-label="Previous page; top-left jumps to first page"></button>
         <button id="pdfTapRight" class="pdf-tap-zone pdf-tap-right" type="button" aria-label="Next page; top-right jumps to last page"></button>
         <div id="pdfZoneTips" class="pdf-zone-tips" aria-hidden="true">
-          <div class="pdf-zone-tip pdf-zone-tip-first"><strong>Skip to page 1</strong></div>
-          <div class="pdf-zone-tip pdf-zone-tip-last"><strong>Skip to last page</strong></div>
-          <div class="pdf-zone-tip pdf-zone-tip-prev"><strong>Previous page</strong></div>
-          <div class="pdf-zone-tip pdf-zone-tip-next"><strong>Next page</strong></div>
+          <div class="pdf-zone-tip pdf-zone-tip-first"><strong>Skip to page 1</strong><span class="pdf-zone-indicator pdf-zone-jump-indicator" aria-hidden="true">&#8676;</span></div>
+          <div class="pdf-zone-tip pdf-zone-tip-last"><strong>Skip to last page</strong><span class="pdf-zone-indicator pdf-zone-jump-indicator" aria-hidden="true">&#8677;</span></div>
+          <div class="pdf-zone-tip pdf-zone-tip-prev"><strong>Previous page</strong><span class="pdf-zone-indicator pdf-zone-turn-indicator" aria-hidden="true">&#8249;</span></div>
+          <div class="pdf-zone-tip pdf-zone-tip-next"><strong>Next page</strong><span class="pdf-zone-indicator pdf-zone-turn-indicator" aria-hidden="true">&#8250;</span></div>
           <div class="pdf-zone-tip-center"><strong>TAP ZONES</strong><span>Tap to begin</span></div>
         </div>
       </div>
@@ -545,10 +545,15 @@
               <summary>PDF Page Turning</summary>
               <div class="help-topic-content">
                 <ul>
-                  <li>Flip pages by tapping the left or bottom part of the screen.</li>
-                  <li class="help-subitem">Tap the top-left to jump to page 1.</li>
-                  <li class="help-subitem">Tap the top-right to jump to the last page.</li>
+                  <li>Use the four large tap zones while playing:</li>
                 </ul>
+                <div class="help-tap-zone-grid" aria-label="PDF tap zones">
+                  <div><strong>Page 1</strong><span aria-hidden="true">&#8676;</span><small>Top left</small></div>
+                  <div><strong>Last page</strong><span aria-hidden="true">&#8677;</span><small>Top right</small></div>
+                  <div><strong>Previous</strong><span aria-hidden="true">&#8249;</span><small>Lower left</small></div>
+                  <div><strong>Next</strong><span aria-hidden="true">&#8250;</span><small>Lower right</small></div>
+                </div>
+                <p class="help-tap-zone-note">Tap Info in the PDF viewer to show the zones again. Tap the guide once to dismiss it.</p>
               </div>
             </details>
 
