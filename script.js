@@ -3487,11 +3487,11 @@ function createFavoriteDividerRow(id, options = {}) {
   if (options.reorderFavorites) article.dataset.favoriteRow = id;
 
   const reorderHandle = options.reorderFavorites
-    ? dragHandleHtml("favorite", id, "divider")
+    ? dragHandleHtml("favorite", id, "section break")
     : "";
 
   article.innerHTML = `
-    <button class="swipe-delete-action" type="button" data-remove-favorite-divider="${escapeHtml(id)}" aria-label="Delete spacer" title="Delete">&#128465;</button>
+    <button class="swipe-delete-action" type="button" data-remove-favorite-divider="${escapeHtml(id)}" aria-label="Delete section break" title="Delete section break">&#128465;</button>
     <div class="swipe-content favorite-divider-content${options.reorderFavorites ? " favorite-divider-editing" : ""}">
       <span class="favorite-divider-line" aria-hidden="true"></span>
       ${reorderHandle}
@@ -5294,6 +5294,7 @@ function addFavoriteDivider() {
 
 function removeFavoriteDivider(id) {
   if (!isFavoriteDividerId(id)) return;
+  if (!window.confirm("Delete this section break?")) return;
   state.favorites.delete(id);
   writeJson(STORAGE_KEYS.favorites, Array.from(state.favorites));
   renderFavorites();
