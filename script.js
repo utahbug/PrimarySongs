@@ -213,7 +213,7 @@ const DEFAULT_LIBRARY_DATA = {
     },
     {
       "id": "new-hymns-link",
-      "title": "New Hymns",
+      "title": "Hymns for Home and Church",
       "type": "link",
       "url": "https://www.churchofjesuschrist.org/media/music/collections/hymns-for-home-and-church?lang=eng"
     }
@@ -325,9 +325,6 @@ const DEFAULT_LIBRARY_DATA = {
         },
         {
           "itemId": "hymns-for-home-and-church-new-hymns"
-        },
-        {
-          "itemId": "new-hymns-link"
         }
       ]
     }
@@ -1350,6 +1347,12 @@ function migrateRetiredLyricListEntries(lists = []) {
 
 function repairPrimarySongs2026Entries(lists = []) {
   return lists.map((list) => {
+    if (["lds-library", "setlist-lds-library"].includes(list.id)) {
+      return {
+        ...list,
+        entries: (list.entries || []).filter((entry) => entry.itemId !== "new-hymns-link")
+      };
+    }
     if (["primary-program", "setlist-primary-program"].includes(list.id)) {
       const seen = new Set();
       return {
@@ -1738,7 +1741,7 @@ function updateImportTypeFields() {
   applyImportContext();
   const fileBacked = type === "pdf" || type === "image";
   el.pdfImportFields.classList.toggle("hidden", !fileBacked || editing);
-  el.importFileLabel.textContent = type === "image" ? "Photo or image" : "PDF, photo, or image";
+  el.importFileLabel.textContent = "File";
   el.importPdfFile.accept = "application/pdf,.pdf,image/*";
   el.cardImportFields.classList.toggle("hidden", type !== "card" && type !== "note");
   el.importCardImageRow.classList.toggle("hidden", type !== "card");
@@ -5565,6 +5568,7 @@ function renderListEditModal() {
 
 function updateListEditView() {
   const showAdd = state.listEditView === "add";
+  el.listEditPanel.classList.toggle("add-items-view", showAdd);
   el.listEditCurrentSection.classList.toggle("hidden", showAdd);
   el.listEditAddSection.classList.toggle("hidden", !showAdd);
   document.querySelectorAll("[data-list-edit-view].list-edit-view-tab").forEach((button) => {

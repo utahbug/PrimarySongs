@@ -699,7 +699,7 @@ body.dark-background .modal-heading .form-close-button:hover, body.dark-backgrou
 
 #importCardImageRow { order: 7; }
 
-#importTypeRow { order: 8; }
+#importTypeRow { order: 3; }
 
 #importForm .form-apply-button { order: 9; }
 
@@ -722,6 +722,10 @@ body.dark-background .modal-heading .form-close-button:hover, body.dark-backgrou
 .compact-action-button { min-height: 38px; padding: 7px 10px; }
 
 .list-edit-modal-panel { max-width: 860px; }
+
+@media (min-width: 761px) {
+  .list-edit-modal-panel.add-items-view { height: min(82dvh, calc(100dvh - 36px)); min-height: min(80dvh, calc(100dvh - 36px)); }
+}
 
 .list-edit-form { gap: 12px; }
 
