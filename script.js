@@ -4712,10 +4712,13 @@ function handlePdfTapZoneClick(event, direction) {
     return;
   }
 
+  performPdfTapZoneAction(event.clientY, direction);
+}
+
+function performPdfTapZoneAction(clientY, direction) {
   const stageBox = el.pdfStage.getBoundingClientRect();
-  const tappedTopQuarter = event.clientY <= stageBox.top + stageBox.height / 4;
+  const tappedTopQuarter = clientY <= stageBox.top + stageBox.height / 4;
   if (tappedTopQuarter) {
-    event.preventDefault();
     if (direction === "previous") {
       firstPdfPage();
     } else {
@@ -4813,6 +4816,18 @@ function handlePdfTouchEnd(event) {
       previousPdfPage();
     }
     return;
+  }
+
+  if (state.currentPdf.touchMode === "tap" && !moved) {
+    const tapZone = event.target.closest(".pdf-tap-zone");
+    if (tapZone) {
+      event.preventDefault();
+      const direction = tapZone === el.pdfTapLeft ? "previous" : "next";
+      finishPdfGesture();
+      performPdfTapZoneAction(touch.clientY, direction);
+      suppressNextPdfClick();
+      return;
+    }
   }
 
   finishPdfGesture();
