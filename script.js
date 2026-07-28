@@ -1459,7 +1459,9 @@ function pruneOldEmptyListShells(lists, persist = false) {
 
 function setupInitialSelections() {
   populateSelect(el.listSelect, state.lists || []);
-  state.activeListId = state.lists[0]?.id || "";
+  const defaultList = state.lists.find((list) => list.id === "primary-songs-2026") || state.lists[0];
+  state.activeListId = defaultList?.id || "";
+  state.expandedListIds = state.activeListId ? [state.activeListId] : [];
   el.listSelect.value = state.activeListId;
 }
 
