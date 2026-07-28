@@ -8,7 +8,7 @@ body { margin: 0px; background: var(--bg); color: var(--ink); font-family: syste
 
 body.modal-open { overflow: hidden; }
 
-body.dark-background { --bg: #000000; --surface: #0B0F12; --surface-strong: #121B21; --ink: #F7FAFB; --muted: #B8C8CE; --line: #31434B; --accent-soft: #132A35; --accent-hover: #1B3B49; --overlay: rgba(0, 0, 0, 0.72); --shadow: none; --shadow-strong: none; --shadow-modal: 0 24px 60px rgba(0, 0, 0, 0.58); color-scheme: dark; }
+body.dark-background { --bg: #000000; --surface: #0B0F12; --surface-strong: #121B21; --ink: #F7FAFB; --muted: #B8C8CE; --line: #405761; --accent-strong: #9BD3FF; --accent-soft: #183746; --accent-hover: #214A5B; --overlay: rgba(0, 0, 0, 0.72); --shadow: none; --shadow-strong: none; --shadow-modal: 0 24px 60px rgba(0, 0, 0, 0.58); color-scheme: dark; }
 
 button, input, select, textarea { font: inherit; }
 
@@ -40,7 +40,10 @@ body.identity-condensed .identity-name { font-size: 0.98rem; }
 
 .header-refresh-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; color: rgba(255, 255, 255, 0.88); display: inline-flex; flex: 0 0 auto; font-size: 1.05rem; height: 30px; justify-content: center; line-height: 1; padding: 4px; width: 30px; }
 
-.header-refresh-button:hover, .header-refresh-button:focus-visible, .app-header .background-toggle-button:hover, .app-header .background-toggle-button:focus-visible { background: rgba(255, 255, 255, 0.16); color: #FFFFFF; }
+.header-info-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; color: rgba(255, 255, 255, 0.9); display: inline-flex; height: 30px; justify-content: center; padding: 3px; width: 30px; }
+.header-info-button .info-icon-mark { color: currentcolor; height: 19px; width: 19px; }
+
+.header-refresh-button:hover, .header-refresh-button:focus-visible, .header-info-button:hover, .header-info-button:focus-visible, .app-header .background-toggle-button:hover, .app-header .background-toggle-button:focus-visible { background: rgba(255, 255, 255, 0.16); color: #FFFFFF; }
 
 .background-toggle-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; display: inline-flex; flex: 0 0 auto; height: 30px; justify-content: center; padding: 4px; width: 30px; }
 
@@ -472,6 +475,7 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 .tag, .type-pill { background: var(--accent-soft); border-radius: 999px; color: var(--accent-strong); display: inline-flex; font-size: 0.78rem; font-weight: 700; line-height: 1; padding: 6px 8px; text-transform: lowercase; }
 
 .type-pill { background: var(--accent-soft); color: var(--accent-strong); margin-left: 6px; }
+body.dark-background .tag, body.dark-background .type-pill { background: #193E50; color: #B9E2FF; }
 
 .compact-index-list { border-top: 1px solid var(--line); gap: 0px; }
 

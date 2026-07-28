@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-83">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-84">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-83" defer></script>
-    <script src="script.js?v=primary-2026-83" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-84" defer></script>
+    <script src="script.js?v=primary-2026-84" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -35,6 +35,20 @@
           <button id="headerRefreshButton" class="header-refresh-button" type="button" aria-label="Refresh app" title="Refresh app" data-refresh-app>
             <span aria-hidden="true">&#8635;</span>
           </button>
+          <div class="overflow-wrap header-info-wrap">
+            <button id="infoMenuButton" class="header-info-button" type="button" aria-label="Information" title="Information" aria-expanded="false" aria-controls="infoMenu">
+              <span class="info-icon-mark" aria-hidden="true">i</span>
+            </button>
+            <div id="infoMenu" class="overflow-menu info-menu hidden" role="menu" aria-label="Information">
+              <strong class="menu-heading">Information</strong>
+              <button type="button" role="menuitem" data-open-help>Help</button>
+              <button type="button" role="menuitem" data-open-about>About</button>
+              <span class="menu-separator" aria-hidden="true"></span>
+              <button id="exportBackupButton" type="button" role="menuitem">Export data + files</button>
+              <button id="importBackupButton" type="button" role="menuitem">Import data + files</button>
+            </div>
+            <input id="backupFileInput" class="hidden" type="file" accept="application/json,.json">
+          </div>
           <button id="backgroundToggleButton" class="background-toggle-button" type="button" aria-label="Use black background" title="Use black background" aria-pressed="false">
             <span aria-hidden="true"></span>
           </button>
@@ -73,20 +87,6 @@
             <button type="button" role="menuitem" data-menu-section="tuner">Tuner</button>
             <button type="button" role="menuitem" data-menu-section="pitch">Pitch</button>
           </div>
-        </div>
-        <div class="overflow-wrap nav-overflow-wrap nav-info-wrap">
-          <button id="infoMenuButton" class="nav-button nav-icon-button nav-help-button" type="button" aria-label="Information" title="Information" aria-expanded="false" aria-controls="infoMenu">
-            <span class="info-icon-mark" aria-hidden="true">i</span>
-          </button>
-          <div id="infoMenu" class="overflow-menu info-menu hidden" role="menu" aria-label="Information">
-            <strong class="menu-heading">Information</strong>
-            <button type="button" role="menuitem" data-open-help>Help</button>
-            <button type="button" role="menuitem" data-open-about>About</button>
-            <span class="menu-separator" aria-hidden="true"></span>
-            <button id="exportBackupButton" type="button" role="menuitem">Export data + files</button>
-            <button id="importBackupButton" type="button" role="menuitem">Import data + files</button>
-          </div>
-          <input id="backupFileInput" class="hidden" type="file" accept="application/json,.json">
         </div>
       </nav>
 
