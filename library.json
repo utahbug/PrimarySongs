@@ -80,6 +80,12 @@
       "title": "Hymns for Home and Church",
       "type": "link",
       "url": "https://www.churchofjesuschrist.org/media/music/collections/hymns-for-home-and-church?lang=eng"
+    },
+    {
+      "id": "hymnal-link",
+      "title": "Hymnal",
+      "type": "link",
+      "url": "https://www.churchofjesuschrist.org/media/music/collections/hymns?lang=eng"
     }
   ],
   "favorites": [

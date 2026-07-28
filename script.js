@@ -216,6 +216,12 @@ const DEFAULT_LIBRARY_DATA = {
       "title": "Hymns for Home and Church",
       "type": "link",
       "url": "https://www.churchofjesuschrist.org/media/music/collections/hymns-for-home-and-church?lang=eng"
+    },
+    {
+      "id": "hymnal-link",
+      "title": "Hymnal",
+      "type": "link",
+      "url": "https://www.churchofjesuschrist.org/media/music/collections/hymns?lang=eng"
     }
   ],
   "favorites": [
@@ -436,7 +442,7 @@ const state = {
     tapTimes: []
   },
   tuner: {
-    instrument: "chromatic",
+    instrument: "guitar",
     running: false,
     audioContext: null,
     analyser: null,
@@ -448,8 +454,8 @@ const state = {
     lastFrequency: 0
   },
   pitch: {
-    preset: "chromatic",
-    note: "A4",
+    preset: "guitar",
+    note: "E2",
     playing: false,
     audioContext: null,
     oscillator: null,
@@ -4737,7 +4743,7 @@ function clampPdfPan() {
 
 function loadPitchSettings() {
   const saved = readJson(STORAGE_KEYS.pitch, {});
-  state.pitch.preset = PITCH_PRESETS[saved.preset] ? saved.preset : "chromatic";
+  state.pitch.preset = PITCH_PRESETS[saved.preset] ? saved.preset : "guitar";
   state.pitch.note = getPitchNotes(state.pitch.preset).some((note) => note.label === saved.note)
     ? saved.note
     : PITCH_PRESETS[state.pitch.preset].defaultNote;
@@ -4910,7 +4916,7 @@ function stopPitchTone(shouldRender = true) {
 }
 function loadTunerSettings() {
   const saved = readJson(STORAGE_KEYS.tuner, {});
-  state.tuner.instrument = TUNER_INSTRUMENTS[saved.instrument] ? saved.instrument : "chromatic";
+  state.tuner.instrument = TUNER_INSTRUMENTS[saved.instrument] ? saved.instrument : "guitar";
 }
 
 function saveTunerSettings() {
