@@ -938,8 +938,7 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-zone-tip-center { background: var(--surface); border: 2px solid color-mix(in srgb, #237C7A 52%, var(--line)); border-radius: 15px; box-shadow: 0 12px 34px rgba(31, 72, 101, 0.24); color: var(--ink); cursor: default; display: grid; gap: 9px; justify-items: center; left: 50%; max-width: min(370px, 84%); padding: 13px 18px 12px; position: absolute; text-align: center; top: 43%; transform: translate(-50%, -50%); width: max-content; }
 .pdf-zone-tip-center strong, .pdf-zone-tip-center small { display: block; }
 .pdf-zone-tip-center strong { background: linear-gradient(105deg, #237C7A, #2B67B1); border-radius: 999px; color: #FFFFFF; font-size: 1.05rem; font-weight: 900; letter-spacing: 0.08em; padding: 5px 16px; }
-.pdf-tips-begin-button { background: linear-gradient(135deg, #2D7F87, #3767AC); border: 1px solid #214A78; border-radius: 10px; box-shadow: 0 4px 10px rgba(32, 76, 120, 0.24); color: #FFFFFF; font-size: 1rem; font-weight: 850; min-height: 42px; padding: 7px 28px; }
-.pdf-tips-begin-button:hover, .pdf-tips-begin-button:focus-visible { filter: brightness(1.08); }
+.pdf-tips-begin-text { color: var(--accent-strong); font-size: 0.92rem; font-weight: 800; line-height: 1.2; }
 .pdf-tips-preference { align-items: center; color: var(--ink); cursor: pointer; display: flex; font-size: 0.76rem; font-weight: 700; gap: 7px; }
 .pdf-tips-preference input { height: 18px; margin: 0px; width: 18px; }
 .pdf-tips-preference span { color: var(--ink); margin: 0px; }

@@ -607,7 +607,6 @@ function collectElements() {
   el.pdfPageStatus = document.getElementById("pdfPageStatus");
   el.pdfStage = document.getElementById("pdfStage");
   el.pdfZoneTips = document.getElementById("pdfZoneTips");
-  el.pdfTipsBeginButton = document.getElementById("pdfTipsBeginButton");
   el.pdfTipsShowOnOpen = document.getElementById("pdfTipsShowOnOpen");
   el.pdfLoading = document.getElementById("pdfLoading");
   el.pdfCanvas = document.getElementById("pdfCanvas");
