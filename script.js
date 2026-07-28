@@ -395,6 +395,14 @@ const state = {
     startY: 0,
     moved: false
   },
+  listItemDrag: {
+    row: null,
+    container: null,
+    pointerId: null,
+    startY: 0,
+    moved: false,
+    listId: ""
+  },
   currentPdf: {
     item: null,
     doc: null,
@@ -812,6 +820,10 @@ function wireEvents() {
   document.body.addEventListener("pointermove", handleListDragPointerMove, { passive: false });
   document.body.addEventListener("pointerup", handleListDragPointerUp);
   document.body.addEventListener("pointercancel", handleListDragPointerCancel);
+  document.body.addEventListener("pointerdown", handleListItemDragPointerDown);
+  document.body.addEventListener("pointermove", handleListItemDragPointerMove, { passive: false });
+  document.body.addEventListener("pointerup", handleListItemDragPointerUp);
+  document.body.addEventListener("pointercancel", handleListItemDragPointerCancel);
   document.body.addEventListener("pointerdown", handleSwipePointerDown);
   document.body.addEventListener("pointermove", handleSwipePointerMove, { passive: false });
   document.body.addEventListener("pointerup", handleSwipePointerUp);
@@ -1020,6 +1032,19 @@ function closeListMoreMenu() {
 }
 
 function handleDocumentKeydown(event) {
+  const dragHandle = event.target.closest?.("[data-favorite-drag], [data-list-drag], [data-list-item-drag]");
+  if (dragHandle && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+    event.preventDefault();
+    const direction = event.key === "ArrowUp" ? "up" : "down";
+    if (dragHandle.dataset.favoriteDrag) {
+      moveFavoriteOrderStep(dragHandle.dataset.favoriteDrag, direction);
+    } else if (dragHandle.dataset.listDrag) {
+      moveListOrderStep(dragHandle.dataset.listDrag, direction);
+    } else if (dragHandle.dataset.listItemDrag) {
+      moveListItem(`${dragHandle.dataset.dragListId}:${dragHandle.dataset.dragIndex}:${direction}`);
+    }
+    return;
+  }
   if (event.key !== "Escape") return;
   closeOverflowMenu();
   closeInfoMenu();
@@ -2809,7 +2834,7 @@ function createItemCard(item, options = {}) {
       return article;
     }
     const reorderHandle = options.reorderFavorites
-      ? reorderStepControlsHtml("favorite", item.id, title, options.reorderIndex, options.reorderCount)
+      ? dragHandleHtml("favorite", item.id, title)
       : "";
     article.innerHTML = `
       ${deleteAction}
@@ -3044,10 +3069,7 @@ function renderLists() {
   el.listSelect.value = active.id;
   renderListTabs(active);
 
-  el.listReorderButton.classList.toggle("hidden", state.lists.length < 2);
-  el.listReorderButton.classList.toggle("active-tool", state.listReorderMode);
-  el.listReorderButton.setAttribute("aria-pressed", state.listReorderMode ? "true" : "false");
-  updateReorderToggle(el.listReorderButton, state.listReorderMode, "lists");
+  el.listReorderButton.classList.add("hidden");
   el.listEditButton.innerHTML = state.listEditMode ? "&#10003;" : "&#9998;";
   el.listEditButton.setAttribute("aria-label", state.listEditMode ? "Save list changes" : "Edit list");
   el.listEditButton.title = state.listEditMode ? "Save list changes" : "Edit list";
@@ -3064,19 +3086,17 @@ function renderLists() {
 }
 
 function renderListTabs(active) {
-  el.listTabs.classList.toggle("list-reorder-list", state.listReorderMode);
+  el.listTabs.classList.add("list-reorder-list");
   el.listTabs.innerHTML = state.lists.map((list, index) => {
     const itemCount = getResolvedListEntries(list).length;
     const activeClass = list.id === active.id ? " active" : "";
     const isExpanded = state.expandedListIds.includes(list.id);
     const expandedClass = isExpanded ? " expanded" : "";
-    const reorderClass = state.listReorderMode ? " list-reorder-row" : "";
+    const reorderClass = " list-reorder-row";
     const expanded = isExpanded ? "true" : "false";
     const selected = list.id === active.id ? "true" : "false";
     const title = list.title || "Untitled List";
-    const reorderHandle = state.listReorderMode
-      ? reorderStepControlsHtml("list", list.id, title, index, state.lists.length)
-      : "";
+    const reorderHandle = dragHandleHtml("list", list.id, title);
     return `
       <div class="list-tab-group${activeClass}${expandedClass}${reorderClass}" role="option" aria-selected="${selected}" data-list-row="${escapeHtml(list.id)}">
         <div class="list-tab-row">
@@ -3102,13 +3122,13 @@ function renderInlineListItems(list) {
   }
 
   return `
-    <div class="inline-list-items">
+    <div class="inline-list-items" data-list-items="${escapeHtml(list.id)}">
       ${entries.map((entry) => {
         const title = itemDisplayTitleWithInlinePage(entry.item, entry.page);
         const favorite = state.favorites.has(entry.item.id);
         const typeLabel = compactTypeLabel(entry.item);
         return `
-          <div class="inline-list-row">
+          <div class="inline-list-row" data-list-item-row="${escapeHtml(entry.item.id)}">
             <button class="icon-button favorite-toggle inline-list-favorite ${favorite ? "favorite-on" : ""}" type="button" data-favorite="${escapeHtml(entry.item.id)}" aria-label="Toggle favorite for ${escapeHtml(title)}" title="Toggle favorite">
               ${favorite ? "&#9733;" : "&#9734;"}
             </button>
@@ -3117,6 +3137,7 @@ function renderInlineListItems(list) {
               <span class="type-pill compact-type">${escapeHtml(typeLabel)}</span>
             </button>
             <button class="icon-button inline-list-edit-button" type="button" data-edit-item="${escapeHtml(entry.item.id)}" data-edit-context="lists" aria-label="Edit ${escapeHtml(title)}" title="Edit item">&#9998;</button>
+            ${dragHandleHtml("list-item", entry.item.id, title)}
           </div>
         `;
       }).join("")}
@@ -3381,11 +3402,8 @@ function renderLinks() {
 function renderFavorites() {
   const favoriteRows = getFavoriteRows();
   const favoriteItemCount = favoriteRows.filter((row) => row.kind === "item").length;
-  el.favoritesReorderButton.classList.toggle("hidden", !favoriteRows.length);
+  el.favoritesReorderButton.classList.add("hidden");
   el.favoriteDividerAddButton.classList.toggle("hidden", favoriteItemCount < 3);
-  el.favoritesReorderButton.classList.toggle("active-tool", state.favoriteReorderMode);
-  el.favoritesReorderButton.setAttribute("aria-pressed", state.favoriteReorderMode ? "true" : "false");
-  updateReorderToggle(el.favoritesReorderButton, state.favoriteReorderMode, "favorites");
   if (!favoriteRows.length) {
     el.favoritesContent.classList.remove("compact-index-list");
     el.favoritesContent.classList.remove("favorite-list");
@@ -3437,11 +3455,11 @@ function cleanupFavoriteRows(rows) {
 function renderFavoriteRows(rows) {
   el.favoritesContent.innerHTML = "";
   el.favoritesContent.classList.add("compact-index-list", "favorite-list");
-  el.favoritesContent.classList.toggle("favorite-reorder-list", state.favoriteReorderMode);
+  el.favoritesContent.classList.add("favorite-reorder-list");
   rows.forEach((row, index) => {
     if (row.kind === "divider") {
       el.favoritesContent.appendChild(createFavoriteDividerRow(row.id, {
-        reorderFavorites: state.favoriteReorderMode,
+        reorderFavorites: true,
         reorderIndex: index,
         reorderCount: rows.length
       }));
@@ -3450,7 +3468,7 @@ function renderFavoriteRows(rows) {
     el.favoritesContent.appendChild(createItemCard(row.item, {
       compact: true,
       favoriteList: true,
-      reorderFavorites: state.favoriteReorderMode,
+      reorderFavorites: true,
       reorderIndex: index,
       reorderCount: rows.length
     }));
@@ -3464,7 +3482,7 @@ function createFavoriteDividerRow(id, options = {}) {
   if (options.reorderFavorites) article.dataset.favoriteRow = id;
 
   const reorderHandle = options.reorderFavorites
-    ? reorderStepControlsHtml("favorite", id, "divider", options.reorderIndex, options.reorderCount)
+    ? dragHandleHtml("favorite", id, "divider")
     : "";
 
   article.innerHTML = `
@@ -3806,7 +3824,6 @@ function finishFavoriteDrag(saveOrder) {
 }
 
 function handleListDragPointerDown(event) {
-  if (!state.listReorderMode) return;
   const handle = event.target.closest("[data-list-drag]");
   if (!handle) return;
 
@@ -3826,6 +3843,88 @@ function handleListDragPointerDown(event) {
   row.classList.add("is-dragging");
   container.classList.add("list-reorder-active");
   handle.setPointerCapture?.(event.pointerId);
+}
+
+function handleListItemDragPointerDown(event) {
+  const handle = event.target.closest("[data-list-item-drag]");
+  if (!handle) return;
+  const row = handle.closest("[data-list-item-row]");
+  const container = row?.parentElement;
+  if (!row || !container) return;
+
+  event.preventDefault();
+  closeSwipeRows();
+  state.listItemDrag = {
+    row,
+    container,
+    pointerId: event.pointerId,
+    startY: event.clientY,
+    moved: false,
+    listId: container.dataset.listItems || ""
+  };
+  row.classList.add("is-dragging");
+  handle.setPointerCapture?.(event.pointerId);
+}
+
+function handleListItemDragPointerMove(event) {
+  const drag = state.listItemDrag;
+  if (!drag.row || event.pointerId !== drag.pointerId) return;
+  if (Math.abs(event.clientY - drag.startY) > 4) drag.moved = true;
+  event.preventDefault();
+
+  const rows = Array.from(drag.container.querySelectorAll("[data-list-item-row]"))
+    .filter((row) => row !== drag.row);
+  const beforeRow = rows.find((row) => {
+    const rect = row.getBoundingClientRect();
+    return event.clientY < rect.top + rect.height / 2;
+  });
+  if (beforeRow) drag.container.insertBefore(drag.row, beforeRow);
+  else drag.container.appendChild(drag.row);
+}
+
+function handleListItemDragPointerUp(event) {
+  if (!state.listItemDrag.row || event.pointerId !== state.listItemDrag.pointerId) return;
+  finishListItemDrag(true);
+}
+
+function handleListItemDragPointerCancel(event) {
+  if (!state.listItemDrag.row || event.pointerId !== state.listItemDrag.pointerId) return;
+  finishListItemDrag(false);
+}
+
+function finishListItemDrag(saveOrder) {
+  const drag = state.listItemDrag;
+  if (!drag.row || !drag.container) return;
+  const orderedIds = Array.from(drag.container.querySelectorAll("[data-list-item-row]"))
+    .map((row) => row.dataset.listItemRow)
+    .filter(Boolean);
+  drag.row.classList.remove("is-dragging");
+  const shouldSave = saveOrder && drag.moved;
+  const listId = drag.listId;
+  state.listItemDrag = {
+    row: null,
+    container: null,
+    pointerId: null,
+    startY: 0,
+    moved: false,
+    listId: ""
+  };
+
+  if (shouldSave) {
+    const list = state.lists.find((candidate) => candidate.id === listId);
+    if (list) {
+      const entriesById = new Map((list.entries || []).map((entry) => [entry.itemId, entry]));
+      list.entries = orderedIds.map((id) => entriesById.get(id)).filter(Boolean);
+      saveLists();
+      renderLists();
+      state.swipe.suppressClick = true;
+      window.setTimeout(() => {
+        state.swipe.suppressClick = false;
+      }, 250);
+    }
+  } else if (!saveOrder) {
+    renderLists();
+  }
 }
 
 function handleListDragPointerMove(event) {
@@ -3895,7 +3994,7 @@ function finishListDrag(saveOrder) {
 
 function handleSwipePointerDown(event) {
   if (event.pointerType && event.pointerType !== "touch" && event.pointerType !== "pen") return;
-  if (event.target.closest(".swipe-delete-action, .favorite-drag-handle, .list-drag-handle, .reorder-step-controls, input, textarea, select")) return;
+  if (event.target.closest(".swipe-delete-action, .drag-handle, .reorder-step-controls, input, textarea, select")) return;
 
   const row = event.target.closest(".swipe-row");
   if (!row) return;
@@ -5181,6 +5280,24 @@ function reorderStepControlsHtml(kind, id, label, index, count) {
       <button class="reorder-step-button" type="button" ${dataAttribute}="${safeId}" data-order-direction="up" aria-label="Move ${safeLabel} up" title="Move up"${disableUp}>&#9650;</button>
       <button class="reorder-step-button" type="button" ${dataAttribute}="${safeId}" data-order-direction="down" aria-label="Move ${safeLabel} down" title="Move down"${disableDown}>&#9660;</button>
     </span>
+  `;
+}
+
+function dragHandleHtml(kind, id, label) {
+  const safeId = escapeHtml(id);
+  const safeLabel = escapeHtml(label);
+  const dataAttribute = kind === "favorite"
+    ? `data-favorite-drag="${safeId}"`
+    : kind === "list"
+      ? `data-list-drag="${safeId}"`
+      : `data-list-item-drag="${safeId}"`;
+  const extraData = kind === "list-item"
+    ? ` data-drag-list-id="${escapeHtml(state.activeListId)}" data-drag-index="${getActiveList()?.entries?.findIndex((entry) => entry.itemId === id) ?? -1}"`
+    : "";
+  return `
+    <button class="drag-handle ${kind}-drag-handle" type="button" ${dataAttribute}${extraData} aria-label="Drag ${safeLabel} to rearrange" title="Drag to rearrange">
+      <span aria-hidden="true"></span>
+    </button>
   `;
 }
 
