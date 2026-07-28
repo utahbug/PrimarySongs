@@ -353,6 +353,7 @@ const state = {
   itemsById: new Map(),
   favorites: new Set(),
   lists: [],
+  armedPdfListId: "",
   listEditMode: false,
   listPickerOpen: false,
   listPickerMessage: "",
@@ -3220,6 +3221,7 @@ function renderListTabs(active) {
 function renderInlineListItems(list) {
   const entries = getResolvedListEntries(list);
   const pdfCount = entries.filter((entry) => entry.item.type === "pdf").length;
+  const playlistArmed = state.armedPdfListId === list.id;
 
   if (!entries.length) {
     return `<div class="inline-list-items"><div class="inline-list-empty">No items yet.</div></div>`;
@@ -3229,8 +3231,10 @@ function renderInlineListItems(list) {
     <div class="inline-list-items" data-list-items="${escapeHtml(list.id)}">
       ${pdfCount > 1 ? `
         <div class="list-play-through-row">
-          <button class="list-play-through-button" type="button" data-play-pdf-list="${escapeHtml(list.id)}">
-            <span aria-hidden="true">&#9654;</span> Play through list
+          <button class="list-play-through-button ${playlistArmed ? "is-active" : ""}" type="button" data-play-pdf-list="${escapeHtml(list.id)}" aria-pressed="${playlistArmed}">
+            ${playlistArmed
+              ? `<span aria-hidden="true">&#10003;</span> Playlist ON &middot; Choose starting song`
+              : `<span aria-hidden="true">&#9654;</span> Play through list`}
           </button>
         </div>
       ` : ""}
@@ -3862,13 +3866,20 @@ async function handleBodyClick(event) {
 
   const playListButton = event.target.closest("[data-play-pdf-list]");
   if (playListButton) {
-    startPdfListPlayback(playListButton.dataset.playPdfList);
+    togglePdfListArming(playListButton.dataset.playPdfList);
     return;
   }
 
   const openButton = event.target.closest("[data-open]");
   if (openButton) {
-    openItem(openButton.dataset.open);
+    const listItems = openButton.closest("[data-list-items]");
+    const listId = listItems?.dataset.listItems || "";
+    const startInPlaylist = Boolean(listId && state.armedPdfListId === listId);
+    if (startInPlaylist) {
+      state.armedPdfListId = "";
+      renderLists();
+    }
+    openItem(openButton.dataset.open, { listId: startInPlaylist ? listId : "" });
     return;
   }
 
@@ -4743,10 +4754,11 @@ function getPdfSequence(listId) {
     .filter((item) => item.type === "pdf");
 }
 
-function startPdfListPlayback(listId) {
+function togglePdfListArming(listId) {
   const sequence = getPdfSequence(listId);
-  if (!sequence.length) return;
-  openPdf(sequence[0], { listId });
+  if (sequence.length < 2) return;
+  state.armedPdfListId = state.armedPdfListId === listId ? "" : listId;
+  renderLists();
 }
 
 function getCurrentPdfSequencePosition() {
@@ -5758,6 +5770,9 @@ function toggleListPicker() {
 
 function selectList(listId) {
   if (!state.lists.some((list) => list.id === listId)) return;
+  if (state.armedPdfListId && state.armedPdfListId !== listId) {
+    state.armedPdfListId = "";
+  }
   const isExpanded = state.expandedListIds.includes(listId);
   state.activeListId = listId;
   state.expandedListIds = isExpanded
