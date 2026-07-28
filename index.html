@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-90">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-91">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-90" defer></script>
-    <script src="script.js?v=primary-2026-90" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-91" defer></script>
+    <script src="script.js?v=primary-2026-91" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -489,19 +489,26 @@
             <input id="listEditTitleField" type="text" autocomplete="off">
           </label>
 
-          <section class="list-edit-section" aria-label="Items in this list">
-            <div class="picker-heading">
-              <strong>Items in this list</strong>
+          <div class="list-edit-view-tabs" role="tablist" aria-label="Edit list sections">
+            <button class="list-edit-view-tab active" type="button" role="tab" data-list-edit-view="current" aria-selected="true">Current Items</button>
+            <button class="list-edit-view-tab" type="button" role="tab" data-list-edit-view="add" aria-selected="false">Add Items +</button>
+          </div>
+
+          <section id="listEditCurrentSection" class="list-edit-section list-edit-current-section" aria-label="Current items">
+            <div class="picker-heading list-edit-section-heading">
+              <strong>Current Items</strong>
+              <span id="listEditCurrentCount" class="list-edit-count"></span>
             </div>
             <div id="listEditItems" class="list-edit-items"></div>
           </section>
 
-          <section class="list-edit-section" aria-label="Select list contents from Files, Cards, and Links">
-            <div class="picker-heading">
-              <strong>Select items</strong>
+          <section id="listEditAddSection" class="list-edit-section list-edit-add-section hidden" aria-label="Add items from Files, Cards, and Links">
+            <div class="picker-heading list-edit-section-heading">
+              <strong>Add Items</strong>
+              <button class="secondary-button list-edit-done-adding" type="button" data-list-edit-view="current">Done adding</button>
             </div>
             <div class="editor-grid list-edit-add-grid">
-              <label>
+              <label class="list-edit-filter-field">
                 <span>Filter</span>
                 <input id="listEditSearch" type="search" autocomplete="off">
               </label>

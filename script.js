@@ -351,6 +351,7 @@ const state = {
   listPickerOpen: false,
   listPickerMessage: "",
   listEditSort: normalizeListEditSort(localStorage.getItem(STORAGE_KEYS.listEditSort)),
+  listEditView: "current",
   favoriteReorderMode: false,
   listReorderMode: false,
   editingListId: "",
@@ -655,6 +656,9 @@ function collectElements() {
   el.listEditTitle = document.getElementById("listEditTitle");
   el.listEditTitleField = document.getElementById("listEditTitleField");
   el.listEditItems = document.getElementById("listEditItems");
+  el.listEditCurrentSection = document.getElementById("listEditCurrentSection");
+  el.listEditAddSection = document.getElementById("listEditAddSection");
+  el.listEditCurrentCount = document.getElementById("listEditCurrentCount");
   el.listEditSearch = document.getElementById("listEditSearch");
   el.listEditSort = document.getElementById("listEditSort");
   el.listEditStatus = document.getElementById("listEditStatus");
@@ -1042,6 +1046,7 @@ function handleDocumentKeydown(event) {
       moveListOrderStep(dragHandle.dataset.listDrag, direction);
     } else if (dragHandle.dataset.listItemDrag) {
       moveListItem(`${dragHandle.dataset.dragListId}:${dragHandle.dataset.dragIndex}:${direction}`);
+      if (dragHandle.closest("#listEditModal")) renderListEditModal();
     }
     return;
   }
@@ -3637,6 +3642,26 @@ async function handleBodyClick(event) {
     return;
   }
 
+  const listEditViewButton = event.target.closest("[data-list-edit-view]");
+  if (listEditViewButton) {
+    setListEditView(listEditViewButton.dataset.listEditView);
+    return;
+  }
+
+  const addListModalButton = event.target.closest("[data-list-modal-add]");
+  if (addListModalButton) {
+    toggleListItemFromModal(addListModalButton.dataset.listModalAdd, true);
+    return;
+  }
+
+  const removeListModalButton = event.target.closest("[data-list-modal-remove]");
+  if (removeListModalButton) {
+    saveCurrentModalListTitle();
+    removeListItem(removeListModalButton.dataset.listModalRemove);
+    renderListEditModal();
+    return;
+  }
+
   const selectListButton = event.target.closest("[data-select-list]");
   if (selectListButton) {
     selectList(selectListButton.dataset.selectList);
@@ -3773,6 +3798,8 @@ function handleFavoriteDragPointerMove(event) {
     return event.clientY < rect.top + rect.height / 2;
   });
 
+  markDragDestination(drag.container, beforeRow || rows[rows.length - 1]);
+
   if (beforeRow) {
     drag.container.insertBefore(drag.row, beforeRow);
   } else {
@@ -3802,6 +3829,7 @@ function finishFavoriteDrag(saveOrder) {
 
   drag.row.classList.remove("is-dragging");
   drag.container.classList.remove("favorites-reorder-active");
+  clearDragDestination(drag.container);
 
   const shouldSave = saveOrder && drag.moved;
   state.favoriteDrag = {
@@ -3878,6 +3906,7 @@ function handleListItemDragPointerMove(event) {
     const rect = row.getBoundingClientRect();
     return event.clientY < rect.top + rect.height / 2;
   });
+  markDragDestination(drag.container, beforeRow || rows[rows.length - 1]);
   if (beforeRow) drag.container.insertBefore(drag.row, beforeRow);
   else drag.container.appendChild(drag.row);
 }
@@ -3899,6 +3928,7 @@ function finishListItemDrag(saveOrder) {
     .map((row) => row.dataset.listItemRow)
     .filter(Boolean);
   drag.row.classList.remove("is-dragging");
+  clearDragDestination(drag.container);
   const shouldSave = saveOrder && drag.moved;
   const listId = drag.listId;
   state.listItemDrag = {
@@ -3917,6 +3947,9 @@ function finishListItemDrag(saveOrder) {
       list.entries = orderedIds.map((id) => entriesById.get(id)).filter(Boolean);
       saveLists();
       renderLists();
+      if (state.editingListId === listId && !el.listEditModal.classList.contains("hidden")) {
+        renderListEditModal();
+      }
       state.swipe.suppressClick = true;
       window.setTimeout(() => {
         state.swipe.suppressClick = false;
@@ -3941,6 +3974,7 @@ function handleListDragPointerMove(event) {
     const rect = row.getBoundingClientRect();
     return event.clientY < rect.top + rect.height / 2;
   });
+  markDragDestination(drag.container, beforeRow || rows[rows.length - 1]);
 
   if (beforeRow) {
     drag.container.insertBefore(drag.row, beforeRow);
@@ -3971,6 +4005,7 @@ function finishListDrag(saveOrder) {
 
   drag.row.classList.remove("is-dragging");
   drag.container.classList.remove("list-reorder-active");
+  clearDragDestination(drag.container);
 
   const shouldSave = saveOrder && drag.moved;
   state.listDrag = {
@@ -3990,6 +4025,15 @@ function finishListDrag(saveOrder) {
   } else if (!saveOrder) {
     renderLists();
   }
+}
+
+function markDragDestination(container, row) {
+  clearDragDestination(container);
+  if (row) row.classList.add("drag-destination");
+}
+
+function clearDragDestination(container) {
+  container?.querySelectorAll(".drag-destination").forEach((row) => row.classList.remove("drag-destination"));
 }
 
 function handleSwipePointerDown(event) {
@@ -5440,6 +5484,7 @@ function openListEditModal(listId) {
   state.activeListId = list.id;
   state.expandedListIds = [list.id];
   state.editingListId = list.id;
+  state.listEditView = "current";
   state.listEditMode = false;
   state.listReorderMode = false;
   state.listPickerOpen = false;
@@ -5451,7 +5496,6 @@ function openListEditModal(listId) {
   renderListEditModal();
   el.listEditModal.classList.remove("hidden");
   fitOpenMobileModals();
-  el.listEditTitleField.focus();
 }
 
 function closeListEditModal() {
@@ -5498,10 +5542,32 @@ function renderListEditModal() {
   el.listEditSort.value = state.listEditSort;
   renderListEditItems(list);
   renderListEditResults();
+  updateListEditView();
+}
+
+function updateListEditView() {
+  const showAdd = state.listEditView === "add";
+  el.listEditCurrentSection.classList.toggle("hidden", showAdd);
+  el.listEditAddSection.classList.toggle("hidden", !showAdd);
+  document.querySelectorAll("[data-list-edit-view].list-edit-view-tab").forEach((button) => {
+    const active = button.dataset.listEditView === state.listEditView;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", active ? "true" : "false");
+  });
+}
+
+function setListEditView(view) {
+  if (!["current", "add"].includes(view)) return;
+  saveCurrentModalListTitle();
+  state.listEditView = view;
+  updateListEditView();
+  if (view === "add") el.listEditSearch.focus();
 }
 
 function renderListEditItems(list) {
   const entries = getResolvedListEntries(list);
+  el.listEditCurrentCount.textContent = `${entries.length} ${entries.length === 1 ? "item" : "items"}`;
+  el.listEditItems.dataset.listItems = list.id;
 
   if (!entries.length) {
     el.listEditItems.innerHTML = `<div class="empty-state compact-empty"><p>No items yet.</p></div>`;
@@ -5518,16 +5584,15 @@ function renderListEditItems(list) {
     ].filter(Boolean).join(" - ");
     const value = `${escapeHtml(list.id)}:${entry.manualIndex}`;
     return `
-      <div class="list-edit-item-row">
+      <div class="list-edit-item-row" data-list-item-row="${escapeHtml(entry.item.id)}">
         <div class="list-edit-item-main">
           <span class="compact-title">${escapeHtml(title)}</span>
           ${meta ? `<span class="compact-meta">${escapeHtml(meta)}</span>` : ""}
         </div>
         <div class="list-edit-item-actions">
           <button class="icon-button" type="button" data-edit-item="${escapeHtml(entry.item.id)}" data-edit-context="lists" aria-label="Edit ${escapeHtml(title)}" title="Edit item">&#9998;</button>
-          <button class="icon-button" type="button" data-list-modal-move="${value}:up" aria-label="Move ${escapeHtml(title)} up" title="Move up">&#8593;</button>
-          <button class="icon-button" type="button" data-list-modal-move="${value}:down" aria-label="Move ${escapeHtml(title)} down" title="Move down">&#8595;</button>
-          <button class="icon-button remove-button" type="button" data-list-modal-remove="${value}" aria-label="Remove ${escapeHtml(title)} from list" title="Remove from list">&times;</button>
+          <button class="icon-button remove-button" type="button" data-list-modal-remove="${value}" aria-label="Remove ${escapeHtml(title)} from list" title="Remove from list">&#128465;</button>
+          ${dragHandleHtml("list-item", entry.item.id, title)}
         </div>
       </div>
     `;
@@ -5560,15 +5625,18 @@ function renderListEditResults() {
       ? `<div class="picker-type-heading">${escapeHtml(group)}</div>`
       : "";
     currentGroup = group;
+    const alreadyAdded = existingIds.has(item.id);
     return `${groupHeading}
-    <label class="checklist-row">
-      <input class="setlist-check" type="checkbox" data-list-modal-check="${escapeHtml(item.id)}" ${existingIds.has(item.id) ? "checked" : ""}>
+    <div class="checklist-row list-edit-result-row${alreadyAdded ? " is-added" : ""}">
       <span class="checklist-main">
         <span class="picker-title">${escapeHtml(itemDisplayTitle(item))}</span>
         <small>${escapeHtml(compactMetaText(item))}</small>
       </span>
       <span class="type-pill compact-type">${escapeHtml(item.type)}</span>
-    </label>
+      <button class="list-edit-add-item-button" type="button" data-list-modal-add="${escapeHtml(item.id)}"${alreadyAdded ? " disabled" : ""}>
+        ${alreadyAdded ? "&#10003; Added" : "+ Add"}
+      </button>
+    </div>
   `;
   }).join("");
 }
