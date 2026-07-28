@@ -957,6 +957,8 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-action-bar { align-items: center; background: color-mix(in srgb, var(--surface) 96%, var(--accent-soft)); border-top: 1px solid var(--line); display: flex; gap: clamp(8px, 2vw, 16px); justify-content: center; padding: 7px max(10px, env(safe-area-inset-right)) max(7px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); }
 .pdf-action-button { align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; box-shadow: 0 2px 7px color-mix(in srgb, var(--ink) 9%, transparent); color: var(--accent-strong); display: inline-flex; flex-direction: column; font-size: 1.2rem; font-weight: 800; gap: 0px; justify-content: center; min-height: 46px; min-width: 62px; padding: 4px 10px; }
 .pdf-action-button small { color: var(--muted); font-size: 0.62rem; font-weight: 750; line-height: 1.05; }
+.pdf-tips-action { min-width: 78px; }
+.pdf-tap-zones-label { color: var(--accent-strong); font-size: 0.72rem; font-weight: 850; line-height: 1.05; white-space: nowrap; }
 .pdf-action-button:hover, .pdf-action-button:focus-visible, .pdf-action-button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
 .pdf-home-action { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent-strong) 55%, var(--line)); color: var(--accent-strong); }
 .pdf-home-action .pdf-home-glyph { height: 26px; width: 26px; }
