@@ -3510,6 +3510,7 @@ function createFavoriteDividerRow(id, options = {}) {
     <button class="swipe-delete-action" type="button" data-remove-favorite-divider="${escapeHtml(id)}" aria-label="Delete section break" title="Delete section break">&#128465;</button>
     <div class="swipe-content favorite-divider-content${options.reorderFavorites ? " favorite-divider-editing" : ""}">
       <span class="favorite-divider-line" aria-hidden="true"></span>
+      <button class="icon-button section-break-delete-button" type="button" data-remove-favorite-divider="${escapeHtml(id)}" aria-label="Delete section break" title="Delete section break">&#128465;</button>
       ${reorderHandle}
     </div>
   `;

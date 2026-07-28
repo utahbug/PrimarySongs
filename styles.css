@@ -460,6 +460,13 @@ body.dark-background .drag-destination .list-tab-title { color: #B8EBD9; }
 .favorite-divider-editing { grid-template-columns: minmax(0px, 1fr) 38px; padding-right: 0px; }
 
 .favorite-divider-line { display: block; min-height: 1px; width: 100%; }
+.section-break-delete-button { display: none; }
+
+@media (min-width: 761px) {
+  .favorite-divider-editing { grid-template-columns: minmax(0px, 1fr) 38px 38px; }
+  .section-break-delete-button { align-self: center; background: transparent; border-color: transparent; color: var(--danger); display: inline-flex; min-height: 38px; min-width: 38px; padding: 0px; }
+  .section-break-delete-button:hover, .section-break-delete-button:focus-visible { background: var(--danger-soft); border-color: var(--danger-border); }
+}
 
 .list-row.swipe-row { display: block; padding: 0px; }
 
