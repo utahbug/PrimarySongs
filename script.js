@@ -35,6 +35,7 @@ const PDF_STORE_NAME = "pdfFiles";
 const RICH_TOGGLE_COMMANDS = ["bold", "italic", "strikeThrough", "insertUnorderedList", "insertOrderedList"];
 const CARD_FONT_FACES = ["Verdana", "system-ui", "Arial", "Trebuchet MS", "Georgia", "Atkinson Hyperlegible"];
 const CARD_READING_SCALES = [0.82, 0.9, 1, 1.12, 1.25, 1.4];
+const PDF_TIPS_REMINDER_MS = 3000;
 const FAVORITE_DIVIDER_PREFIX = "favorite-divider:";
 const TUNER_INSTRUMENTS = {
   chromatic: { label: "Chromatic", targets: [] },
@@ -432,7 +433,8 @@ const state = {
     panX: 0,
     panY: 0,
     suppressClick: false,
-    tipsTimer: null
+    tipsTimer: null,
+    tipsMode: ""
   },
   metronome: {
     bpm: 90,
@@ -605,6 +607,8 @@ function collectElements() {
   el.pdfPageStatus = document.getElementById("pdfPageStatus");
   el.pdfStage = document.getElementById("pdfStage");
   el.pdfZoneTips = document.getElementById("pdfZoneTips");
+  el.pdfTipsBeginButton = document.getElementById("pdfTipsBeginButton");
+  el.pdfTipsShowOnOpen = document.getElementById("pdfTipsShowOnOpen");
   el.pdfLoading = document.getElementById("pdfLoading");
   el.pdfCanvas = document.getElementById("pdfCanvas");
   el.pdfTapLeft = document.getElementById("pdfTapLeft");
@@ -847,7 +851,8 @@ function wireEvents() {
   el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfTipsButton.addEventListener("click", togglePdfTips);
-  el.pdfZoneTips.addEventListener("click", hidePdfTips);
+  el.pdfZoneTips.addEventListener("click", handlePdfZoneTipsClick);
+  el.pdfTipsShowOnOpen.addEventListener("change", savePdfTipsPreference);
   el.pdfMetronomeButton.addEventListener("click", toggleMetronome);
   el.pdfTempoUpButton.addEventListener("click", () => setMetronomeBpm(state.metronome.bpm + 1));
   el.pdfTempoDownButton.addEventListener("click", () => setMetronomeBpm(state.metronome.bpm - 1));
@@ -4447,7 +4452,7 @@ async function openPdf(item) {
   showPdfMessage("Loading PDF...");
   document.body.classList.add("pdf-open");
   el.pdfViewer.classList.remove("hidden");
-  setPdfTipsVisible(true, 4000);
+  showPdfTipsOnOpen();
 
   if (!window.pdfjsLib) {
     showPdfMessage("PDF.js could not be loaded. Check your internet connection or download PDF.js for local use.");
@@ -4588,15 +4593,63 @@ function returnFromPdfViewer() {
 
 function togglePdfTips() {
   const showTips = !el.pdfViewer.classList.contains("show-tips");
-  setPdfTipsVisible(showTips, 4000);
+  if (showTips) {
+    syncPdfTipsPreference();
+    setPdfTipsVisible(true, 0, "manual");
+  } else {
+    dismissPdfTips();
+  }
 }
 
-function setPdfTipsVisible(showTips, duration = 4000) {
+function showPdfTipsOnOpen() {
+  const settings = readJson(STORAGE_KEYS.settings, {});
+  const firstTime = !settings.pdfTipsSeen;
+  const showOnOpen = settings.showPdfTipsOnOpen !== false;
+  el.pdfTipsShowOnOpen.checked = showOnOpen;
+  if (firstTime) {
+    setPdfTipsVisible(true, 0, "first");
+  } else if (showOnOpen) {
+    setPdfTipsVisible(true, PDF_TIPS_REMINDER_MS, "reminder");
+  } else {
+    setPdfTipsVisible(false);
+  }
+}
+
+function syncPdfTipsPreference() {
+  const settings = readJson(STORAGE_KEYS.settings, {});
+  el.pdfTipsShowOnOpen.checked = settings.showPdfTipsOnOpen !== false;
+}
+
+function savePdfTipsPreference() {
+  const settings = readJson(STORAGE_KEYS.settings, {});
+  writeJson(STORAGE_KEYS.settings, {
+    ...settings,
+    showPdfTipsOnOpen: el.pdfTipsShowOnOpen.checked
+  });
+}
+
+function handlePdfZoneTipsClick(event) {
+  if (event.target.closest(".pdf-tips-preference")) return;
+  dismissPdfTips();
+}
+
+function dismissPdfTips() {
+  if (state.currentPdf.tipsMode === "first") {
+    const settings = readJson(STORAGE_KEYS.settings, {});
+    writeJson(STORAGE_KEYS.settings, { ...settings, pdfTipsSeen: true });
+  }
+  setPdfTipsVisible(false);
+}
+
+function setPdfTipsVisible(showTips, duration = 0, mode = "") {
   window.clearTimeout(state.currentPdf.tipsTimer);
   state.currentPdf.tipsTimer = null;
+  state.currentPdf.tipsMode = showTips ? mode : "";
   el.pdfViewer.classList.toggle("show-tips", showTips);
+  el.pdfZoneTips.dataset.guideMode = showTips ? mode : "";
+  el.pdfZoneTips.setAttribute("aria-hidden", showTips ? "false" : "true");
   el.pdfTipsButton.setAttribute("aria-pressed", showTips ? "true" : "false");
-  if (showTips) {
+  if (showTips && duration > 0) {
     state.currentPdf.tipsTimer = window.setTimeout(() => {
       setPdfTipsVisible(false);
     }, duration);

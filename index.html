@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-103">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-104">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-100" defer></script>
-    <script src="script.js?v=primary-2026-103" defer></script>
+    <script src="script.js?v=primary-2026-104" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -316,11 +316,16 @@
         <button id="pdfTapLeft" class="pdf-tap-zone pdf-tap-left" type="button" aria-label="Previous page; top-left jumps to first page"></button>
         <button id="pdfTapRight" class="pdf-tap-zone pdf-tap-right" type="button" aria-label="Next page; top-right jumps to last page"></button>
         <div id="pdfZoneTips" class="pdf-zone-tips" aria-hidden="true">
-          <div class="pdf-zone-tip pdf-zone-tip-first"><strong>Skip to page 1</strong><span class="pdf-zone-indicator pdf-zone-jump-indicator" aria-hidden="true">&#8676;</span></div>
-          <div class="pdf-zone-tip pdf-zone-tip-last"><strong>Skip to last page</strong><span class="pdf-zone-indicator pdf-zone-jump-indicator" aria-hidden="true">&#8677;</span></div>
+          <div class="pdf-zone-tip pdf-zone-tip-first"><strong>Jump to page 1</strong><span class="pdf-zone-indicator pdf-zone-jump-indicator" aria-hidden="true">|&larr;</span></div>
+          <div class="pdf-zone-tip pdf-zone-tip-last"><strong>Jump to last page</strong><span class="pdf-zone-indicator pdf-zone-jump-indicator" aria-hidden="true">&rarr;|</span></div>
           <div class="pdf-zone-tip pdf-zone-tip-prev"><strong>Previous page</strong><span class="pdf-zone-indicator pdf-zone-turn-indicator" aria-hidden="true">&#8249;</span></div>
           <div class="pdf-zone-tip pdf-zone-tip-next"><strong>Next page</strong><span class="pdf-zone-indicator pdf-zone-turn-indicator" aria-hidden="true">&#8250;</span></div>
-          <div class="pdf-zone-tip-center"><strong>TAP ZONES</strong><span>Tap to begin</span><small>Tap Info below to show again</small></div>
+          <div class="pdf-zone-tip-center">
+            <strong>TAP ZONES</strong>
+            <button id="pdfTipsBeginButton" class="pdf-tips-begin-button" type="button">Begin</button>
+            <label class="pdf-tips-preference"><input id="pdfTipsShowOnOpen" type="checkbox" checked> <span>Show when opening music</span></label>
+            <small>Tap Info below to show this guide again</small>
+          </div>
         </div>
       </div>
       <footer class="pdf-action-bar" aria-label="PDF viewer actions">
@@ -559,12 +564,12 @@
                   <li>Use the four large tap zones while playing:</li>
                 </ul>
                 <div class="help-tap-zone-grid" aria-label="PDF tap zones">
-                  <div><strong>Page 1</strong><span aria-hidden="true">&#8676;</span><small>Top left</small></div>
-                  <div><strong>Last page</strong><span aria-hidden="true">&#8677;</span><small>Top right</small></div>
+                  <div><strong>Jump: page 1</strong><span aria-hidden="true">|&larr;</span><small>Top left</small></div>
+                  <div><strong>Jump: last page</strong><span aria-hidden="true">&rarr;|</span><small>Top right</small></div>
                   <div><strong>Previous</strong><span aria-hidden="true">&#8249;</span><small>Lower left</small></div>
                   <div><strong>Next</strong><span aria-hidden="true">&#8250;</span><small>Lower right</small></div>
                 </div>
-                <p class="help-tap-zone-note">Tap Info <span class="help-inline-info-icon" aria-hidden="true">i</span> in the PDF viewer to show the zones again. Tap the guide once to dismiss it.</p>
+                <p class="help-tap-zone-note">The first guide stays until you begin. Later reminders close after three seconds. Clear “Show when opening music” if you no longer need them. Tap Info <span class="help-inline-info-icon" aria-hidden="true">i</span> to show the guide again.</p>
               </div>
             </details>
 
