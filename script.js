@@ -5074,6 +5074,7 @@ function renderTuner() {
   if (!el.tunerInstrument) return;
   el.tunerInstrument.value = state.tuner.instrument;
   el.tunerStatus.textContent = state.tuner.running ? "Listening" : "Microphone off";
+  el.tunerNote.parentElement.classList.toggle("is-idle", !state.tuner.running);
   el.tunerStartButton.textContent = state.tuner.running ? "Stop tuner" : "Start tuner";
   renderTunerStrings();
   if (!state.tuner.running) {

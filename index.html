@@ -14,10 +14,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-107">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-108">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-100" defer></script>
-    <script src="script.js?v=primary-2026-107" defer></script>
+    <script src="script.js?v=primary-2026-108" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -222,7 +222,10 @@
           <div class="tuner-panel">
             <div class="tuner-header">
               <h2 id="tunerTitle">Tuner</h2>
-              <span id="tunerStatus" class="tuner-status">Microphone off</span>
+              <span class="tuner-status-wrap">
+                <svg class="tuner-microphone-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Zm-6 9a6 6 0 0 0 12 0M12 18v3M9 21h6"/></svg>
+                <span id="tunerStatus" class="tuner-status">Microphone off</span>
+              </span>
             </div>
             <label class="tuner-field">
               <span>Instrument</span>

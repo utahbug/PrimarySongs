@@ -1104,11 +1104,15 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .tuner-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
 .tuner-header { align-items: center; border-bottom: 1px solid var(--line); display: flex; gap: 12px; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; }
 .tuner-header h2 { font-size: 1.25rem; margin: 0; }
+.tuner-status-wrap { align-items: center; color: var(--muted); display: inline-flex; gap: 5px; }
+.tuner-microphone-icon { fill: none; height: 15px; stroke: currentcolor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; width: 15px; }
 .tuner-status, .tuner-message, .tuner-frequency, .tuner-target { color: var(--muted); }
 .tuner-field { display: grid; gap: 6px; margin-bottom: 16px; }
 .tuner-field span { color: var(--muted); font-weight: 600; }
 .tuner-readout { text-align: center; }
 .tuner-note { color: var(--text); font-size: clamp(4rem, 22vw, 7rem); font-weight: 700; line-height: 1; }
+.tuner-readout.is-idle .tuner-note { font-size: 3.2rem; }
+.tuner-readout.is-idle .tuner-target { display: none; }
 .tuner-frequency { font-size: 1rem; margin-top: 6px; }
 .tuner-target { font-size: 1.1rem; margin-top: 4px; min-height: 1.4em; }
 .tuner-meter { margin: 18px 0 14px; }
