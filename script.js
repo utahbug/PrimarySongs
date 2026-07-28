@@ -5590,7 +5590,6 @@ function renderListEditItems(list) {
           ${meta ? `<span class="compact-meta">${escapeHtml(meta)}</span>` : ""}
         </div>
         <div class="list-edit-item-actions">
-          <button class="icon-button" type="button" data-edit-item="${escapeHtml(entry.item.id)}" data-edit-context="lists" aria-label="Edit ${escapeHtml(title)}" title="Edit item">&#9998;</button>
           <button class="icon-button remove-button" type="button" data-list-modal-remove="${value}" aria-label="Remove ${escapeHtml(title)} from list" title="Remove from list">&#128465;</button>
           ${dragHandleHtml("list-item", entry.item.id, title)}
         </div>
