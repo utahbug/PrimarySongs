@@ -33,6 +33,8 @@ const IMPORT_DB_NAME = `${APP_STORAGE_SCOPE}.imports`;
 const IMPORT_DB_VERSION = 1;
 const PDF_STORE_NAME = "pdfFiles";
 const RICH_TOGGLE_COMMANDS = ["bold", "italic", "strikeThrough", "insertUnorderedList", "insertOrderedList"];
+const CARD_FONT_FACES = ["Verdana", "system-ui", "Arial", "Trebuchet MS", "Georgia", "Atkinson Hyperlegible"];
+const CARD_READING_SCALES = [0.82, 0.9, 1, 1.12, 1.25, 1.4];
 const FAVORITE_DIVIDER_PREFIX = "favorite-divider:";
 const TUNER_INSTRUMENTS = {
   chromatic: { label: "Chromatic", targets: [] },
@@ -363,6 +365,7 @@ const state = {
   importReturnSection: "",
   modalDrag: null,
   cardEditorRange: null,
+  cardReadingScale: normalizeCardReadingScale(readJson(STORAGE_KEYS.settings, {}).cardReadingScale),
   activeSection: "lists",
   previousSection: "library",
   previousScrollY: 0,
@@ -627,6 +630,7 @@ function collectElements() {
   el.richCardContentRow = document.getElementById("richCardContentRow");
   el.plainCardContentRow = document.getElementById("plainCardContentRow");
   el.cardFormatToolbar = document.getElementById("cardFormatToolbar");
+  el.cardFontPicker = document.getElementById("cardFontPicker");
   el.importCardImageRow = document.getElementById("importCardImageRow");
   el.importCardImage = document.getElementById("importCardImage");
   el.importCardImageName = document.getElementById("importCardImageName");
@@ -750,8 +754,12 @@ function wireEvents() {
   });
   el.importCardImage.addEventListener("change", () => updateFilePickerName(el.importCardImage, el.importCardImageName, "No image selected"));
   el.inlineCardImageInput.addEventListener("change", handleInlineCardImageSelected);
-  el.cardFormatToolbar.addEventListener("mousedown", (event) => event.preventDefault());
+  el.cardFormatToolbar.addEventListener("mousedown", (event) => {
+    if (event.target.closest("button")) event.preventDefault();
+  });
   el.cardFormatToolbar.addEventListener("click", handleRichToolbarClick);
+  el.cardFontPicker.addEventListener("pointerdown", saveCardEditorSelection);
+  el.cardFontPicker.addEventListener("change", handleCardFontChange);
   ["keyup", "mouseup", "focus", "input"].forEach((eventName) => {
     el.importCardEditor.addEventListener(eventName, updateRichToolbarState);
   });
@@ -1681,11 +1689,13 @@ function fitOpenMobileModals() {
 
 function resetImportForm() {
   el.importForm.reset();
+  state.cardEditorRange = null;
   el.importType.value = "pdf";
   el.importCategory.value = "";
   el.importCardContent.value = "";
   el.importPlainContent.value = "";
   el.importCardEditor.innerHTML = "";
+  el.cardFontPicker.value = "Verdana";
   updateFilePickerName(el.importPdfFile, el.importPdfFileName);
   updateFilePickerName(el.importCardImage, el.importCardImageName, "No image selected");
   el.importType.disabled = false;
@@ -1839,6 +1849,12 @@ function updateFilePickerName(input, nameEl, emptyText = "No file selected") {
 }
 
 function handleRichToolbarClick(event) {
+  const sizeButton = event.target.closest("[data-rich-size]");
+  if (sizeButton) {
+    changeSelectedCardTextSize(Number(sizeButton.dataset.richSize));
+    return;
+  }
+
   const button = event.target.closest("[data-rich-command]");
   if (!button) return;
 
@@ -1853,6 +1869,32 @@ function handleRichToolbarClick(event) {
   document.execCommand(command, false, null);
   syncCardEditorToHiddenField();
   updateRichToolbarState();
+}
+
+function handleCardFontChange() {
+  const face = CARD_FONT_FACES.includes(el.cardFontPicker.value) ? el.cardFontPicker.value : "Verdana";
+  restoreCardEditorSelection();
+  document.execCommand("fontName", false, face);
+  syncCardEditorToHiddenField();
+  saveCardEditorSelection();
+  updateRichToolbarState();
+}
+
+function changeSelectedCardTextSize(direction) {
+  restoreCardEditorSelection();
+  const current = Number(document.queryCommandValue("fontSize")) || 3;
+  document.execCommand("fontSize", false, String(clamp(current + direction, 1, 7)));
+  syncCardEditorToHiddenField();
+  saveCardEditorSelection();
+  updateRichToolbarState();
+}
+
+function restoreCardEditorSelection() {
+  el.importCardEditor.focus();
+  if (!state.cardEditorRange) return;
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(state.cardEditorRange);
 }
 
 function handleCardEditorClick(event) {
@@ -1965,6 +2007,12 @@ function updateRichToolbarState() {
 
   if (hasEditorSelection) saveCardEditorSelection();
 
+  if (hasEditorSelection) {
+    const currentFace = String(document.queryCommandValue("fontName") || "").replace(/^["']|["']$/g, "");
+    const matchedFace = CARD_FONT_FACES.find((face) => face.toLowerCase() === currentFace.toLowerCase());
+    if (matchedFace) el.cardFontPicker.value = matchedFace;
+  }
+
   el.cardFormatToolbar.querySelectorAll("[data-rich-command]").forEach((button) => {
     const command = button.dataset.richCommand;
     if (!RICH_TOGGLE_COMMANDS.includes(command)) return;
@@ -2004,7 +2052,7 @@ function lyricsTextToHtml(text = "") {
 function sanitizeCardHtml(html = "") {
   const template = document.createElement("template");
   template.innerHTML = html || "";
-  const allowedTags = new Set(["B", "STRONG", "I", "EM", "U", "S", "STRIKE", "BR", "DIV", "P", "SPAN", "TABLE", "TBODY", "THEAD", "TR", "TD", "TH", "UL", "OL", "LI", "IMG"]);
+  const allowedTags = new Set(["B", "STRONG", "I", "EM", "U", "S", "STRIKE", "BR", "DIV", "P", "SPAN", "FONT", "TABLE", "TBODY", "THEAD", "TR", "TD", "TH", "UL", "OL", "LI", "IMG"]);
   const allowedAttrs = new Set(["colspan", "rowspan"]);
 
   function cleanNode(node) {
@@ -2035,6 +2083,14 @@ function sanitizeCardHtml(html = "") {
       }
       if (tagName === "IMG" && name === "title") {
         clean.setAttribute("title", attr.value);
+        return;
+      }
+      if (tagName === "FONT" && name === "face" && CARD_FONT_FACES.includes(attr.value)) {
+        clean.setAttribute("face", attr.value);
+        return;
+      }
+      if (tagName === "FONT" && name === "size" && /^[1-7]$/.test(attr.value)) {
+        clean.setAttribute("size", attr.value);
         return;
       }
       if (allowedAttrs.has(name)) clean.setAttribute(name, attr.value);
@@ -3569,6 +3625,12 @@ async function handleBodyClick(event) {
     return;
   }
 
+  const cardReadingButton = event.target.closest("[data-card-reading-size]");
+  if (cardReadingButton) {
+    changeCardReadingSize(cardReadingButton.dataset.cardReadingSize);
+    return;
+  }
+
   if (!event.target.closest(".overflow-wrap")) {
     closeOverflowMenu();
     closeInfoMenu();
@@ -4200,6 +4262,23 @@ function openDetail(id) {
   showSection("detail");
 }
 
+function normalizeCardReadingScale(value) {
+  const numeric = Number(value);
+  return CARD_READING_SCALES.includes(numeric) ? numeric : 1;
+}
+
+function changeCardReadingSize(action) {
+  const currentIndex = Math.max(0, CARD_READING_SCALES.indexOf(state.cardReadingScale));
+  const nextIndex = action === "reset"
+    ? CARD_READING_SCALES.indexOf(1)
+    : clamp(currentIndex + (action === "increase" ? 1 : -1), 0, CARD_READING_SCALES.length - 1);
+  state.cardReadingScale = CARD_READING_SCALES[nextIndex];
+  const settings = readJson(STORAGE_KEYS.settings, {});
+  writeJson(STORAGE_KEYS.settings, { ...settings, cardReadingScale: state.cardReadingScale });
+  const card = document.querySelector(".card-detail-card");
+  if (card) card.dataset.cardReadingLevel = String(CARD_READING_SCALES.indexOf(state.cardReadingScale));
+}
+
 function detailHtml(item) {
   const title = itemDisplayTitle(item);
   const favorite = state.favorites.has(item.id);
@@ -4216,6 +4295,13 @@ function detailHtml(item) {
     <button class="icon-button card-exit-button" type="button" data-exit-card aria-label="Exit card and return" title="Return">
       &#8592;
     </button>
+  `;
+  const cardReadingControls = `
+    <div class="card-reading-controls" role="group" aria-label="Lyric text size">
+      <button type="button" data-card-reading-size="decrease" aria-label="Reduce lyric text" title="Reduce lyric text">A&minus;</button>
+      <button type="button" data-card-reading-size="reset" aria-label="Reset lyric text size" title="Reset lyric text size">A</button>
+      <button type="button" data-card-reading-size="increase" aria-label="Enlarge lyric text" title="Enlarge lyric text">A+</button>
+    </div>
   `;
   const compactHeader = `
     <div class="compact-detail-header">
@@ -4240,10 +4326,11 @@ function detailHtml(item) {
       ? `<h2 id="detailTitle" class="lyrics-card-title">${escapeHtml(title)}</h2>`
       : "";
     return `
-      <article class="detail-card card-detail-card${item.lyricsCard ? " lyrics-card-detail" : ""}">
+      <article class="detail-card card-detail-card${item.lyricsCard ? " lyrics-card-detail" : ""}" data-card-reading-level="${CARD_READING_SCALES.indexOf(state.cardReadingScale)}">
         <div class="detail-actions card-detail-actions">
           ${cardExitAction}
           ${item.lyricsCard ? `<span class="card-toolbar-spacer" aria-hidden="true"></span>` : cardTitle}
+          ${item.lyricsCard ? cardReadingControls : ""}
           ${favoriteAction}
           ${deleteAction}
           ${editAction}

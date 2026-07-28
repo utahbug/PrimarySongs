@@ -1,5 +1,10 @@
 :root { --color-primary: #2B5F9E; --color-primary-dark: #214A78; --color-primary-light: #EAF2FB; --color-primary-hover: #D8E7F7; --color-border: #B7CCE0; --color-text: #1F2A2E; --color-muted-text: #5C6B70; --color-background: #F7FAFB; --color-surface: #FFFFFF; --color-danger: #B94A48; --color-star: #A8874A; --identity-height: 58px; --bg: var(--color-background); --surface: var(--color-surface); --surface-strong: var(--color-primary-light); --ink: var(--color-text); --muted: var(--color-muted-text); --line: var(--color-border); --accent: var(--color-primary); --accent-strong: var(--color-primary-dark); --accent-soft: var(--color-primary-light); --accent-hover: var(--color-primary-hover); --danger: var(--color-danger); --star: var(--color-star); --shadow: 0 3px 12px color-mix(in srgb, var(--color-text) 7%, transparent); --shadow-strong: 0 12px 32px color-mix(in srgb, var(--color-text) 16%, transparent); --shadow-modal: 0 24px 60px color-mix(in srgb, var(--color-text) 24%, transparent); --shadow-pdf: 0 8px 34px color-mix(in srgb, var(--color-text) 25%, transparent); --overlay: color-mix(in srgb, var(--color-text) 42%, transparent); --tap-feedback: color-mix(in srgb, var(--color-primary) 8%, transparent); --danger-soft: color-mix(in srgb, var(--color-danger) 9%, var(--color-surface)); --danger-border: color-mix(in srgb, var(--color-danger) 42%, var(--color-border)); --radius: 8px; color-scheme: light; }
 
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/AtkinsonHyperlegible-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: italic; font-weight: 400; font-display: swap; src: url("assets/AtkinsonHyperlegible-Italic.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 700; font-display: swap; src: url("assets/AtkinsonHyperlegible-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: italic; font-weight: 700; font-display: swap; src: url("assets/AtkinsonHyperlegible-BoldItalic.woff2") format("woff2"); }
+
 * { box-sizing: border-box; letter-spacing: 0px; }
 
 html, body { min-height: 100%; overflow-x: hidden; }
@@ -223,6 +228,10 @@ textarea { resize: vertical; }
 
 .rich-toolbar button.is-active:hover, .rich-toolbar button.is-active:focus-visible, .rich-toolbar button[aria-pressed="true"]:hover, .rich-toolbar button[aria-pressed="true"]:focus-visible { background: var(--accent-strong); border-color: var(--accent-strong); color: #FFFFFF; }
 
+.rich-toolbar-separator { align-self: stretch; border-left: 1px solid var(--line); margin: 2px; }
+.rich-font-picker { display: block; }
+.rich-font-picker select { font-size: 0.86rem; height: 32px; min-height: 32px; padding: 3px 28px 3px 8px; width: 112px; }
+
 .strikeout-icon { display: inline-block; font-weight: 850; line-height: 1; position: relative; }
 
 .strikeout-icon span { position: relative; z-index: 1; }
@@ -243,7 +252,7 @@ textarea { resize: vertical; }
 
 .photo-icon::after { border: 2px solid currentcolor; border-radius: 999px; content: ""; height: 6px; left: 5px; position: absolute; top: 4px; width: 6px; }
 
-.rich-card-editor, .rich-card-content { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace; font-size: clamp(1rem, 4vw, 1.14rem); font-weight: 400; line-height: 1.55; overflow-x: auto; padding: 12px; white-space: pre-wrap; }
+.rich-card-editor, .rich-card-content { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); font-family: Verdana, Arial, sans-serif; font-size: clamp(1rem, 4vw, 1.14rem); font-weight: 400; line-height: 1.55; overflow-x: auto; padding: 12px; white-space: pre-wrap; }
 
 .rich-card-editor { background: var(--surface); height: 72px; min-height: 56px; outline: none; overflow: auto; resize: vertical; }
 
@@ -253,7 +262,12 @@ textarea { resize: vertical; }
 
 .lyrics-card-detail { align-content: start; min-height: calc(100dvh - 150px); }
 .lyrics-card-title { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.55rem, 7vw, 2.4rem); font-weight: 500; line-height: 1.15; margin: 0; }
-.lyrics-card-content { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.18rem, 5.2vw, 1.65rem); line-height: 1.5; overflow-wrap: anywhere; }
+.lyrics-card-content { color: var(--ink); font-family: Verdana, Arial, sans-serif; font-size: clamp(1.18rem, 5.2vw, 1.65rem); line-height: 1.5; overflow-wrap: anywhere; }
+.card-detail-card[data-card-reading-level="0"] .lyrics-card-content { font-size: clamp(0.98rem, 4.25vw, 1.36rem); }
+.card-detail-card[data-card-reading-level="1"] .lyrics-card-content { font-size: clamp(1.08rem, 4.7vw, 1.5rem); }
+.card-detail-card[data-card-reading-level="3"] .lyrics-card-content { font-size: clamp(1.32rem, 5.8vw, 1.85rem); }
+.card-detail-card[data-card-reading-level="4"] .lyrics-card-content { font-size: clamp(1.47rem, 6.5vw, 2.06rem); }
+.card-detail-card[data-card-reading-level="5"] .lyrics-card-content { font-size: clamp(1.65rem, 7.3vw, 2.31rem); }
 .lyrics-card-content div { min-height: 1.5em; }
 .lyrics-card-content .lyrics-verse { margin: 1.15em 0 0; }
 .lyrics-card-content .lyrics-verse:first-child { margin-top: 0; }
@@ -614,7 +628,13 @@ body.dark-background .tag, body.dark-background .type-pill { background: #193E50
 
 .image-detail-card .song-card-image { margin-top: 0px; }
 
-.detail-actions.card-detail-actions { align-items: center; display: grid; gap: 8px; grid-template-columns: auto minmax(0px, 1fr) auto auto auto; margin-top: 0px; }
+.detail-actions.card-detail-actions { align-items: center; display: grid; gap: 8px; grid-template-columns: auto minmax(0px, 1fr) auto auto auto auto; margin-top: 0px; }
+.card-reading-controls { display: inline-flex; }
+.card-reading-controls button { background: var(--accent-soft); border: 1px solid var(--line); color: var(--accent-strong); font-size: 0.78rem; font-weight: 800; height: 38px; min-width: 34px; padding: 0px 6px; }
+.card-reading-controls button:first-child { border-radius: 7px 0px 0px 7px; }
+.card-reading-controls button + button { border-left: 0px; }
+.card-reading-controls button:last-child { border-radius: 0px 7px 7px 0px; }
+.card-reading-controls button:hover, .card-reading-controls button:focus-visible { background: var(--accent-hover); }
 .card-toolbar-spacer { min-width: 0px; }
 .card-exit-button { color: var(--accent-strong); font-size: 1.25rem; font-weight: 800; }
 .card-detail-footer-actions { display: flex; justify-content: flex-start; padding-top: 4px; }
@@ -982,6 +1002,14 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
   .modal-action-buttons { flex: 0 0 auto; min-width: 0px; }
   .rich-toolbar { max-width: 100%; overflow: hidden; }
   .rich-toolbar button { flex: 0 0 40px; min-height: 40px; min-width: 40px; padding: 0px; width: 40px; }
+  .rich-font-picker select { height: 40px; min-height: 40px; }
+  .detail-actions.card-detail-actions { grid-template-columns: auto minmax(0px, 1fr) auto auto auto; }
+  .card-detail-actions .card-exit-button { grid-column: 1; grid-row: 1; }
+  .card-detail-actions .card-toolbar-spacer, .card-detail-actions .compact-detail-title { grid-column: 2; grid-row: 1; }
+  .card-detail-actions > .favorite-toggle { grid-column: 3; grid-row: 1; }
+  .card-detail-actions > .danger-icon { grid-column: 4; grid-row: 1; }
+  .card-detail-actions > [data-edit-item] { grid-column: 5; grid-row: 1; }
+  .card-detail-actions .card-reading-controls { grid-column: 3 / 6; grid-row: 2; justify-self: end; }
   .form-grid { grid-template-columns: 1fr; }
   .list-edit-add-grid { grid-template-columns: minmax(150px, 68%) 108px; }
   .list-edit-section { padding-left: 8px; padding-right: 8px; }

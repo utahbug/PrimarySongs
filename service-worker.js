@@ -1,10 +1,10 @@
-const CACHE_NAME = "primary-music-helper-shell-v264";
+const CACHE_NAME = "primary-music-helper-shell-v265";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=primary-2026-101",
+  "./styles.css?v=primary-2026-102",
   "./lyrics-cards.js?v=primary-2026-99",
-  "./script.js?v=primary-2026-101",
+  "./script.js?v=primary-2026-102",
   "./library.json",
   "./manifest.json",
   "./favicon.ico",
@@ -12,6 +12,10 @@ const APP_SHELL = [
   "./assets/apple-touch-icon.png",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
+  "./assets/AtkinsonHyperlegible-Regular.woff2",
+  "./assets/AtkinsonHyperlegible-Italic.woff2",
+  "./assets/AtkinsonHyperlegible-Bold.woff2",
+  "./assets/AtkinsonHyperlegible-BoldItalic.woff2",
   "./music/Primary-2026/called-to-serve-lyrics-249.pdf",
   "./music/Primary-2026/called-to-serve-hymnbook-174.pdf",
   "./music/Primary-2026/called-to-serve-249.pdf",
