@@ -81,7 +81,7 @@ const PITCH_PRESETS = {
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
 const STARTER_DATA_VERSION = "primary-2026-lists-v6";
-const ITEM_METADATA_REPAIR_VERSION = "called-to-serve-pages-v1";
+const ITEM_METADATA_REPAIR_VERSION = "starter-metadata-v2";
 const STARTER_FAVORITES_LAYOUT_VERSION = "pianist-test-layout-v1";
 const STARTER_LIST_ORDER = [
   "primary-program",
@@ -212,7 +212,7 @@ const DEFAULT_LIBRARY_DATA = {
       "title": "Hymns for Home and Church (new hymns)",
       "type": "pdf",
       "file": "music/Primary-2026/HymnsForHomeAndChurch July 23, 2026).pdf",
-      "category": "Hymn"
+      "category": "Hymns"
     },
     {
       "id": "new-hymns-link",
@@ -1188,6 +1188,13 @@ function repairCalledToServeMetadataEdits() {
     ["title", "page", "category", "book"].forEach((field) => delete edits[id][field]);
     if (!Object.keys(edits[id]).filter((key) => key !== "editedAt").length) delete edits[id];
   });
+  const homeChurchEdits = edits["hymns-for-home-and-church-new-hymns"];
+  if (homeChurchEdits?.category?.trim().toLowerCase() === "hymn") {
+    delete homeChurchEdits.category;
+    if (!Object.keys(homeChurchEdits).filter((key) => key !== "editedAt").length) {
+      delete edits["hymns-for-home-and-church-new-hymns"];
+    }
+  }
   writeJson(STORAGE_KEYS.itemEdits, edits);
   localStorage.setItem(STORAGE_KEYS.itemMetadataRepairVersion, ITEM_METADATA_REPAIR_VERSION);
 }

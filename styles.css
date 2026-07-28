@@ -949,6 +949,9 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .help-tap-zone-grid strong { color: var(--ink); font-size: 0.78rem; }
 .help-tap-zone-grid span { color: var(--accent-strong); font-size: 1.25rem; line-height: 1; }
 .help-tap-zone-grid > div:nth-child(-n+2) span { color: #856A34; }
+.help-tap-zone-grid .help-zone-icon { align-items: center; border-radius: 7px; box-shadow: 0 2px 5px rgba(31, 65, 96, 0.2); color: #FFFFFF; display: inline-flex; font-weight: 900; height: 30px; justify-content: center; margin: 2px 0px; width: 38px; }
+.help-tap-zone-grid .help-jump-icon { background: linear-gradient(145deg, #D5B766, #A8874A); border: 1px solid #80652F; color: #FFFFFF; font-family: system-ui, sans-serif; font-size: 0.82rem; letter-spacing: -0.08em; }
+.help-tap-zone-grid .help-turn-icon { background: linear-gradient(145deg, #3983BA, #285A9C); border: 1px solid #214A78; color: #FFFFFF; font-family: Georgia, serif; font-size: 1.55rem; padding-bottom: 2px; }
 .help-tap-zone-grid small { color: var(--muted); font-size: 0.68rem; }
 .help-tap-zone-note { color: var(--muted); font-size: 0.8rem; margin: 8px 0px 0px; }
 .help-inline-info-icon { align-items: center; border: 1.5px solid currentcolor; border-radius: 999px; color: var(--accent-strong); display: inline-flex; font-family: Georgia, serif; font-size: 0.68rem; font-style: italic; font-weight: 800; height: 17px; justify-content: center; line-height: 1; margin-left: 2px; vertical-align: -2px; width: 17px; }
