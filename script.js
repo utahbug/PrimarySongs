@@ -242,7 +242,7 @@ const DEFAULT_LIBRARY_DATA = {
           "itemId": "this-little-light-of-mine-1028"
         },
         {
-          "itemId": "called-to-serve-249"
+          "itemId": "called-to-serve-hymnbook-174"
         },
         {
           "itemId": "i-will-follow-gods-plan-for-me-165"
@@ -1350,7 +1350,23 @@ function migrateRetiredLyricListEntries(lists = []) {
 
 function repairPrimarySongs2026Entries(lists = []) {
   return lists.map((list) => {
-    if (list.id !== "primary-songs-2026") return list;
+    if (["primary-program", "setlist-primary-program"].includes(list.id)) {
+      const seen = new Set();
+      return {
+        ...list,
+        entries: (list.entries || []).map((entry) => ({
+          ...entry,
+          itemId: entry.itemId === "called-to-serve-249"
+            ? "called-to-serve-hymnbook-174"
+            : entry.itemId
+        })).filter((entry) => {
+          if (seen.has(entry.itemId)) return false;
+          seen.add(entry.itemId);
+          return true;
+        })
+      };
+    }
+    if (!["primary-songs-2026", "setlist-primary-songs-2026"].includes(list.id)) return list;
     return {
       ...list,
       entries: (list.entries || []).filter((entry) =>
