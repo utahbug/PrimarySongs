@@ -212,7 +212,7 @@ textarea { resize: vertical; }
 
 #importCardContent { min-height: 132px; }
 
-#importNotes { min-height: 42px; }
+#importNotes { height: 56px; min-height: 48px; }
 
 .modal[data-item-type="link"] #importNotes { height: 86px; min-height: 86px; }
 
@@ -254,7 +254,7 @@ textarea { resize: vertical; }
 
 .rich-card-editor, .rich-card-content { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); font-family: Verdana, Arial, sans-serif; font-size: clamp(1rem, 4vw, 1.14rem); font-weight: 400; line-height: 1.55; overflow-x: auto; padding: 12px; white-space: pre-wrap; }
 
-.rich-card-editor { background: var(--surface); height: 72px; min-height: 56px; outline: none; overflow: auto; resize: vertical; }
+.rich-card-editor { background: var(--surface); height: min(32dvh, 300px); min-height: 220px; outline: none; overflow: auto; resize: vertical; }
 
 .rich-card-editor:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-hover); }
 

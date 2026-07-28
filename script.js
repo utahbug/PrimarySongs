@@ -2042,7 +2042,7 @@ function lyricsTextToHtml(text = "") {
     .split("\n")
     .map((line) => {
       const verse = line.match(/^(\d+\.)\s+(.*)$/);
-      if (verse) return `<p><strong>${escapeHtml(verse[1])}</strong> ${escapeHtml(verse[2])}</p>`;
+      if (verse) return `<p>${escapeHtml(verse[1])} ${escapeHtml(verse[2])}</p>`;
       if (/^chorus:?$/i.test(line)) return `<p><strong>${escapeHtml(line)}</strong></p>`;
       return line ? `<div>${escapeHtml(line)}</div>` : "<div><br></div>";
     })
@@ -4410,7 +4410,7 @@ function cardContentHtml(item, options = {}) {
     const lines = String(item.lyricsText).replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
     const html = lines.map((line) => {
       const verse = line.match(/^(\d+\.)\s+(.*)$/);
-      if (verse) return `<p class="lyrics-verse"><strong>${escapeHtml(verse[1])}</strong> ${escapeHtml(verse[2])}</p>`;
+      if (verse) return `<p class="lyrics-verse">${escapeHtml(verse[1])} ${escapeHtml(verse[2])}</p>`;
       if (/^chorus:?$/i.test(line)) return `<p class="lyrics-chorus-label"><strong>${escapeHtml(line)}</strong></p>`;
       return line ? `<div>${escapeHtml(line)}</div>` : "<div><br></div>";
     }).join("");
