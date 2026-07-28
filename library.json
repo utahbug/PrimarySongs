@@ -1,13 +1,6 @@
 {
   "items": [
     {
-      "id": "called-to-serve-lyrics-249",
-      "title": "Called to Serve - lyrics, 249",
-      "type": "pdf",
-      "file": "music/Primary-2026/called-to-serve-lyrics-249.pdf",
-      "page": 249
-    },
-    {
       "id": "called-to-serve-hymnbook-174",
       "title": "Called to Serve (hymnbook), 174",
       "type": "pdf",
@@ -20,12 +13,6 @@
       "type": "pdf",
       "file": "music/Primary-2026/called-to-serve-249.pdf",
       "page": 249
-    },
-    {
-      "id": "choose-to-serve-the-lord-lyrics",
-      "title": "Choose to Serve the Lord - lyrics",
-      "type": "pdf",
-      "file": "music/Primary-2026/choose-to-serve-the-lord-lyrics.pdf"
     },
     {
       "id": "choose-to-serve-the-lord",
@@ -41,20 +28,6 @@
       "page": 74
     },
     {
-      "id": "i-feel-my-savior-s-love-lyrics-74",
-      "title": "I Feel My Savior's Love, lyrics, 74",
-      "type": "pdf",
-      "file": "music/Primary-2026/i-feel-my-savior-s-love-lyrics-74.pdf",
-      "page": 74
-    },
-    {
-      "id": "i-will-follow-god-s-plan-lyrics-165",
-      "title": "I Will Follow God's Plan for Me - lyrics, 165",
-      "type": "pdf",
-      "file": "music/Primary-2026/i-will-follow-god-s-plan-lyrics-165.pdf",
-      "page": 165
-    },
-    {
       "id": "i-will-follow-gods-plan-for-me-165",
       "title": "I Will Follow God's Plan for Me, 165",
       "type": "pdf",
@@ -62,25 +35,11 @@
       "page": 165
     },
     {
-      "id": "i-will-walk-with-jesus-1004-lyrics",
-      "title": "I Will Walk with Jesus, 1004 - lyrics",
-      "type": "pdf",
-      "file": "music/Primary-2026/i-will-walk-with-jesus-1004-lyrics.pdf",
-      "page": 1004
-    },
-    {
       "id": "i-will-walk-with-jesus-1004",
       "title": "I Will Walk with Jesus, 1004",
       "type": "pdf",
       "file": "music/Primary-2026/i-will-walk-with-jesus-1004.pdf",
       "page": 1004
-    },
-    {
-      "id": "search-ponder-and-pray-lyrics-109",
-      "title": "Search, Ponder, and Pray - lyrics, 109",
-      "type": "pdf",
-      "file": "music/Primary-2026/search-ponder-and-pray-lyrics-109.pdf",
-      "page": 109
     },
     {
       "id": "search-ponder-and-pray-109",
@@ -97,20 +56,6 @@
       "page": 281
     },
     {
-      "id": "the-wise-man-and-the-foolish-man-lyrics-281",
-      "title": "The Wise Man and the Foolish Man, lyrics, 281",
-      "type": "pdf",
-      "file": "music/Primary-2026/the-wise-man-and-the-foolish-man-lyrics-281.pdf",
-      "page": 281
-    },
-    {
-      "id": "this-little-light-of-mine-lyrics-1028",
-      "title": "This Little Light of Mine - lyrics, 1028",
-      "type": "pdf",
-      "file": "music/Primary-2026/this-little-light-of-mine-lyrics-1028.pdf",
-      "page": 1028
-    },
-    {
       "id": "this-little-light-of-mine-1028",
       "title": "This Little Light of Mine, 1028",
       "type": "pdf",
@@ -122,6 +67,13 @@
       "title": "Children's Songbook",
       "type": "link",
       "url": "https://www.churchofjesuschrist.org/media/music/collections/childrens-songbook?lang=eng"
+    },
+    {
+      "id": "hymns-for-home-and-church-new-hymns",
+      "title": "Hymns for Home and Church (new hymns)",
+      "type": "pdf",
+      "file": "music/Primary-2026/HymnsForHomeAndChurch July 23, 2026).pdf",
+      "category": "Hymn"
     },
     {
       "id": "new-hymns-link",
@@ -141,6 +93,7 @@
     "i-feel-my-saviors-love-74",
     "favorite-divider:primary-2026-2",
     "childrens-songbook-link",
+    "hymns-for-home-and-church-new-hymns",
     "new-hymns-link"
   ],
   "quickIndexes": [],
@@ -167,13 +120,13 @@
       "showCheckboxes": false,
       "items": [
         {
-          "itemId": "this-little-light-of-mine-lyrics-1028"
+          "itemId": "lyrics-card-this-little-light-of-mine-1028"
         },
         {
-          "itemId": "called-to-serve-lyrics-249"
+          "itemId": "lyrics-card-called-to-serve-249"
         },
         {
-          "itemId": "i-will-follow-god-s-plan-lyrics-165"
+          "itemId": "lyrics-card-i-will-follow-gods-plan-165"
         }
       ]
     },
@@ -192,7 +145,7 @@
           "itemId": "the-wise-man-and-the-foolish-man-281"
         },
         {
-          "itemId": "i-will-walk-with-jesus-1004-lyrics"
+          "itemId": "i-will-walk-with-jesus-1004"
         },
         {
           "itemId": "i-feel-my-saviors-love-74"
@@ -208,22 +161,22 @@
       "showCheckboxes": false,
       "items": [
         {
-          "itemId": "choose-to-serve-the-lord-lyrics"
+          "itemId": "lyrics-card-choose-to-serve-the-lord"
         },
         {
-          "itemId": "search-ponder-and-pray-lyrics-109"
+          "itemId": "lyrics-card-search-ponder-and-pray-109"
         },
         {
-          "itemId": "the-wise-man-and-the-foolish-man-lyrics-281"
+          "itemId": "lyrics-card-wise-man-foolish-man-281"
         },
         {
-          "itemId": "i-will-walk-with-jesus-1004-lyrics"
+          "itemId": "lyrics-card-i-will-walk-with-jesus-1004"
         },
         {
-          "itemId": "i-feel-my-savior-s-love-lyrics-74"
+          "itemId": "lyrics-card-i-feel-my-saviors-love-74"
         },
         {
-          "itemId": "this-little-light-of-mine-lyrics-1028"
+          "itemId": "lyrics-card-this-little-light-of-mine-1028"
         }
       ]
     },
@@ -234,6 +187,9 @@
       "items": [
         {
           "itemId": "childrens-songbook-link"
+        },
+        {
+          "itemId": "hymns-for-home-and-church-new-hymns"
         },
         {
           "itemId": "new-hymns-link"

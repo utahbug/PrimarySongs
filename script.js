@@ -75,7 +75,17 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-lists-v4";
+const STARTER_DATA_VERSION = "primary-2026-lists-v5";
+const RETIRED_LYRIC_PDF_REPLACEMENTS = {
+  "called-to-serve-lyrics-249": "lyrics-card-called-to-serve-249",
+  "choose-to-serve-the-lord-lyrics": "lyrics-card-choose-to-serve-the-lord",
+  "i-feel-my-savior-s-love-lyrics-74": "lyrics-card-i-feel-my-saviors-love-74",
+  "i-will-follow-god-s-plan-lyrics-165": "lyrics-card-i-will-follow-gods-plan-165",
+  "i-will-walk-with-jesus-1004-lyrics": "lyrics-card-i-will-walk-with-jesus-1004",
+  "search-ponder-and-pray-lyrics-109": "lyrics-card-search-ponder-and-pray-109",
+  "the-wise-man-and-the-foolish-man-lyrics-281": "lyrics-card-wise-man-foolish-man-281",
+  "this-little-light-of-mine-lyrics-1028": "lyrics-card-this-little-light-of-mine-1028"
+};
 const RETIRED_STARTER_LISTS = [
   {
     id: "setlist-try-this-piano-and-lyrics",
@@ -116,13 +126,6 @@ function getAppStorageScope() {
 const DEFAULT_LIBRARY_DATA = {
   "items": [
     {
-      "id": "called-to-serve-lyrics-249",
-      "title": "Called to Serve - lyrics, 249",
-      "type": "pdf",
-      "file": "music/Primary-2026/called-to-serve-lyrics-249.pdf",
-      "page": 249
-    },
-    {
       "id": "called-to-serve-hymnbook-174",
       "title": "Called to Serve (hymnbook), 174",
       "type": "pdf",
@@ -135,12 +138,6 @@ const DEFAULT_LIBRARY_DATA = {
       "type": "pdf",
       "file": "music/Primary-2026/called-to-serve-249.pdf",
       "page": 249
-    },
-    {
-      "id": "choose-to-serve-the-lord-lyrics",
-      "title": "Choose to Serve the Lord - lyrics",
-      "type": "pdf",
-      "file": "music/Primary-2026/choose-to-serve-the-lord-lyrics.pdf"
     },
     {
       "id": "choose-to-serve-the-lord",
@@ -156,20 +153,6 @@ const DEFAULT_LIBRARY_DATA = {
       "page": 74
     },
     {
-      "id": "i-feel-my-savior-s-love-lyrics-74",
-      "title": "I Feel My Savior's Love, lyrics, 74",
-      "type": "pdf",
-      "file": "music/Primary-2026/i-feel-my-savior-s-love-lyrics-74.pdf",
-      "page": 74
-    },
-    {
-      "id": "i-will-follow-god-s-plan-lyrics-165",
-      "title": "I Will Follow God's Plan for Me - lyrics, 165",
-      "type": "pdf",
-      "file": "music/Primary-2026/i-will-follow-god-s-plan-lyrics-165.pdf",
-      "page": 165
-    },
-    {
       "id": "i-will-follow-gods-plan-for-me-165",
       "title": "I Will Follow God's Plan for Me, 165",
       "type": "pdf",
@@ -177,25 +160,11 @@ const DEFAULT_LIBRARY_DATA = {
       "page": 165
     },
     {
-      "id": "i-will-walk-with-jesus-1004-lyrics",
-      "title": "I Will Walk with Jesus, 1004 - lyrics",
-      "type": "pdf",
-      "file": "music/Primary-2026/i-will-walk-with-jesus-1004-lyrics.pdf",
-      "page": 1004
-    },
-    {
       "id": "i-will-walk-with-jesus-1004",
       "title": "I Will Walk with Jesus, 1004",
       "type": "pdf",
       "file": "music/Primary-2026/i-will-walk-with-jesus-1004.pdf",
       "page": 1004
-    },
-    {
-      "id": "search-ponder-and-pray-lyrics-109",
-      "title": "Search, Ponder, and Pray - lyrics, 109",
-      "type": "pdf",
-      "file": "music/Primary-2026/search-ponder-and-pray-lyrics-109.pdf",
-      "page": 109
     },
     {
       "id": "search-ponder-and-pray-109",
@@ -212,20 +181,6 @@ const DEFAULT_LIBRARY_DATA = {
       "page": 281
     },
     {
-      "id": "the-wise-man-and-the-foolish-man-lyrics-281",
-      "title": "The Wise Man and the Foolish Man, lyrics, 281",
-      "type": "pdf",
-      "file": "music/Primary-2026/the-wise-man-and-the-foolish-man-lyrics-281.pdf",
-      "page": 281
-    },
-    {
-      "id": "this-little-light-of-mine-lyrics-1028",
-      "title": "This Little Light of Mine - lyrics, 1028",
-      "type": "pdf",
-      "file": "music/Primary-2026/this-little-light-of-mine-lyrics-1028.pdf",
-      "page": 1028
-    },
-    {
       "id": "this-little-light-of-mine-1028",
       "title": "This Little Light of Mine, 1028",
       "type": "pdf",
@@ -237,6 +192,13 @@ const DEFAULT_LIBRARY_DATA = {
       "title": "Children's Songbook",
       "type": "link",
       "url": "https://www.churchofjesuschrist.org/media/music/collections/childrens-songbook?lang=eng"
+    },
+    {
+      "id": "hymns-for-home-and-church-new-hymns",
+      "title": "Hymns for Home and Church (new hymns)",
+      "type": "pdf",
+      "file": "music/Primary-2026/HymnsForHomeAndChurch July 23, 2026).pdf",
+      "category": "Hymn"
     },
     {
       "id": "new-hymns-link",
@@ -256,6 +218,7 @@ const DEFAULT_LIBRARY_DATA = {
     "i-feel-my-saviors-love-74",
     "favorite-divider:primary-2026-2",
     "childrens-songbook-link",
+    "hymns-for-home-and-church-new-hymns",
     "new-hymns-link"
   ],
   "quickIndexes": [],
@@ -282,13 +245,13 @@ const DEFAULT_LIBRARY_DATA = {
       "showCheckboxes": false,
       "items": [
         {
-          "itemId": "this-little-light-of-mine-lyrics-1028"
+          "itemId": "lyrics-card-this-little-light-of-mine-1028"
         },
         {
-          "itemId": "called-to-serve-lyrics-249"
+          "itemId": "lyrics-card-called-to-serve-249"
         },
         {
-          "itemId": "i-will-follow-god-s-plan-lyrics-165"
+          "itemId": "lyrics-card-i-will-follow-gods-plan-165"
         }
       ]
     },
@@ -307,7 +270,7 @@ const DEFAULT_LIBRARY_DATA = {
           "itemId": "the-wise-man-and-the-foolish-man-281"
         },
         {
-          "itemId": "i-will-walk-with-jesus-1004-lyrics"
+          "itemId": "i-will-walk-with-jesus-1004"
         },
         {
           "itemId": "i-feel-my-saviors-love-74"
@@ -323,22 +286,22 @@ const DEFAULT_LIBRARY_DATA = {
       "showCheckboxes": false,
       "items": [
         {
-          "itemId": "choose-to-serve-the-lord-lyrics"
+          "itemId": "lyrics-card-choose-to-serve-the-lord"
         },
         {
-          "itemId": "search-ponder-and-pray-lyrics-109"
+          "itemId": "lyrics-card-search-ponder-and-pray-109"
         },
         {
-          "itemId": "the-wise-man-and-the-foolish-man-lyrics-281"
+          "itemId": "lyrics-card-wise-man-foolish-man-281"
         },
         {
-          "itemId": "i-will-walk-with-jesus-1004-lyrics"
+          "itemId": "lyrics-card-i-will-walk-with-jesus-1004"
         },
         {
-          "itemId": "i-feel-my-savior-s-love-lyrics-74"
+          "itemId": "lyrics-card-i-feel-my-saviors-love-74"
         },
         {
-          "itemId": "this-little-light-of-mine-lyrics-1028"
+          "itemId": "lyrics-card-this-little-light-of-mine-1028"
         }
       ]
     },
@@ -349,6 +312,9 @@ const DEFAULT_LIBRARY_DATA = {
       "items": [
         {
           "itemId": "childrens-songbook-link"
+        },
+        {
+          "itemId": "hymns-for-home-and-church-new-hymns"
         },
         {
           "itemId": "new-hymns-link"
@@ -1172,7 +1138,12 @@ function loadLocalState() {
   // localStorage keeps private, device-only preferences and planning state.
   // Clearing browser site data resets these values without changing library.json.
   syncStarterDataVersion();
-  state.favorites = new Set(readJson(STORAGE_KEYS.favorites, []));
+  const savedFavorites = readJson(STORAGE_KEYS.favorites, []);
+  const migratedFavorites = migrateRetiredLyricIds(savedFavorites);
+  state.favorites = new Set(migratedFavorites);
+  if (JSON.stringify(savedFavorites) !== JSON.stringify(migratedFavorites)) {
+    writeJson(STORAGE_KEYS.favorites, migratedFavorites);
+  }
   applyStarterFavorites();
   state.lists = loadUnifiedLists();
 }
@@ -1206,6 +1177,21 @@ function applyStarterFavorites() {
     appliedChanged = true;
   });
 
+  const homeChurchId = "hymns-for-home-and-church-new-hymns";
+  const childrensSongbookId = "childrens-songbook-link";
+  if (state.favorites.has(homeChurchId) && state.favorites.has(childrensSongbookId)) {
+    const favorites = Array.from(state.favorites);
+    const currentIndex = favorites.indexOf(homeChurchId);
+    const songbookIndex = favorites.indexOf(childrensSongbookId);
+    if (currentIndex !== songbookIndex + 1) {
+      favorites.splice(currentIndex, 1);
+      const updatedSongbookIndex = favorites.indexOf(childrensSongbookId);
+      favorites.splice(updatedSongbookIndex + 1, 0, homeChurchId);
+      state.favorites = new Set(favorites);
+      favoritesChanged = true;
+    }
+  }
+
   if (favoritesChanged) writeJson(STORAGE_KEYS.favorites, Array.from(state.favorites));
   if (appliedChanged) writeJson(STORAGE_KEYS.starterFavorites, Array.from(applied));
 }
@@ -1214,7 +1200,11 @@ function loadUnifiedLists() {
   const savedLists = readJson(STORAGE_KEYS.lists, null);
   if (Array.isArray(savedLists) && savedLists.length) {
     const normalizedSavedLists = pruneRetiredStarterLists(normalizeLists(savedLists), true);
-    return syncStarterLists(pruneOldEmptyListShells(normalizedSavedLists, true));
+    const lists = migrateRetiredLyricListEntries(
+      syncStarterLists(pruneOldEmptyListShells(normalizedSavedLists, true))
+    );
+    writeJson(STORAGE_KEYS.lists, lists);
+    return lists;
   }
 
   const quickChecks = readJson(STORAGE_KEYS.quickChecks, {});
@@ -1249,9 +1239,35 @@ function loadUnifiedLists() {
     }))
   ];
 
-  const lists = syncStarterLists(pruneRetiredStarterLists(normalizeLists(migrated)));
+  const lists = migrateRetiredLyricListEntries(
+    syncStarterLists(pruneRetiredStarterLists(normalizeLists(migrated)))
+  );
   writeJson(STORAGE_KEYS.lists, lists);
   return lists;
+}
+
+function migrateRetiredLyricIds(ids = []) {
+  const seen = new Set();
+  return ids.map((id) => RETIRED_LYRIC_PDF_REPLACEMENTS[id] || id).filter((id) => {
+    if (!id || seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+}
+
+function migrateRetiredLyricListEntries(lists = []) {
+  return lists.map((list) => {
+    const seen = new Set();
+    const entries = (list.entries || []).map((entry) => ({
+      ...entry,
+      itemId: RETIRED_LYRIC_PDF_REPLACEMENTS[entry.itemId] || entry.itemId
+    })).filter((entry) => {
+      if (!entry.itemId || seen.has(entry.itemId)) return false;
+      seen.add(entry.itemId);
+      return true;
+    });
+    return { ...list, entries };
+  });
 }
 
 function syncStarterLists(lists) {
@@ -2975,7 +2991,7 @@ function renderListTabs(active) {
           <span class="list-title-mark" aria-hidden="true">&#9776;</span>
           <span class="list-tab-title">${escapeHtml(title)}</span>
         </button>
-        ${itemCount ? `<span class="list-tab-count" aria-label="${itemCount} items">${itemCount}</span>` : ""}
+        ${isExpanded && itemCount ? `<span class="list-tab-count" aria-label="${itemCount} items">${itemCount}</span>` : ""}
         <button class="icon-button list-row-edit-button" type="button" data-edit-list-row="${escapeHtml(list.id)}" aria-label="Edit ${escapeHtml(title)}" title="Edit list">&#9998;</button>
         ${reorderHandle}
         </div>
