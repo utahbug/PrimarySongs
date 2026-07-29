@@ -83,14 +83,13 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-lists-v6";
+const STARTER_DATA_VERSION = "primary-2026-lists-v7";
 const ITEM_METADATA_REPAIR_VERSION = "starter-metadata-v2";
 const STARTER_FAVORITES_LAYOUT_VERSION = "pianist-test-layout-v1";
-const STARTER_LIST_ALPHABETICAL_VERSION = "starter-lists-alphabetical-v1";
+const STARTER_LIST_ALPHABETICAL_VERSION = "starter-lists-alphabetical-v2";
 const STARTER_LIST_ORDER = [
   "primary-program",
   "primary-songs-2026",
-  "primary-program-lyrics",
   "primary-songs-2026-lyrics",
   "lds-library"
 ];
@@ -105,6 +104,11 @@ const RETIRED_LYRIC_PDF_REPLACEMENTS = {
   "this-little-light-of-mine-lyrics-1028": "lyrics-card-this-little-light-of-mine-1028"
 };
 const RETIRED_STARTER_LISTS = [
+  {
+    id: "setlist-primary-program-lyrics",
+    title: "Primary Program (lyrics)",
+    itemIds: ["lyrics-card-called-to-serve-249", "lyrics-card-i-will-follow-gods-plan-165", "lyrics-card-this-little-light-of-mine-1028"]
+  },
   {
     id: "setlist-try-this-piano-and-lyrics",
     title: "Try this: Piano & Lyrics",
@@ -263,22 +267,6 @@ const DEFAULT_LIBRARY_DATA = {
       ]
     },
     {
-      "id": "primary-program-lyrics",
-      "title": "Primary Program (lyrics)",
-      "showCheckboxes": false,
-      "items": [
-        {
-          "itemId": "lyrics-card-this-little-light-of-mine-1028"
-        },
-        {
-          "itemId": "lyrics-card-called-to-serve-249"
-        },
-        {
-          "itemId": "lyrics-card-i-will-follow-gods-plan-165"
-        }
-      ]
-    },
-    {
       "id": "primary-songs-2026",
       "title": "Primary Songs 2026",
       "showCheckboxes": false,
@@ -309,19 +297,25 @@ const DEFAULT_LIBRARY_DATA = {
       "showCheckboxes": false,
       "items": [
         {
+          "itemId": "lyrics-card-called-to-serve-249"
+        },
+        {
           "itemId": "lyrics-card-choose-to-serve-the-lord"
+        },
+        {
+          "itemId": "lyrics-card-i-feel-my-saviors-love-74"
+        },
+        {
+          "itemId": "lyrics-card-i-will-follow-gods-plan-165"
+        },
+        {
+          "itemId": "lyrics-card-i-will-walk-with-jesus-1004"
         },
         {
           "itemId": "lyrics-card-search-ponder-and-pray-109"
         },
         {
           "itemId": "lyrics-card-wise-man-foolish-man-281"
-        },
-        {
-          "itemId": "lyrics-card-i-will-walk-with-jesus-1004"
-        },
-        {
-          "itemId": "lyrics-card-i-feel-my-saviors-love-74"
         },
         {
           "itemId": "lyrics-card-this-little-light-of-mine-1028"
