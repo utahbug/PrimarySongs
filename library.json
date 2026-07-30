@@ -145,6 +145,37 @@
       ]
     },
     {
+      "id": "primary-favorites",
+      "title": "Primary favorites",
+      "showCheckboxes": false,
+      "items": [
+        {
+          "itemId": "choose-to-serve-the-lord"
+        },
+        {
+          "itemId": "search-ponder-and-pray-109"
+        },
+        {
+          "itemId": "the-wise-man-and-the-foolish-man-281"
+        },
+        {
+          "itemId": "i-will-walk-with-jesus-1004"
+        },
+        {
+          "itemId": "i-feel-my-saviors-love-74"
+        },
+        {
+          "itemId": "this-little-light-of-mine-1028"
+        }
+      ]
+    },
+    {
+      "id": "just-for-fun",
+      "title": "Just for fun",
+      "showCheckboxes": false,
+      "items": []
+    },
+    {
       "id": "lds-library",
       "title": "LDS Library",
       "showCheckboxes": false,

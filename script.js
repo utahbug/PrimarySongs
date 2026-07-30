@@ -87,13 +87,15 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-lists-v8";
+const STARTER_DATA_VERSION = "primary-2026-lists-v10";
 const ITEM_METADATA_REPAIR_VERSION = "starter-metadata-v2";
 const STARTER_FAVORITES_LAYOUT_VERSION = "pianist-test-layout-v1";
 const STARTER_LIST_ALPHABETICAL_VERSION = "starter-lists-alphabetical-v2";
 const STARTER_LIST_ORDER = [
   "primary-program",
   "primary-songs-2026",
+  "primary-favorites",
+  "just-for-fun",
   "lds-library"
 ];
 const RETIRED_LYRIC_PDF_REPLACEMENTS = {
@@ -298,6 +300,37 @@ const DEFAULT_LIBRARY_DATA = {
           "itemId": "this-little-light-of-mine-1028"
         }
       ]
+    },
+    {
+      "id": "primary-favorites",
+      "title": "Primary favorites",
+      "showCheckboxes": false,
+      "items": [
+        {
+          "itemId": "choose-to-serve-the-lord"
+        },
+        {
+          "itemId": "search-ponder-and-pray-109"
+        },
+        {
+          "itemId": "the-wise-man-and-the-foolish-man-281"
+        },
+        {
+          "itemId": "i-will-walk-with-jesus-1004"
+        },
+        {
+          "itemId": "i-feel-my-saviors-love-74"
+        },
+        {
+          "itemId": "this-little-light-of-mine-1028"
+        }
+      ]
+    },
+    {
+      "id": "just-for-fun",
+      "title": "Just for fun",
+      "showCheckboxes": false,
+      "items": []
     },
     {
       "id": "lds-library",
@@ -1536,7 +1569,6 @@ function syncStarterLists(lists) {
 
   starterLists.forEach((starter) => {
     const starterEntries = (starter.entries || []).filter((entry) => state.itemsById.has(entry.itemId));
-    if (!starterEntries.length) return;
 
     const existing = listById.get(starter.id);
     if (applied.has(starter.id) && existing) return;
