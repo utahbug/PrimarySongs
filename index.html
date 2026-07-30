@@ -30,8 +30,8 @@
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
     <link rel="stylesheet" href="styles.css?v=primary-2026-156">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-    <script src="lyrics-cards.js?v=primary-2026-100" defer></script>
-    <script src="script.js?v=primary-2026-156" defer></script>
+    <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
+    <script src="script.js?v=primary-2026-157" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -633,6 +633,17 @@
             <input id="importTitleField" type="text" autocomplete="off">
           </label>
 
+          <label id="importCardSubtypeRow" class="hidden">
+            <span>Subtype</span>
+            <select id="importCardSubtype">
+              <option value="">Choose a subtype</option>
+            </select>
+          </label>
+          <label id="importCardSubtypeCustomRow" class="hidden">
+            <span>Custom subtype</span>
+            <input id="importCardSubtypeCustom" type="text" maxlength="24" autocomplete="off">
+          </label>
+
           <label id="importPageRow">
             <span>Page</span>
             <input id="importPage" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="5" size="5" autocomplete="off">
@@ -704,16 +715,6 @@
           </div>
 
           <div class="form-grid">
-            <label id="importCardSubtypeRow" class="hidden">
-              <span>Card subtype</span>
-              <select id="importCardSubtype">
-                <option value="">Choose a subtype</option>
-              </select>
-            </label>
-            <label id="importCardSubtypeCustomRow" class="hidden">
-              <span>Custom subtype</span>
-              <input id="importCardSubtypeCustom" type="text" maxlength="24" autocomplete="off">
-            </label>
             <label id="importCategoryRow">
               <span>Category / Genre</span>
               <input id="importCategory" type="text" autocomplete="off" list="categorySuggestions">

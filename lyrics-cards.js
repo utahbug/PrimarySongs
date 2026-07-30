@@ -4,7 +4,7 @@
 window.PRIMARY_LYRIC_CARDS = [
   {
     "id": "lyrics-card-called-to-serve-249",
-    "title": "Called to Serve - Lyrics",
+    "title": "Called to Serve",
     "type": "card",
     "category": "Primary Songs 2026",
     "lyricsCard": true,
@@ -13,7 +13,7 @@ window.PRIMARY_LYRIC_CARDS = [
   },
   {
     "id": "lyrics-card-choose-to-serve-the-lord",
-    "title": "Choose to Serve the Lord - Lyrics",
+    "title": "Choose to Serve the Lord",
     "type": "card",
     "category": "Primary Songs 2026",
     "lyricsCard": true,
@@ -22,7 +22,7 @@ window.PRIMARY_LYRIC_CARDS = [
   },
   {
     "id": "lyrics-card-i-feel-my-saviors-love-74",
-    "title": "I Feel My Savior's Love - Lyrics",
+    "title": "I Feel My Savior's Love",
     "type": "card",
     "category": "Primary Songs 2026",
     "lyricsCard": true,
@@ -31,7 +31,7 @@ window.PRIMARY_LYRIC_CARDS = [
   },
   {
     "id": "lyrics-card-i-will-follow-gods-plan-165",
-    "title": "I Will Follow God's Plan - Lyrics",
+    "title": "I Will Follow God's Plan",
     "type": "card",
     "category": "Primary Songs 2026",
     "lyricsCard": true,
@@ -40,7 +40,7 @@ window.PRIMARY_LYRIC_CARDS = [
   },
   {
     "id": "lyrics-card-i-will-walk-with-jesus-1004",
-    "title": "I Will Walk with Jesus - Lyrics",
+    "title": "I Will Walk with Jesus",
     "type": "card",
     "category": "Primary Songs 2026",
     "lyricsCard": true,
@@ -49,7 +49,7 @@ window.PRIMARY_LYRIC_CARDS = [
   },
   {
     "id": "lyrics-card-search-ponder-and-pray-109",
-    "title": "Search, Ponder, and Pray - Lyrics",
+    "title": "Search, Ponder, and Pray",
     "type": "card",
     "category": "Primary Songs 2026",
     "lyricsCard": true,
@@ -58,7 +58,7 @@ window.PRIMARY_LYRIC_CARDS = [
   },
   {
     "id": "lyrics-card-wise-man-foolish-man-281",
-    "title": "The Wise Man and the Foolish Man - Lyrics",
+    "title": "The Wise Man and the Foolish Man",
     "type": "card",
     "category": "Primary Songs 2026",
     "lyricsCard": true,
@@ -67,7 +67,7 @@ window.PRIMARY_LYRIC_CARDS = [
   },
   {
     "id": "lyrics-card-this-little-light-of-mine-1028",
-    "title": "This Little Light of Mine - Lyrics",
+    "title": "This Little Light of Mine",
     "type": "card",
     "category": "Primary Songs 2026",
     "lyricsCard": true,
