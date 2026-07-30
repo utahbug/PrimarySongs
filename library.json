@@ -145,37 +145,6 @@
       ]
     },
     {
-      "id": "primary-songs-2026-lyrics",
-      "title": "Primary Songs 2026 (lyrics)",
-      "showCheckboxes": false,
-      "items": [
-        {
-          "itemId": "lyrics-card-called-to-serve-249"
-        },
-        {
-          "itemId": "lyrics-card-choose-to-serve-the-lord"
-        },
-        {
-          "itemId": "lyrics-card-i-feel-my-saviors-love-74"
-        },
-        {
-          "itemId": "lyrics-card-i-will-follow-gods-plan-165"
-        },
-        {
-          "itemId": "lyrics-card-i-will-walk-with-jesus-1004"
-        },
-        {
-          "itemId": "lyrics-card-search-ponder-and-pray-109"
-        },
-        {
-          "itemId": "lyrics-card-wise-man-foolish-man-281"
-        },
-        {
-          "itemId": "lyrics-card-this-little-light-of-mine-1028"
-        }
-      ]
-    },
-    {
       "id": "lds-library",
       "title": "LDS Library",
       "showCheckboxes": false,

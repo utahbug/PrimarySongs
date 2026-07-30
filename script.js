@@ -84,14 +84,13 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-lists-v7";
+const STARTER_DATA_VERSION = "primary-2026-lists-v8";
 const ITEM_METADATA_REPAIR_VERSION = "starter-metadata-v2";
 const STARTER_FAVORITES_LAYOUT_VERSION = "pianist-test-layout-v1";
 const STARTER_LIST_ALPHABETICAL_VERSION = "starter-lists-alphabetical-v2";
 const STARTER_LIST_ORDER = [
   "primary-program",
   "primary-songs-2026",
-  "primary-songs-2026-lyrics",
   "lds-library"
 ];
 const RETIRED_LYRIC_PDF_REPLACEMENTS = {
@@ -124,6 +123,11 @@ const RETIRED_STARTER_LISTS = [
     id: "setlist-primary-songs-2026-lyrics-cards",
     title: "Primary Songs 2026 - Lyrics Cards",
     itemIds: ["lyrics-card-choose-to-serve-the-lord", "lyrics-card-search-ponder-and-pray-109", "lyrics-card-wise-man-foolish-man-281", "lyrics-card-i-will-walk-with-jesus-1004", "lyrics-card-i-feel-my-saviors-love-74", "lyrics-card-this-little-light-of-mine-1028"]
+  },
+  {
+    id: "setlist-primary-songs-2026-lyrics",
+    title: "Primary Songs 2026 (lyrics)",
+    itemIds: ["lyrics-card-called-to-serve-249", "lyrics-card-choose-to-serve-the-lord", "lyrics-card-i-feel-my-saviors-love-74", "lyrics-card-i-will-follow-gods-plan-165", "lyrics-card-i-will-walk-with-jesus-1004", "lyrics-card-search-ponder-and-pray-109", "lyrics-card-wise-man-foolish-man-281", "lyrics-card-this-little-light-of-mine-1028"]
   }
 ];
 const FILE_ITEM_TYPES = new Set(["pdf", "image", "note", "index"]);
@@ -289,37 +293,6 @@ const DEFAULT_LIBRARY_DATA = {
         },
         {
           "itemId": "this-little-light-of-mine-1028"
-        }
-      ]
-    },
-    {
-      "id": "primary-songs-2026-lyrics",
-      "title": "Primary Songs 2026 (lyrics)",
-      "showCheckboxes": false,
-      "items": [
-        {
-          "itemId": "lyrics-card-called-to-serve-249"
-        },
-        {
-          "itemId": "lyrics-card-choose-to-serve-the-lord"
-        },
-        {
-          "itemId": "lyrics-card-i-feel-my-saviors-love-74"
-        },
-        {
-          "itemId": "lyrics-card-i-will-follow-gods-plan-165"
-        },
-        {
-          "itemId": "lyrics-card-i-will-walk-with-jesus-1004"
-        },
-        {
-          "itemId": "lyrics-card-search-ponder-and-pray-109"
-        },
-        {
-          "itemId": "lyrics-card-wise-man-foolish-man-281"
-        },
-        {
-          "itemId": "lyrics-card-this-little-light-of-mine-1028"
         }
       ]
     },
@@ -3380,8 +3353,8 @@ function renderInlineListItems(list) {
         <div class="list-play-through-row">
           <button class="list-play-through-button ${playlistArmed ? "is-active" : ""}" type="button" data-play-pdf-list="${escapeHtml(list.id)}" aria-pressed="${playlistArmed}">
             ${playlistArmed
-              ? `Follow: On`
-              : `Follow: Off`}
+              ? `Next Song: On`
+              : `Next Song: Off`}
           </button>
         </div>
       ` : ""}
@@ -4643,7 +4616,8 @@ async function openPdf(item, options = {}) {
     listId = "",
     followEnabled = false,
     initialPage = "first",
-    preserveSequence = false
+    preserveSequence = false,
+    sequenceNotice = ""
   } = options;
   if (!preserveSequence) {
     const validSequenceListId = getPdfSequence(listId).some((entry) => entry.id === item.id) ? listId : "";
@@ -4687,6 +4661,7 @@ async function openPdf(item, options = {}) {
     state.currentPdf.pageNumber = clamp(state.currentPdf.pageNumber, 1, state.currentPdf.pageCount);
     resetPdfZoom();
     await renderPdfPage(state.currentPdf.pageNumber);
+    if (sequenceNotice) showPdfSequenceNotice(sequenceNotice);
     savePdfPage();
     rememberOpened(item, state.currentPdf.pageNumber);
   } catch (error) {
@@ -4837,7 +4812,7 @@ function openPdfSettings() {
   state.pdfSettingsDraft = {
     showOnOpen: readJson(STORAGE_KEYS.settings, {}).showPdfTipsOnOpen !== false,
     numberingMode: settings.numberingMode,
-    repeatList: settings.repeatList,
+    nextSongDefault: settings.nextSongDefault,
     metronomeEnabled: settings.metronomeEnabled,
     bpm: state.metronome.bpm,
     songStartPage: custom?.startPage || null,
@@ -4858,7 +4833,7 @@ function getPdfViewerSettings() {
   const settings = readJson(STORAGE_KEYS.settings, {});
   return {
     numberingMode: ["document", "song"].includes(settings.pdfNumberingMode) ? settings.pdfNumberingMode : "off",
-    repeatList: settings.pdfRepeatList !== false,
+    nextSongDefault: settings.pdfNextSongDefault !== false,
     metronomeEnabled: settings.pdfMetronomeEnabled === true
   };
 }
@@ -4868,7 +4843,7 @@ function syncPdfViewerSettings() {
   const settings = state.pdfSettingsDraft || savedSettings;
   if (state.pdfSettingsDraft) el.pdfTipsShowOnOpen.checked = settings.showOnOpen;
   el.pdfNumberingMode.value = settings.numberingMode;
-  el.pdfRepeatListEnabled.checked = settings.repeatList;
+  el.pdfRepeatListEnabled.checked = settings.nextSongDefault;
   el.pdfMetronomeEnabled.checked = settings.metronomeEnabled;
   el.pdfSettingsTempoInput.value = String(settings.bpm || state.metronome.bpm);
   el.pdfSettingsTempoRow.classList.toggle("hidden", !settings.metronomeEnabled);
@@ -4889,7 +4864,7 @@ function updatePdfSettingsDraft() {
   const draft = state.pdfSettingsDraft;
   draft.showOnOpen = el.pdfTipsShowOnOpen.checked;
   draft.numberingMode = el.pdfNumberingMode.value;
-  draft.repeatList = el.pdfRepeatListEnabled.checked;
+  draft.nextSongDefault = el.pdfRepeatListEnabled.checked;
   draft.metronomeEnabled = el.pdfMetronomeEnabled.checked;
   draft.bpm = clamp(Math.round(Number(el.pdfSettingsTempoInput.value) || 90), 40, 220);
   const startPage = draft.songStartPage || state.currentPdf.pageNumber;
@@ -4913,7 +4888,7 @@ function applyPdfSettings() {
     ...settings,
     showPdfTipsOnOpen: draft.showOnOpen,
     pdfNumberingMode: draft.numberingMode,
-    pdfRepeatList: draft.repeatList,
+    pdfNextSongDefault: draft.nextSongDefault,
     pdfMetronomeEnabled: draft.metronomeEnabled
   });
   if (draft.numberingMode === "song" && draft.songStartPage) {
@@ -4985,6 +4960,15 @@ function renderPdfPageNumbering(showNotice) {
   state.currentPdf.pageNoticeTimer = window.setTimeout(() => {
     el.pdfPageNotice.classList.add("hidden");
   }, 1200);
+}
+
+function showPdfSequenceNotice(message) {
+  window.clearTimeout(state.currentPdf.pageNoticeTimer);
+  el.pdfPageNotice.textContent = message;
+  el.pdfPageNotice.classList.remove("hidden");
+  state.currentPdf.pageNoticeTimer = window.setTimeout(() => {
+    el.pdfPageNotice.classList.add("hidden");
+  }, 1800);
 }
 
 function showPdfTipsOnOpen() {
@@ -5083,11 +5067,12 @@ function moveToAdjacentPdfInList(direction) {
   if (!sequence) return false;
   const targetIndex = sequence.index + direction;
   if (targetIndex < 0 || targetIndex >= sequence.items.length) {
-    if (direction > 0 && getPdfViewerSettings().repeatList && sequence.items.length) {
+    if (direction > 0 && sequence.items.length) {
       openPdf(sequence.items[0], {
         listId: state.currentPdf.sequenceListId,
         initialPage: "first",
-        preserveSequence: true
+        preserveSequence: true,
+        sequenceNotice: "Starting list over"
       });
       return true;
     }
@@ -5114,7 +5099,7 @@ function updatePdfSequenceControls() {
   const followOn = Boolean(getCurrentPdfSequencePosition());
   el.pdfFollowButton.classList.toggle("hidden", !hasSourcePosition || !onLastPage);
   el.pdfFollowButton.classList.toggle("is-active", followOn);
-  el.pdfFollowButton.textContent = `Follow: ${followOn ? "On" : "Off"}`;
+  el.pdfFollowButton.textContent = `Next Song: ${followOn ? "On" : "Off"}`;
   el.pdfFollowButton.setAttribute("aria-pressed", followOn ? "true" : "false");
 }
 
@@ -6962,10 +6947,13 @@ function toggleListPicker() {
 
 function selectList(listId) {
   if (!state.lists.some((list) => list.id === listId)) return;
-  if (state.armedPdfListId && state.armedPdfListId !== listId) {
-    state.armedPdfListId = "";
-  }
   const isExpanded = state.expandedListIds.includes(listId);
+  const willExpand = !isExpanded;
+  state.armedPdfListId = willExpand
+    && getPdfViewerSettings().nextSongDefault
+    && getPdfSequence(listId).length > 1
+    ? listId
+    : "";
   state.activeListId = listId;
   state.expandedListIds = isExpanded
     ? []
@@ -7155,7 +7143,7 @@ function listPickerTypeGroup(item) {
 }
 
 function normalizeListEditSort(value) {
-  return ["type", "title", "pdf", "card", "link"].includes(value) ? value : "type";
+  return ["type", "title", "pdf", "card", "link"].includes(value) ? value : "pdf";
 }
 
 function compareListPickerType(a, b) {
