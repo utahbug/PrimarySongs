@@ -13,6 +13,7 @@ const STORAGE_KEYS = {
   lastOpened: storageKey("lastOpened"),
   lists: storageKey("lists"),
   listEditSort: storageKey("listEditSort"),
+  cardSubtypes: storageKey("cardSubtypes"),
   pdfPages: storageKey("pdfPages"),
   pdfNumbering: storageKey("pdfNumbering"),
   quickIndexes: storageKey("quickIndexes"),
@@ -38,6 +39,8 @@ const PDF_STORE_NAME = "pdfFiles";
 const RICH_TOGGLE_COMMANDS = ["bold", "italic", "strikeThrough", "insertUnorderedList", "insertOrderedList"];
 const CARD_FONT_FACES = ["Verdana", "Aptos, Calibri, Arial, sans-serif", "Calibri, Aptos, Arial, sans-serif", "system-ui", "Arial", "Trebuchet MS", "Georgia", "Atkinson Hyperlegible"];
 const CARD_READING_SCALES = [0.82, 0.9, 1, 1.12, 1.25, 1.4];
+const CARD_SUBTYPE_PRESETS = ["Lyrics", "Song plan", "Notes", "Image", "Chords", "Teaching aid", "Cue"];
+const CARD_SUBTYPE_OTHER = "__other__";
 const METRONOME_SOUNDS = new Set(["wood", "classic", "pulse", "bell", "marimba", "bubble", "water"]);
 const PDF_TIPS_REMINDER_MS = 3000;
 const FAVORITE_DIVIDER_PREFIX = "favorite-divider:";
@@ -686,6 +689,10 @@ function collectElements() {
   el.importTitleField = document.getElementById("importTitleField");
   el.importCategoryRow = document.getElementById("importCategoryRow");
   el.importCategory = document.getElementById("importCategory");
+  el.importCardSubtypeRow = document.getElementById("importCardSubtypeRow");
+  el.importCardSubtype = document.getElementById("importCardSubtype");
+  el.importCardSubtypeCustomRow = document.getElementById("importCardSubtypeCustomRow");
+  el.importCardSubtypeCustom = document.getElementById("importCardSubtypeCustom");
   el.importBookRow = document.getElementById("importBookRow");
   el.importBook = document.getElementById("importBook");
   el.importComposerRow = document.getElementById("importComposerRow");
@@ -794,6 +801,7 @@ function wireEvents() {
   el.importCloseButton.addEventListener("click", closeImportModal);
   el.importDeleteButton.addEventListener("click", handleDeleteItemFromForm);
   el.importType.addEventListener("change", updateImportTypeFields);
+  el.importCardSubtype.addEventListener("change", handleCardSubtypeChange);
   el.importPdfFile.addEventListener("change", () => {
     updateFilePickerName(el.importPdfFile, el.importPdfFileName);
     fillTitleFromPdfFile();
@@ -1821,6 +1829,8 @@ function resetImportForm() {
   state.cardEditorRange = null;
   el.importType.value = "pdf";
   el.importCategory.value = "";
+  el.importCardSubtypeCustom.value = "";
+  refreshCardSubtypeOptions("");
   el.importCardContent.value = "";
   el.importPlainContent.value = "";
   el.importCardEditor.innerHTML = "";
@@ -1835,6 +1845,74 @@ function resetImportForm() {
   el.importTitleLabel.textContent = "Title";
   el.importDeleteButton.classList.add("hidden");
   setImportStatus("");
+}
+
+function normalizeCardSubtype(value) {
+  return String(value || "").replace(/\s+/g, " ").trim().slice(0, 24);
+}
+
+function getCardSubtype(item) {
+  const subtype = normalizeCardSubtype(item?.cardSubtype);
+  if (subtype) return subtype;
+  return item?.lyricsCard ? "Lyrics" : "";
+}
+
+function getRememberedCardSubtypes() {
+  const saved = readJson(STORAGE_KEYS.cardSubtypes, []);
+  if (!Array.isArray(saved)) return [];
+  const seen = new Set(CARD_SUBTYPE_PRESETS.map((label) => label.toLowerCase()));
+  return saved.map(normalizeCardSubtype).filter((label) => {
+    const key = label.toLowerCase();
+    if (!label || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 12);
+}
+
+function rememberCardSubtype(value) {
+  const label = normalizeCardSubtype(value);
+  if (!label || CARD_SUBTYPE_PRESETS.some((preset) => preset.toLowerCase() === label.toLowerCase())) return;
+  const labels = getRememberedCardSubtypes().filter((saved) => saved.toLowerCase() !== label.toLowerCase());
+  writeJson(STORAGE_KEYS.cardSubtypes, [label, ...labels].slice(0, 12));
+}
+
+function refreshCardSubtypeOptions(selectedValue = "") {
+  const selected = normalizeCardSubtype(selectedValue);
+  const custom = getRememberedCardSubtypes();
+  if (selected
+    && !CARD_SUBTYPE_PRESETS.some((label) => label.toLowerCase() === selected.toLowerCase())
+    && !custom.some((label) => label.toLowerCase() === selected.toLowerCase())) {
+    custom.unshift(selected);
+  }
+  const labels = [...CARD_SUBTYPE_PRESETS, ...custom];
+  el.importCardSubtype.innerHTML = `
+    <option value="">Choose a subtype</option>
+    ${labels.map((label) => `<option value="${escapeHtml(label)}">${escapeHtml(label)}</option>`).join("")}
+    <option value="${CARD_SUBTYPE_OTHER}">Other...</option>
+  `;
+  const match = labels.find((label) => label.toLowerCase() === selected.toLowerCase());
+  el.importCardSubtype.value = match || "";
+  syncCardSubtypeFields();
+}
+
+function syncCardSubtypeFields() {
+  const isCard = el.importType.value === "card";
+  el.importCardSubtypeRow.classList.toggle("hidden", !isCard);
+  el.importCardSubtypeCustomRow.classList.toggle("hidden", !isCard || el.importCardSubtype.value !== CARD_SUBTYPE_OTHER);
+}
+
+function handleCardSubtypeChange() {
+  syncCardSubtypeFields();
+  if (el.importCardSubtype.value === CARD_SUBTYPE_OTHER) el.importCardSubtypeCustom.focus();
+}
+
+function getCardSubtypeFromForm() {
+  if (el.importCardSubtype.value !== CARD_SUBTYPE_OTHER) {
+    return normalizeCardSubtype(el.importCardSubtype.value);
+  }
+  const custom = normalizeCardSubtype(el.importCardSubtypeCustom.value);
+  if (!custom) throw new Error("Enter a custom card subtype before saving.");
+  return custom;
 }
 
 function applyImportContext() {
@@ -1861,6 +1939,7 @@ function applyImportContext() {
   el.importDeleteButton.classList.toggle("hidden", !editing || !isDeletableItem(state.editingItemId));
 
   el.importCategoryRow.classList.toggle("hidden", linkOnly);
+  syncCardSubtypeFields();
   el.importBookRow.classList.add("hidden");
   el.importComposerRow.classList.toggle("hidden", linkOnly || cardOnly);
   el.importPageRow.classList.add("hidden");
@@ -1893,6 +1972,7 @@ function updateImportTypeFields() {
   el.richCardContentRow.classList.toggle("hidden", type !== "card");
   el.plainCardContentRow.classList.toggle("hidden", type !== "note");
   el.linkImportFields.classList.toggle("hidden", type !== "link");
+  syncCardSubtypeFields();
 }
 
 function startModalDrag(event) {
@@ -1941,6 +2021,7 @@ function prefillImportForm(item) {
   el.importType.disabled = true;
   el.importTitleField.value = normalizeVisibleText(item.title);
   el.importCategory.value = item.category || "";
+  refreshCardSubtypeOptions(getCardSubtype(item));
   el.importBook.value = item.book || "";
   el.importComposer.value = item.composer || "";
   el.importPage.value = item.page || "";
@@ -2348,6 +2429,9 @@ function buildEditableFieldsFromForm(type, fallbackTitle = "Untitled Item") {
   if (!fields.notes) delete fields.notes;
 
   if (type === "card") {
+    const cardSubtype = getCardSubtypeFromForm();
+    fields.cardSubtype = cardSubtype;
+    rememberCardSubtype(cardSubtype);
     syncCardEditorToHiddenField();
     const cardHtml = sanitizeCardHtml(el.importCardEditor.innerHTML);
     const content = htmlToPlainText(cardHtml).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
@@ -7469,6 +7553,7 @@ function compactLibraryMetaText(item) {
 }
 
 function compactTypeLabel(item) {
+  if (item?.type === "card") return getCardSubtype(item) || "card";
   return item?.type || "item";
 }
 
@@ -7554,6 +7639,7 @@ async function exportBackup() {
     const data = {
       importedItems: readJson(STORAGE_KEYS.importedItems, []),
       itemEdits: readJson(STORAGE_KEYS.itemEdits, {}),
+      cardSubtypes: getRememberedCardSubtypes(),
       lists: readJson(STORAGE_KEYS.lists, state.lists),
       quickIndexes: readJson(STORAGE_KEYS.quickIndexes, state.data.quickIndexes || []),
       setlists: readJson(STORAGE_KEYS.setlists, state.data.setlists || []),
@@ -7611,6 +7697,7 @@ function importBackupFromFile(event) {
       await restoreBackupFiles(fileRecords);
       writeJson(STORAGE_KEYS.importedItems, data.importedItems || []);
       writeJson(STORAGE_KEYS.itemEdits, data.itemEdits || {});
+      writeJson(STORAGE_KEYS.cardSubtypes, data.cardSubtypes || []);
       if (data.lists) {
         writeJson(STORAGE_KEYS.lists, data.lists);
       } else {
