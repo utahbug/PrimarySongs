@@ -1,4 +1,4 @@
-const CACHE_NAME = "primary-music-helper-shell-v342";
+const CACHE_NAME = "primary-music-helper-shell-v343";
 const APP_SHELL = [
   "./",
   "./index.html",
