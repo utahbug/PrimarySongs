@@ -6453,6 +6453,7 @@ function endSidetrackPuzzleDrag(event) {
     slot.appendChild(piece);
     slot.classList.add("filled");
     piece.disabled = true;
+    playJazzPuzzleSuccess();
     const remaining = el.sidetrackPuzzle.querySelectorAll(".sidetrack-puzzle-pieces .sidetrack-puzzle-piece").length;
     const status = el.sidetrackPuzzle.querySelector(".sidetrack-puzzle-status");
     status.textContent = remaining ? `${remaining} key${remaining === 1 ? "" : "s"} left` : "Keyboard complete!";
