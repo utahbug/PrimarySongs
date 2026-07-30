@@ -1,10 +1,10 @@
-const CACHE_NAME = "primary-music-helper-shell-v407";
+const CACHE_NAME = "primary-music-helper-shell-v408";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=primary-2026-197",
+  "./styles.css?v=primary-2026-198",
   "./lyrics-cards.js?v=primary-2026-101",
-  "./script.js?v=primary-2026-195",
+  "./script.js?v=primary-2026-196",
   "./library.json",
   "./manifest.json",
   "./favicon.ico",
@@ -13,6 +13,7 @@ const APP_SHELL = [
   "./assets/apple-touch-icon.png",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
+  "./assets/jazz-ensemble-puzzle.webp",
   "./assets/AtkinsonHyperlegible-Regular.woff2",
   "./assets/AtkinsonHyperlegible-Italic.woff2",
   "./assets/AtkinsonHyperlegible-Bold.woff2",
