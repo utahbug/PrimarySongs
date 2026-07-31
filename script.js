@@ -87,7 +87,7 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-lists-v10";
+const STARTER_DATA_VERSION = "primary-2026-expanded-lists-v11";
 const ITEM_METADATA_REPAIR_VERSION = "starter-metadata-v2";
 const STARTER_FAVORITES_LAYOUT_VERSION = "pianist-test-layout-v1";
 const STARTER_LIST_ALPHABETICAL_VERSION = "starter-lists-alphabetical-v2";
@@ -154,6 +154,48 @@ function getAppStorageScope() {
   const repoOrFolder = pathParts[0] || "local";
   return `primaryMusicHelper.${repoOrFolder}`;
 }
+
+const IMPORTED_STARTER_ITEMS = [
+  { id: "build-an-ark-1060", title: "Build an Ark, 1060", type: "pdf", file: "music/Primary-favorites/build-an-ark-1060.pdf", page: 1060 },
+  { id: "do-as-im-doing-276", title: "Do as I'm Doing, 276", type: "pdf", file: "music/Primary-favorites/do-as-im-doing-276.pdf", page: 276 },
+  { id: "follow-the-prophet-110", title: "Follow the Prophet, 110", type: "pdf", file: "music/Primary-favorites/follow-the-prophet-110.pdf", page: 110 },
+  { id: "give-said-the-little-stream-236", title: "Give, Said the Little Stream, 236", type: "pdf", file: "music/Primary-favorites/give-said-the-little-stream-236.pdf", page: 236 },
+  { id: "head-shoulders-knees-and-toes-275a", title: "Head, Shoulders, Knees, and Toes, 275a", type: "pdf", file: "music/Primary-favorites/head-shoulders-knees-and-toes-275a.pdf" },
+  { id: "hello-song-260", title: "Hello Song, 260", type: "pdf", file: "music/Primary-favorites/hello-song-260.pdf", page: 260 },
+  { id: "if-youre-happy-266", title: "If You're Happy, 266", type: "pdf", file: "music/Primary-favorites/if-youre-happy-266.pdf", page: 266 },
+  { id: "once-there-was-a-snowman-249", title: "Once There Was a Snowman, 249", type: "pdf", file: "music/Primary-favorites/once-there-was-a-snowman-249.pdf", page: 249 },
+  { id: "popcorn-popping-242", title: "Popcorn Popping, 242", type: "pdf", file: "music/Primary-favorites/popcorn-popping-242.pdf", page: 242 },
+  { id: "the-handcart-song-220", title: "The Handcart Song, 220", type: "pdf", file: "music/Primary-favorites/the-handcart-song-220.pdf", page: 220 },
+  { id: "a-childs-prayer-12", title: "A Child's Prayer, 12", type: "pdf", file: "music/Just-for-fun/a-childs-prayer-12.pdf", page: 12 },
+  { id: "beauty-everywhere-232", title: "Beauty Everywhere, 232", type: "pdf", file: "music/Just-for-fun/beauty-everywhere-232.pdf", page: 232 },
+  { id: "children-all-over-the-world-16", title: "Children All Over the World, 16", type: "pdf", file: "music/Just-for-fun/children-all-over-the-world-16.pdf", page: 16 },
+  { id: "gethsemane-1009", title: "Gethsemane, 1009", type: "pdf", file: "music/Just-for-fun/gethsemane-1009.pdf", page: 1009 },
+  { id: "he-sent-his-son-34", title: "He Sent His Son, 34", type: "pdf", file: "music/Just-for-fun/he-sent-his-son-34.pdf", page: 34 },
+  { id: "holding-hands-around-the-world-1011", title: "Holding Hands Around the World, 1011", type: "pdf", file: "music/Just-for-fun/holding-hands-around-the-world-1011.pdf", page: 1011 },
+  { id: "i-belong-to-the-church-of-jesus-christ-77", title: "I Belong to the Church of Jesus Christ, 77", type: "pdf", file: "music/Just-for-fun/i-belong-to-the-church-of-jesus-christ-77.pdf", page: 77 },
+  { id: "i-hope-they-call-me-on-a-mission-169", title: "I Hope They Call Me on a Mission, 169", type: "pdf", file: "music/Just-for-fun/i-hope-they-call-me-on-a-mission-169.pdf", page: 169 },
+  { id: "i-love-to-see-the-temple-95", title: "I Love to See the Temple, 95", type: "pdf", file: "music/Just-for-fun/i-love-to-see-the-temple-95.pdf", page: 95 },
+  { id: "i-need-my-heavenly-father-18", title: "I Need My Heavenly Father, 18", type: "pdf", file: "music/Just-for-fun/i-need-my-heavenly-father-18.pdf", page: 18 },
+  { id: "i-thank-thee-dear-father-7", title: "I Thank Thee, Dear Father, 7", type: "pdf", file: "music/Just-for-fun/i-thank-thee-dear-father-7.pdf", page: 7 },
+  { id: "i-want-to-be-a-missionary-now-168", title: "I Want to Be a Missionary Now, 168", type: "pdf", file: "music/Just-for-fun/i-want-to-be-a-missionary-now-168.pdf", page: 168 },
+  { id: "im-trying-to-be-like-jesus-78", title: "I'm Trying to Be Like Jesus, 78", type: "pdf", file: "music/Just-for-fun/im-trying-to-be-like-jesus-78.pdf", page: 78 },
+  { id: "jesus-has-risen-70", title: "Jesus Has Risen, 70", type: "pdf", file: "music/Just-for-fun/jesus-has-risen-70.pdf", page: 70 },
+  { id: "jesus-wants-me-for-a-sunbeam-60", title: "Jesus Wants Me for a Sunbeam, 60", type: "pdf", file: "music/Just-for-fun/jesus-wants-me-for-a-sunbeam-60.pdf", page: 60 },
+  { id: "little-purple-pansies-244", title: "Little Purple Pansies, 244", type: "pdf", file: "music/Just-for-fun/little-purple-pansies-244.pdf", page: 244 },
+  { id: "my-heavenly-father-loves-me-228", title: "My Heavenly Father Loves Me, 228", type: "pdf", file: "music/Just-for-fun/my-heavenly-father-loves-me-228.pdf", page: 228 },
+  { id: "scripture-power", title: "Scripture Power", type: "pdf", file: "music/Just-for-fun/scripture-power.pdf" },
+  { id: "when-he-comes-again-82", title: "When He Comes Again, 82", type: "pdf", file: "music/Just-for-fun/when-he-comes-again-82.pdf", page: 82 },
+  { id: "when-i-am-baptized-103", title: "When I Am Baptized, 103", type: "pdf", file: "music/Just-for-fun/when-i-am-baptized-103.pdf", page: 103 },
+  { id: "where-love-is-138", title: "Where Love Is, 138", type: "pdf", file: "music/Just-for-fun/where-love-is-138.pdf", page: 138 }
+];
+
+const PRIMARY_FAVORITES_IMPORT_IDS = IMPORTED_STARTER_ITEMS
+  .filter((item) => item.file.includes("/Primary-favorites/"))
+  .map((item) => item.id);
+const JUST_FOR_FUN_IMPORT_IDS = [
+  ...IMPORTED_STARTER_ITEMS.filter((item) => item.file.includes("/Just-for-fun/")).map((item) => item.id),
+  "i-will-follow-gods-plan-for-me-165"
+];
 
 const DEFAULT_LIBRARY_DATA = {
   "items": [
@@ -298,6 +340,9 @@ const DEFAULT_LIBRARY_DATA = {
         },
         {
           "itemId": "this-little-light-of-mine-1028"
+        },
+        {
+          "itemId": "i-will-follow-gods-plan-for-me-165"
         }
       ]
     },
@@ -323,6 +368,9 @@ const DEFAULT_LIBRARY_DATA = {
         },
         {
           "itemId": "this-little-light-of-mine-1028"
+        },
+        {
+          "itemId": "i-will-follow-gods-plan-for-me-165"
         }
       ]
     },
@@ -347,6 +395,16 @@ const DEFAULT_LIBRARY_DATA = {
     }
   ]
 };
+
+DEFAULT_LIBRARY_DATA.items.push(...IMPORTED_STARTER_ITEMS.map((item) => ({ ...item })));
+const defaultPrimaryFavorites = DEFAULT_LIBRARY_DATA.setlists.find((list) => list.id === "primary-favorites");
+const defaultJustForFun = DEFAULT_LIBRARY_DATA.setlists.find((list) => list.id === "just-for-fun");
+if (defaultPrimaryFavorites) {
+  defaultPrimaryFavorites.items.push(...PRIMARY_FAVORITES_IMPORT_IDS.map((itemId) => ({ itemId })));
+}
+if (defaultJustForFun) {
+  defaultJustForFun.items.push(...JUST_FOR_FUN_IMPORT_IDS.map((itemId) => ({ itemId })));
+}
 
 const APP_THEME = {
   primary: "#2B5F9E",
