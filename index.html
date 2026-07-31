@@ -28,10 +28,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-203">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-204">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
-    <script src="script.js?v=primary-2026-204" defer></script>
+    <script src="script.js?v=primary-2026-205" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -536,6 +536,19 @@
               <button id="scaleGuideTab" type="button" role="tab" aria-selected="false" aria-controls="scaleGuide">Scales</button>
             </div>
             <section id="pianoChordGuide" class="keyboard-chord-guide" aria-labelledby="keyboardChordHeading">
+              <div class="piano-style-guide">
+                <label for="pianoStyle"><span>I want to play…</span>
+                  <select id="pianoStyle">
+                    <option value="manual">Choose manually</option>
+                    <option value="hymn">Hymn</option>
+                    <option value="country">Country</option>
+                    <option value="blues">Blues</option>
+                    <option value="jazz">Jazz</option>
+                    <option value="pop">Pop</option>
+                  </select>
+                </label>
+                <div id="pianoStyleRecipe" class="piano-style-recipe" aria-live="polite" hidden></div>
+              </div>
               <div class="piano-chord-controls keyboard-chord-controls">
                 <h3 id="keyboardChordHeading">Chord:</h3>
                 <label><span>Root</span>

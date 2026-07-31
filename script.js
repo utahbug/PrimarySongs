@@ -720,6 +720,8 @@ function collectElements() {
   el.keyboardSoundStatus = document.getElementById("keyboardSoundStatus");
   el.realKeyboard = document.getElementById("realKeyboard");
   el.pianoChordGuide = document.getElementById("pianoChordGuide");
+  el.pianoStyle = document.getElementById("pianoStyle");
+  el.pianoStyleRecipe = document.getElementById("pianoStyleRecipe");
   el.pianoChordRoot = document.getElementById("pianoChordRoot");
   el.pianoChordType = document.getElementById("pianoChordType");
   el.pianoChordPlayButton = document.getElementById("pianoChordPlayButton");
@@ -980,7 +982,9 @@ function wireEvents() {
   el.keyboardTransposeDown.addEventListener("click", () => adjustKeyboardTranspose(-1));
   el.keyboardTransposeReset.addEventListener("click", () => setKeyboardTranspose(0));
   el.keyboardTransposeUp.addEventListener("click", () => adjustKeyboardTranspose(1));
-  el.pianoChordRoot.addEventListener("change", renderPianoChordGuide);
+  el.pianoStyle.addEventListener("change", applyPianoStyleGuide);
+  el.pianoStyleRecipe.addEventListener("click", handlePianoStyleRecipeClick);
+  el.pianoChordRoot.addEventListener("change", handlePianoChordRootChange);
   el.pianoChordType.addEventListener("change", renderPianoChordGuide);
   el.pianoChordPlayButton.addEventListener("click", playPianoGuideChord);
   el.chordGuideTab.addEventListener("click", () => showKeyboardGuide("chord"));
@@ -6050,6 +6054,36 @@ const PIANO_CHORDS = {
   sixth: { intervals: [0, 4, 7, 9], use: "The 6th adds warmth without the stronger pull of a 7th; useful in country, jazz, and older popular music." },
   ninth: { intervals: [0, 2, 4, 7, 10], use: "The 9th expands a dominant 7th with extra color, especially in blues, funk, and jazz." }
 };
+const PIANO_STYLE_GUIDES = {
+  hymn: {
+    intro: "A familiar, settled sound. Move away from the home chord, then return to it.",
+    chordType: "major", scaleType: "major", scaleLabel: "Major",
+    chords: [[0, "major", "I · Home"], [5, "major", "IV · Away"], [7, "dominant7", "V7 · Leads home"], [0, "major", "I · Home"]]
+  },
+  country: {
+    intro: "Start with three dependable chords. The dominant 7th gives the return home extra pull.",
+    chordType: "major", scaleType: "majorPentatonic", scaleLabel: "Major pentatonic",
+    chords: [[0, "major", "I"], [5, "major", "IV"], [7, "dominant7", "V7"], [0, "major", "I"]]
+  },
+  blues: {
+    intro: "Use dominant 7th chords for the progression and the Blues scale for melody or improvising.",
+    chordType: "dominant7", scaleType: "blues", scaleLabel: "Blues",
+    chords: [[0, "dominant7", "I7"], [5, "dominant7", "IV7"], [7, "dominant7", "V7"], [0, "dominant7", "I7"]]
+  },
+  jazz: {
+    intro: "Try the common ii–V–I movement: mellow minor 7th, tense dominant 7th, then a warm major 7th home.",
+    chordType: "major7", scaleType: "dorian", scaleLabel: "Dorian over ii; Mixolydian over V; Major over I",
+    chords: [[2, "minor7", "ii7", "dorian"], [7, "dominant7", "V7", "mixolydian"], [0, "major7", "Imaj7", "major"]]
+  },
+  pop: {
+    intro: "These four chords create a familiar progression used in many popular songs.",
+    chordType: "major", scaleType: "majorPentatonic", scaleLabel: "Major or major pentatonic",
+    chords: [[0, "major", "I"], [7, "major", "V"], [9, "minor", "vi"], [5, "major", "IV"]]
+  }
+};
+const PIANO_CHORD_SUFFIXES = {
+  major: "", minor: "m", dominant7: "7", major7: "maj7", minor7: "m7"
+};
 const PIANO_SCALES = {
   major: { intervals: [0, 2, 4, 5, 7, 9, 11, 12], label: "Major", use: "Bright and familiar; common in hymns, folk music, and popular songs." },
   naturalMinor: { intervals: [0, 2, 3, 5, 7, 8, 10, 12], label: "Natural minor", use: "Reflective or dramatic; the basic minor-scale pattern." },
@@ -7108,6 +7142,63 @@ function renderPianoChordGuide() {
     <span><strong>${PIANO_NOTE_NAMES[fifth]}</strong>V · Leads home</span>
     <span><strong>${PIANO_NOTE_NAMES[relativeMinor]}m</strong>vi · Softer</span>
   `;
+  renderPianoStyleGuide();
+}
+
+function applyPianoStyleGuide() {
+  const guide = PIANO_STYLE_GUIDES[el.pianoStyle?.value];
+  if (guide) {
+    if (!el.pianoStyle.dataset.homeRoot) el.pianoStyle.dataset.homeRoot = el.pianoChordRoot.value;
+    el.pianoChordType.value = guide.chordType;
+    el.scaleRoot.value = el.pianoStyle.dataset.homeRoot;
+    el.scaleType.value = guide.scaleType;
+  } else {
+    delete el.pianoStyle.dataset.homeRoot;
+  }
+  renderPianoChordGuide();
+}
+
+function handlePianoChordRootChange() {
+  if (PIANO_STYLE_GUIDES[el.pianoStyle?.value]) {
+    el.pianoStyle.dataset.homeRoot = el.pianoChordRoot.value;
+    el.scaleRoot.value = el.pianoChordRoot.value;
+  }
+  renderPianoChordGuide();
+}
+
+function renderPianoStyleGuide() {
+  if (!el.pianoStyle || !el.pianoStyleRecipe) return;
+  const guide = PIANO_STYLE_GUIDES[el.pianoStyle.value];
+  el.pianoStyleRecipe.hidden = !guide;
+  if (!guide) {
+    el.pianoStyleRecipe.replaceChildren();
+    return;
+  }
+  const home = Number(el.pianoStyle.dataset.homeRoot ?? el.pianoChordRoot.value) || 0;
+  const chordButtons = guide.chords.map(([offset, type, role, scaleType]) => {
+    const root = (home + offset) % 12;
+    const suffix = PIANO_CHORD_SUFFIXES[type] ?? "";
+    const scaleAttribute = scaleType ? ` data-style-scale="${scaleType}"` : "";
+    return `<button type="button" data-style-root="${root}" data-style-type="${type}"${scaleAttribute}><strong>${PIANO_NOTE_NAMES[root]}${suffix}</strong><span>${role}</span></button>`;
+  }).join("");
+  el.pianoStyleRecipe.innerHTML = `
+    <div><strong>Try this first</strong><span>${guide.intro}</span></div>
+    <div class="piano-style-chords">${chordButtons}</div>
+    <p><strong>Scale:</strong> ${guide.scaleLabel}</p>
+  `;
+}
+
+function handlePianoStyleRecipeClick(event) {
+  const button = event.target.closest("[data-style-root][data-style-type]");
+  if (!button) return;
+  el.pianoChordRoot.value = button.dataset.styleRoot;
+  el.pianoChordType.value = button.dataset.styleType;
+  if (button.dataset.styleScale) {
+    el.scaleRoot.value = button.dataset.styleRoot;
+    el.scaleType.value = button.dataset.styleScale;
+  }
+  renderPianoChordGuide();
+  playPianoGuideChord();
 }
 
 function showKeyboardGuide(guide) {
