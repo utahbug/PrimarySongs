@@ -1,10 +1,10 @@
-const CACHE_NAME = "primary-music-helper-shell-v414";
+const CACHE_NAME = "primary-music-helper-shell-v417";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=primary-2026-200",
+  "./styles.css?v=primary-2026-203",
   "./lyrics-cards.js?v=primary-2026-101",
-  "./script.js?v=primary-2026-201",
+  "./script.js?v=primary-2026-204",
   "./library.json",
   "./manifest.json",
   "./favicon.ico",
@@ -14,6 +14,12 @@ const APP_SHELL = [
   "./assets/icon-192.png",
   "./assets/icon-512.png",
   "./assets/jazz-ensemble-puzzle.webp",
+  "./assets/jazz-ensemble-puzzle-2.webp",
+  "./assets/jazz-ensemble-puzzle-3.webp",
+  "./assets/jazz-ensemble-puzzle-4.webp",
+  "./assets/jazz-ensemble-puzzle-5.webp",
+  "./assets/jazz-ensemble-puzzle-6.webp",
+  "./assets/jazz-ensemble-puzzle-7.webp",
   "./assets/AtkinsonHyperlegible-Regular.woff2",
   "./assets/AtkinsonHyperlegible-Italic.woff2",
   "./assets/AtkinsonHyperlegible-Bold.woff2",

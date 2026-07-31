@@ -6056,6 +6056,8 @@ const PIANO_SCALES = {
   majorPentatonic: { intervals: [0, 2, 4, 7, 9, 12], label: "Major pentatonic", use: "Open and friendly; useful in folk, country, and simple improvisation." },
   minorPentatonic: { intervals: [0, 3, 5, 7, 10, 12], label: "Minor pentatonic", use: "Flexible and expressive; widely used in rock, blues, and improvisation." },
   blues: { intervals: [0, 3, 5, 6, 7, 10, 12], label: "Blues", use: "Adds the distinctive blue note between the fourth and fifth." },
+  dorian: { intervals: [0, 2, 3, 5, 7, 9, 10, 12], label: "Dorian", use: "A minor sound with a brighter sixth; common over minor 7th chords in jazz, funk, and modal music." },
+  mixolydian: { intervals: [0, 2, 4, 5, 7, 9, 10, 12], label: "Mixolydian", use: "A major sound with a lowered seventh; useful over dominant 7th chords in blues, jazz, rock, and country." },
   chromatic: { intervals: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], label: "Chromatic", use: "Uses every neighboring note; helpful for fingering, warmups, and hearing half steps." }
 };
 const PIANO_NOTE_NAMES = ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"];
@@ -6275,9 +6277,20 @@ const SIDETRACK_NOTES = [
   ["G sharp 4", "G#"], ["A4", "A"], ["A sharp 4", "A#"], ["B4", "B"], ["C5", "C"]
 ];
 const sidetrackAirGame = { active: false, popped: 0, created: 0, total: 20, lastPhrase: -1 };
+const JAZZ_PUZZLE_IMAGES = [
+  "assets/jazz-ensemble-puzzle.webp",
+  "assets/jazz-ensemble-puzzle-2.webp",
+  "assets/jazz-ensemble-puzzle-3.webp",
+  "assets/jazz-ensemble-puzzle-4.webp",
+  "assets/jazz-ensemble-puzzle-5.webp",
+  "assets/jazz-ensemble-puzzle-6.webp",
+  "assets/jazz-ensemble-puzzle-7.webp"
+];
 let sidetrackPuzzleDrag = null;
 let sidetrackJazzDrag = null;
 let sidetrackJazzSelected = null;
+let sidetrackJazzImageIndex = 0;
+let sidetrackJazzAdvanceTimer = null;
 
 function initializeSidetrackActivities() {
   if (!el.sidetrackKeyboard || el.sidetrackKeyboard.childElementCount) return;
@@ -6304,19 +6317,24 @@ function initializeSidetrackActivities() {
 
 function buildJazzPuzzle() {
   if (!el.sidetrackJazzPuzzle) return;
+  window.clearTimeout(sidetrackJazzAdvanceTimer);
+  sidetrackJazzAdvanceTimer = null;
+  const image = JAZZ_PUZZLE_IMAGES[sidetrackJazzImageIndex];
+  const pictureNumber = sidetrackJazzImageIndex + 1;
+  el.sidetrackJazzPuzzle.style.setProperty("--jazz-puzzle-image", `url("${image}")`);
   const pieces = Array.from({ length: 9 }, (_, index) => index).sort(() => Math.random() - 0.5);
   el.sidetrackJazzPuzzle.innerHTML = `
     <div class="jazz-puzzle-heading">
-      <strong>Build the jazz ensemble</strong>
+      <strong>Build the music scene</strong>
       <button class="jazz-puzzle-reset" type="button" aria-label="Shuffle and start over" title="Start over">↻</button>
     </div>
-    <div class="jazz-puzzle-board" aria-label="Jazz ensemble puzzle board">
+    <div class="jazz-puzzle-board" aria-label="Music picture ${pictureNumber} of ${JAZZ_PUZZLE_IMAGES.length} puzzle board">
       ${Array.from({ length: 9 }, (_, index) => `<span class="jazz-puzzle-slot" data-jazz-index="${index}"></span>`).join("")}
     </div>
     <div class="jazz-puzzle-tray" aria-label="Puzzle pieces">
-      ${pieces.map((index) => `<button class="jazz-puzzle-piece" type="button" data-jazz-index="${index}" aria-label="Jazz puzzle piece ${index + 1}"></button>`).join("")}
+      ${pieces.map((index) => `<button class="jazz-puzzle-piece" type="button" data-jazz-index="${index}" aria-label="Music puzzle piece ${index + 1}"></button>`).join("")}
     </div>
-    <p class="jazz-puzzle-status" aria-live="polite">Piece 1 of 9</p>`;
+    <p class="jazz-puzzle-status" aria-live="polite">Picture ${pictureNumber} of ${JAZZ_PUZZLE_IMAGES.length} • Piece 1 of 9</p>`;
   el.sidetrackJazzPuzzle.querySelectorAll(".jazz-puzzle-piece").forEach((piece) => {
     const index = Number(piece.dataset.jazzIndex);
     piece.style.setProperty("--piece-column", String(index % 3));
@@ -6340,6 +6358,8 @@ function buildJazzPuzzle() {
 }
 
 function resetJazzPuzzle() {
+  window.clearTimeout(sidetrackJazzAdvanceTimer);
+  sidetrackJazzAdvanceTimer = null;
   sidetrackJazzDrag?.floating?.remove();
   sidetrackJazzDrag?.piece?.classList.remove("dragging");
   sidetrackJazzDrag = null;
@@ -6433,9 +6453,18 @@ function placeJazzPuzzlePiece(piece, slot) {
   piece.disabled = true;
   const remaining = el.sidetrackJazzPuzzle.querySelectorAll(".jazz-puzzle-tray .jazz-puzzle-piece").length;
   const status = el.sidetrackJazzPuzzle.querySelector(".jazz-puzzle-status");
-  status.textContent = remaining ? `Piece ${10 - remaining} of 9` : "Jazz ensemble complete!";
+  const pictureNumber = sidetrackJazzImageIndex + 1;
+  status.textContent = remaining
+    ? `Picture ${pictureNumber} of ${JAZZ_PUZZLE_IMAGES.length} • Piece ${10 - remaining} of 9`
+    : "Great! Next music picture…";
   el.sidetrackJazzPuzzle.classList.toggle("complete", remaining === 0);
   playJazzPuzzleSuccess();
+  if (!remaining) {
+    sidetrackJazzAdvanceTimer = window.setTimeout(() => {
+      sidetrackJazzImageIndex = (sidetrackJazzImageIndex + 1) % JAZZ_PUZZLE_IMAGES.length;
+      buildJazzPuzzle();
+    }, 1500);
+  }
 }
 
 async function playJazzPuzzleSuccess() {
@@ -6540,6 +6569,28 @@ function enableCompletedKeyOrder() {
     piece.addEventListener("pointerup", handlePianoPointerUp);
     piece.addEventListener("pointercancel", handlePianoPointerUp);
     piece.addEventListener("lostpointercapture", handlePianoPointerUp);
+  });
+  const blackKeys = [
+    { slot: 0, note: "C sharp 4", label: "C sharp" },
+    { slot: 1, note: "D sharp 4", label: "D sharp" },
+    { slot: 3, note: "F sharp 4", label: "F sharp" },
+    { slot: 4, note: "G sharp 4", label: "G sharp" },
+    { slot: 5, note: "A sharp 4", label: "A sharp" }
+  ];
+  blackKeys.forEach(({ slot: slotIndex, note, label }) => {
+    const slot = el.sidetrackPuzzle.querySelector(`.sidetrack-puzzle-slot[data-puzzle-index="${slotIndex}"]`);
+    if (!slot || slot.querySelector(".key-order-black-playable")) return;
+    const key = document.createElement("button");
+    key.type = "button";
+    key.className = "keyboard-key key-order-black-playable";
+    key.dataset.note = note;
+    key.setAttribute("aria-label", label);
+    ["pointerdown", "pointermove", "pointerup", "pointercancel", "lostpointercapture"].forEach((eventName) => {
+      const handler = eventName === "pointerdown" ? handlePianoPointerDown
+        : eventName === "pointermove" ? handlePianoPointerMove : handlePianoPointerUp;
+      key.addEventListener(eventName, handler);
+    });
+    slot.appendChild(key);
   });
   el.sidetrackPuzzle.querySelector(".sidetrack-puzzle-status").textContent = "Keyboard complete — play it!";
 }
