@@ -28,10 +28,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-204">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-205">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
-    <script src="script.js?v=primary-2026-205" defer></script>
+    <script src="script.js?v=primary-2026-206" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -70,6 +70,9 @@
               <button type="button" role="menuitem" data-menu-section="keyboard">Keyboard</button>
             </div>
           </div>
+          <button id="backgroundToggleButton" class="background-toggle-button" type="button" aria-label="Use black background" title="Use black background" aria-pressed="false">
+            <span aria-hidden="true"></span>
+          </button>
           <div class="overflow-wrap header-info-wrap">
             <button id="infoMenuButton" class="header-info-button" type="button" aria-label="Help and app options" title="Help and app options" aria-expanded="false" aria-controls="infoMenu">
               <span class="info-icon-mark" aria-hidden="true"></span>
@@ -83,9 +86,6 @@
             </div>
             <input id="backupFileInput" class="hidden" type="file" accept="application/json,.json">
           </div>
-          <button id="backgroundToggleButton" class="background-toggle-button" type="button" aria-label="Use black background" title="Use black background" aria-pressed="false">
-            <span aria-hidden="true"></span>
-          </button>
         </div>
       </header>
 

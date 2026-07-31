@@ -87,12 +87,11 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-expanded-lists-v11";
+const STARTER_DATA_VERSION = "primary-2026-consolidated-lists-v12";
 const ITEM_METADATA_REPAIR_VERSION = "starter-metadata-v2";
 const STARTER_FAVORITES_LAYOUT_VERSION = "pianist-test-layout-v1";
 const STARTER_LIST_ALPHABETICAL_VERSION = "starter-lists-alphabetical-v2";
 const STARTER_LIST_ORDER = [
-  "primary-program",
   "primary-songs-2026",
   "primary-favorites",
   "just-for-fun",
@@ -303,26 +302,13 @@ const DEFAULT_LIBRARY_DATA = {
   "quickIndexes": [],
   "setlists": [
     {
-      "id": "primary-program",
-      "title": "Primary Program",
-      "showCheckboxes": false,
-      "items": [
-        {
-          "itemId": "this-little-light-of-mine-1028"
-        },
-        {
-          "itemId": "called-to-serve-hymnbook-174"
-        },
-        {
-          "itemId": "i-will-follow-gods-plan-for-me-165"
-        }
-      ]
-    },
-    {
       "id": "primary-songs-2026",
       "title": "Primary Songs 2026",
       "showCheckboxes": false,
       "items": [
+        {
+          "itemId": "called-to-serve-hymnbook-174"
+        },
         {
           "itemId": "choose-to-serve-the-lord"
         },
@@ -351,6 +337,9 @@ const DEFAULT_LIBRARY_DATA = {
       "title": "Primary favorites",
       "showCheckboxes": false,
       "items": [
+        {
+          "itemId": "called-to-serve-hymnbook-174"
+        },
         {
           "itemId": "choose-to-serve-the-lord"
         },
@@ -390,6 +379,9 @@ const DEFAULT_LIBRARY_DATA = {
         },
         {
           "itemId": "hymns-for-home-and-church-new-hymns"
+        },
+        {
+          "itemId": "hymnal-link"
         }
       ]
     }
@@ -1559,7 +1551,9 @@ function applyStarterFavorites() {
 function loadUnifiedLists() {
   const savedLists = readJson(STORAGE_KEYS.lists, null);
   if (Array.isArray(savedLists) && savedLists.length) {
-    const normalizedSavedLists = pruneRetiredStarterLists(normalizeLists(savedLists), true);
+    const normalizedSavedLists = consolidatePrimaryProgramList(
+      pruneRetiredStarterLists(normalizeLists(savedLists), true)
+    );
     const lists = applyStarterListAlphabeticalOrder(repairPrimarySongs2026Entries(migrateRetiredLyricListEntries(
       syncStarterLists(pruneOldEmptyListShells(normalizedSavedLists, true))
     )));
@@ -1630,6 +1624,36 @@ function migrateRetiredLyricListEntries(lists = []) {
     });
     return { ...list, entries };
   });
+}
+
+function consolidatePrimaryProgramList(lists = []) {
+  const programIds = new Set(["primary-program", "setlist-primary-program"]);
+  const programs = lists.filter((list) => programIds.has(list.id));
+  if (!programs.length) return lists;
+
+  const targets = [
+    { ids: ["primary-songs-2026", "setlist-primary-songs-2026"], id: "setlist-primary-songs-2026", title: "Primary Songs 2026" },
+    { ids: ["primary-favorites", "setlist-primary-favorites"], id: "setlist-primary-favorites", title: "Primary favorites" }
+  ];
+  const retained = lists.filter((list) => !programIds.has(list.id));
+  const programEntries = programs.flatMap((list) => list.entries || []);
+
+  targets.forEach((spec) => {
+    let target = retained.find((list) => spec.ids.includes(list.id) || list.title === spec.title);
+    if (!target) {
+      target = { id: spec.id, title: spec.title, showCheckboxes: false, userCreated: false, entries: [] };
+      retained.push(target);
+    }
+    const existingIds = new Set((target.entries || []).map((entry) => entry.itemId));
+    programEntries.forEach((entry) => {
+      if (!entry.itemId || existingIds.has(entry.itemId)) return;
+      target.entries.push({ ...entry, checked: false });
+      existingIds.add(entry.itemId);
+    });
+  });
+
+  writeJson(STORAGE_KEYS.lists, retained);
+  return retained;
 }
 
 function repairPrimarySongs2026Entries(lists = []) {

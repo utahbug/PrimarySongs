@@ -135,26 +135,13 @@
   "quickIndexes": [],
   "setlists": [
     {
-      "id": "primary-program",
-      "title": "Primary Program",
-      "showCheckboxes": false,
-      "items": [
-        {
-          "itemId": "this-little-light-of-mine-1028"
-        },
-        {
-          "itemId": "called-to-serve-hymnbook-174"
-        },
-        {
-          "itemId": "i-will-follow-gods-plan-for-me-165"
-        }
-      ]
-    },
-    {
       "id": "primary-songs-2026",
       "title": "Primary Songs 2026",
       "showCheckboxes": false,
       "items": [
+        {
+          "itemId": "called-to-serve-hymnbook-174"
+        },
         {
           "itemId": "choose-to-serve-the-lord"
         },
@@ -183,6 +170,9 @@
       "title": "Primary favorites",
       "showCheckboxes": false,
       "items": [
+        {
+          "itemId": "called-to-serve-hymnbook-174"
+        },
         {
           "itemId": "choose-to-serve-the-lord"
         },
@@ -255,6 +245,9 @@
         },
         {
           "itemId": "hymns-for-home-and-church-new-hymns"
+        },
+        {
+          "itemId": "hymnal-link"
         }
       ]
     }
