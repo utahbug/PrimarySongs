@@ -6450,11 +6450,18 @@ function buildJazzPuzzle() {
       <strong>Build the music scene</strong>
       <button class="jazz-puzzle-reset" type="button" aria-label="Shuffle and start over" title="Start over">↻</button>
     </div>
-    <div class="jazz-puzzle-board" aria-label="Music picture ${pictureNumber} of ${JAZZ_PUZZLE_IMAGES.length} puzzle board">
-      ${Array.from({ length: 9 }, (_, index) => `<span class="jazz-puzzle-slot" data-jazz-index="${index}"></span>`).join("")}
+    <div class="jazz-puzzle-choices" role="group" aria-label="Choose a puzzle picture">
+      ${JAZZ_PUZZLE_IMAGES.map((choiceImage, index) => `
+        <button class="jazz-puzzle-choice${index === sidetrackJazzImageIndex ? " selected" : ""}" type="button" data-jazz-picture="${index}" aria-label="Choose puzzle ${index + 1}" aria-pressed="${index === sidetrackJazzImageIndex}" style="--jazz-choice-image: url('${choiceImage}')"></button>
+      `).join("")}
     </div>
-    <div class="jazz-puzzle-tray" aria-label="Puzzle pieces">
-      ${pieces.map((index) => `<button class="jazz-puzzle-piece" type="button" data-jazz-index="${index}" aria-label="Music puzzle piece ${index + 1}"></button>`).join("")}
+    <div class="jazz-puzzle-workspace">
+      <div class="jazz-puzzle-board" aria-label="Music picture ${pictureNumber} of ${JAZZ_PUZZLE_IMAGES.length} puzzle board">
+        ${Array.from({ length: 9 }, (_, index) => `<span class="jazz-puzzle-slot" data-jazz-index="${index}"></span>`).join("")}
+      </div>
+      <div class="jazz-puzzle-tray" aria-label="Current puzzle piece">
+        ${pieces.map((index) => `<button class="jazz-puzzle-piece" type="button" data-jazz-index="${index}" aria-label="Music puzzle piece ${index + 1}"></button>`).join("")}
+      </div>
     </div>
     <p class="jazz-puzzle-status" aria-live="polite">Picture ${pictureNumber} of ${JAZZ_PUZZLE_IMAGES.length} • Piece 1 of 9</p>`;
   el.sidetrackJazzPuzzle.querySelectorAll(".jazz-puzzle-piece").forEach((piece) => {
@@ -6474,6 +6481,14 @@ function buildJazzPuzzle() {
       } else {
         el.sidetrackJazzPuzzle.querySelector(".jazz-puzzle-status").textContent = "Try another space";
       }
+    });
+  });
+  el.sidetrackJazzPuzzle.querySelectorAll("[data-jazz-picture]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const nextIndex = Number(button.dataset.jazzPicture);
+      if (!Number.isInteger(nextIndex) || !JAZZ_PUZZLE_IMAGES[nextIndex]) return;
+      sidetrackJazzImageIndex = nextIndex;
+      resetJazzPuzzle();
     });
   });
   el.sidetrackJazzPuzzle.querySelector(".jazz-puzzle-reset")?.addEventListener("click", resetJazzPuzzle);
@@ -6578,15 +6593,9 @@ function placeJazzPuzzlePiece(piece, slot) {
   const pictureNumber = sidetrackJazzImageIndex + 1;
   status.textContent = remaining
     ? `Picture ${pictureNumber} of ${JAZZ_PUZZLE_IMAGES.length} • Piece ${10 - remaining} of 9`
-    : "Great! Next music picture…";
+    : "Great! Choose another puzzle or play this one again.";
   el.sidetrackJazzPuzzle.classList.toggle("complete", remaining === 0);
   playJazzPuzzleSuccess();
-  if (!remaining) {
-    sidetrackJazzAdvanceTimer = window.setTimeout(() => {
-      sidetrackJazzImageIndex = (sidetrackJazzImageIndex + 1) % JAZZ_PUZZLE_IMAGES.length;
-      buildJazzPuzzle();
-    }, 1500);
-  }
 }
 
 async function playJazzPuzzleSuccess() {

@@ -1489,6 +1489,20 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 @media (max-width: 480px) {
   .jazz-puzzle-board { width: min(88vw, 360px); }
 }
+.jazz-puzzle { grid-template-rows: auto auto minmax(0, 1fr) auto; }
+.jazz-puzzle-choices { display: flex; gap: 6px; justify-content: center; overflow-x: auto; padding: 2px 2px 5px; scrollbar-width: thin; }
+.jazz-puzzle-choice { background-image: linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)), var(--jazz-choice-image); background-position: center; background-size: cover; border: 2px solid color-mix(in srgb, var(--line) 82%, transparent); border-radius: 8px; box-shadow: 0 2px 5px rgba(25,66,101,0.12); flex: 0 0 54px; height: 42px; min-height: 42px; padding: 0; }
+.jazz-puzzle-choice:hover, .jazz-puzzle-choice:focus-visible { border-color: var(--accent); transform: translateY(-1px); }
+.jazz-puzzle-choice.selected { border-color: #2F7E97; box-shadow: 0 0 0 3px color-mix(in srgb, #2F7E97 24%, transparent), 0 3px 8px rgba(25,66,101,0.18); }
+.jazz-puzzle-workspace { align-items: center; display: grid; gap: 14px; grid-template-areas: "board piece"; grid-template-columns: minmax(240px, 360px) minmax(125px, 170px); justify-content: center; min-width: 0; }
+.jazz-puzzle-workspace .jazz-puzzle-board { grid-area: board; width: 100%; }
+.jazz-puzzle-workspace .jazz-puzzle-tray { align-self: center; grid-area: piece; justify-self: center; width: min(100%, 170px); }
+@media (max-width: 620px) {
+  .jazz-puzzle-workspace { gap: 7px; grid-template-areas: "piece" "board"; grid-template-columns: minmax(0, 1fr); }
+  .jazz-puzzle-workspace .jazz-puzzle-board { justify-self: center; width: min(88vw, 360px); }
+  .jazz-puzzle-workspace .jazz-puzzle-tray { width: min(42vw, 155px); }
+  .jazz-puzzle-choice { flex-basis: 48px; height: 38px; min-height: 38px; }
+}
 .sidetrack-keyboard { align-items: stretch; display: flex; justify-content: center; padding: 38px 22px 28px; }
 .sidetrack-key { border: 1px solid #7890A1; border-radius: 0 0 7px 7px; flex: 1; max-width: 58px; min-width: 0; position: relative; touch-action: none; }
 .sidetrack-key.is-white { background: linear-gradient(#FFFFFF, #E9F0F5); color: #173F72; height: 250px; z-index: 1; }
