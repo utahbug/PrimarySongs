@@ -461,7 +461,7 @@ const state = {
   listEditMode: false,
   listPickerOpen: false,
   listPickerMessage: "",
-  listEditSort: normalizeListEditSort(localStorage.getItem(STORAGE_KEYS.listEditSort)),
+  listEditSort: "pdf",
   listEditView: "current",
   favoriteReorderMode: false,
   listReorderMode: false,
@@ -986,7 +986,6 @@ function wireEvents() {
   el.listEditForm.addEventListener("submit", saveListEditModal);
   el.listEditSort.addEventListener("change", () => {
     state.listEditSort = normalizeListEditSort(el.listEditSort.value);
-    localStorage.setItem(STORAGE_KEYS.listEditSort, state.listEditSort);
     renderListEditResults();
   });
   el.helpCloseButton.addEventListener("click", closeHelpModal);
@@ -8404,6 +8403,7 @@ function openListEditModal(listId) {
   state.expandedListIds = [list.id];
   state.editingListId = list.id;
   state.listEditView = "current";
+  state.listEditSort = "pdf";
   state.listEditMode = false;
   state.listReorderMode = false;
   state.listPickerOpen = false;
