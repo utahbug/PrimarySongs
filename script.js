@@ -1118,6 +1118,11 @@ function wireEvents() {
   el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfPageThemeToggleButton.addEventListener("click", togglePdfPageTheme);
   el.pdfTopTapZonesButton.addEventListener("click", () => {
+    const guideIsVisible = el.pdfViewer.classList.contains("show-tips");
+    if (guideIsVisible) {
+      dismissPdfTips();
+      return;
+    }
     syncPdfTipsPreference();
     setPdfTipsVisible(true, 0, "manual");
   });
@@ -5497,6 +5502,9 @@ function setPdfTipsVisible(showTips, duration = 0, mode = "") {
   el.pdfViewer.classList.toggle("show-tips", showTips);
   el.pdfZoneTips.dataset.guideMode = showTips ? mode : "";
   el.pdfZoneTips.setAttribute("aria-hidden", showTips ? "false" : "true");
+  el.pdfTopTapZonesButton.setAttribute("aria-pressed", String(showTips));
+  el.pdfTopTapZonesButton.setAttribute("aria-label", showTips ? "Hide tap zones" : "Show tap zones");
+  el.pdfTopTapZonesButton.title = showTips ? "Hide tap zones" : "Show tap zones";
   if (showTips && duration > 0) {
     state.currentPdf.tipsTimer = window.setTimeout(() => {
       setPdfTipsVisible(false);
