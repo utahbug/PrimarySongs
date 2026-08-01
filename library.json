@@ -78,6 +78,7 @@
     { "id": "gethsemane-1009", "title": "Gethsemane, 1009", "type": "pdf", "file": "music/Just-for-fun/gethsemane-1009.pdf", "page": 1009 },
     { "id": "he-sent-his-son-34", "title": "He Sent His Son, 34", "type": "pdf", "file": "music/Just-for-fun/he-sent-his-son-34.pdf", "page": 34 },
     { "id": "holding-hands-around-the-world-1011", "title": "Holding Hands Around the World, 1011", "type": "pdf", "file": "music/Just-for-fun/holding-hands-around-the-world-1011.pdf", "page": 1011 },
+    { "id": "i-am-a-child-of-god-2", "title": "I Am a Child of God, 2", "type": "pdf", "file": "music/Primary-favorites/i-am-a-child-of-god-2.pdf", "page": 2 },
     { "id": "i-belong-to-the-church-of-jesus-christ-77", "title": "I Belong to the Church of Jesus Christ, 77", "type": "pdf", "file": "music/Just-for-fun/i-belong-to-the-church-of-jesus-christ-77.pdf", "page": 77 },
     { "id": "i-hope-they-call-me-on-a-mission-169", "title": "I Hope They Call Me on a Mission, 169", "type": "pdf", "file": "music/Just-for-fun/i-hope-they-call-me-on-a-mission-169.pdf", "page": 169 },
     { "id": "i-love-to-see-the-temple-95", "title": "I Love to See the Temple, 95", "type": "pdf", "file": "music/Just-for-fun/i-love-to-see-the-temple-95.pdf", "page": 95 },
@@ -170,40 +171,36 @@
       "title": "Primary favorites",
       "showCheckboxes": false,
       "items": [
-        {
-          "itemId": "called-to-serve-hymnbook-174"
-        },
-        {
-          "itemId": "choose-to-serve-the-lord"
-        },
-        {
-          "itemId": "search-ponder-and-pray-109"
-        },
-        {
-          "itemId": "the-wise-man-and-the-foolish-man-281"
-        },
-        {
-          "itemId": "i-will-walk-with-jesus-1004"
-        },
-        {
-          "itemId": "i-feel-my-saviors-love-74"
-        },
-        {
-          "itemId": "this-little-light-of-mine-1028"
-        },
-        {
-          "itemId": "i-will-follow-gods-plan-for-me-165"
-        },
-        { "itemId": "build-an-ark-1060" },
-        { "itemId": "do-as-im-doing-276" },
+        { "itemId": "a-childs-prayer-12" },
+        { "itemId": "beauty-everywhere-232" },
+        { "itemId": "called-to-serve-hymnbook-174" },
+        { "itemId": "children-all-over-the-world-16" },
+        { "itemId": "choose-to-serve-the-lord" },
         { "itemId": "follow-the-prophet-110" },
-        { "itemId": "give-said-the-little-stream-236" },
-        { "itemId": "head-shoulders-knees-and-toes-275a" },
-        { "itemId": "hello-song-260" },
-        { "itemId": "if-youre-happy-266" },
-        { "itemId": "once-there-was-a-snowman-249" },
-        { "itemId": "popcorn-popping-242" },
-        { "itemId": "the-handcart-song-220" }
+        { "itemId": "gethsemane-1009" },
+        { "itemId": "he-sent-his-son-34" },
+        { "itemId": "holding-hands-around-the-world-1011" },
+        { "itemId": "i-am-a-child-of-god-2" },
+        { "itemId": "i-belong-to-the-church-of-jesus-christ-77" },
+        { "itemId": "i-feel-my-saviors-love-74" },
+        { "itemId": "i-hope-they-call-me-on-a-mission-169" },
+        { "itemId": "i-love-to-see-the-temple-95" },
+        { "itemId": "im-trying-to-be-like-jesus-78" },
+        { "itemId": "i-need-my-heavenly-father-18" },
+        { "itemId": "i-thank-thee-dear-father-7" },
+        { "itemId": "i-want-to-be-a-missionary-now-168" },
+        { "itemId": "i-will-walk-with-jesus-1004" },
+        { "itemId": "i-will-follow-gods-plan-for-me-165" },
+        { "itemId": "jesus-has-risen-70" },
+        { "itemId": "little-purple-pansies-244" },
+        { "itemId": "my-heavenly-father-loves-me-228" },
+        { "itemId": "scripture-power" },
+        { "itemId": "search-ponder-and-pray-109" },
+        { "itemId": "this-little-light-of-mine-1028" },
+        { "itemId": "the-wise-man-and-the-foolish-man-281" },
+        { "itemId": "where-love-is-138" },
+        { "itemId": "when-i-am-baptized-103" },
+        { "itemId": "when-he-comes-again-82" }
       ]
     },
     {
@@ -211,28 +208,43 @@
       "title": "Just for fun",
       "showCheckboxes": false,
       "items": [
-        { "itemId": "a-childs-prayer-12" },
-        { "itemId": "beauty-everywhere-232" },
-        { "itemId": "children-all-over-the-world-16" },
-        { "itemId": "gethsemane-1009" },
-        { "itemId": "he-sent-his-son-34" },
-        { "itemId": "holding-hands-around-the-world-1011" },
+        { "itemId": "build-an-ark-1060" },
+        { "itemId": "do-as-im-doing-276" },
+        { "itemId": "follow-the-prophet-110" },
+        { "itemId": "give-said-the-little-stream-236" },
+        { "itemId": "head-shoulders-knees-and-toes-275a" },
+        { "itemId": "hello-song-260" },
+        { "itemId": "if-youre-happy-266" },
+        { "itemId": "jesus-wants-me-for-a-sunbeam-60" },
+        { "itemId": "once-there-was-a-snowman-249" },
+        { "itemId": "popcorn-popping-242" },
+        { "itemId": "scripture-power" },
+        { "itemId": "the-handcart-song-220" },
+        { "itemId": "the-wise-man-and-the-foolish-man-281" }
+      ]
+    },
+    {
+      "id": "prelude",
+      "title": "Prelude",
+      "showCheckboxes": false,
+      "items": [
+        { "itemId": "called-to-serve-hymnbook-174" },
         { "itemId": "i-belong-to-the-church-of-jesus-christ-77" },
         { "itemId": "i-hope-they-call-me-on-a-mission-169" },
+        { "itemId": "i-am-a-child-of-god-2" },
         { "itemId": "i-love-to-see-the-temple-95" },
         { "itemId": "i-need-my-heavenly-father-18" },
-        { "itemId": "i-thank-thee-dear-father-7" },
-        { "itemId": "i-want-to-be-a-missionary-now-168" },
         { "itemId": "i-will-follow-gods-plan-for-me-165" },
-        { "itemId": "im-trying-to-be-like-jesus-78" },
-        { "itemId": "jesus-has-risen-70" },
-        { "itemId": "jesus-wants-me-for-a-sunbeam-60" },
-        { "itemId": "little-purple-pansies-244" },
-        { "itemId": "my-heavenly-father-loves-me-228" },
-        { "itemId": "scripture-power" },
+        { "itemId": "i-will-walk-with-jesus-1004" },
+        { "itemId": "search-ponder-and-pray-109" },
         { "itemId": "when-he-comes-again-82" },
         { "itemId": "when-i-am-baptized-103" },
-        { "itemId": "where-love-is-138" }
+        { "itemId": "where-love-is-138" },
+        { "itemId": "this-little-light-of-mine-1028" },
+        { "itemId": "the-wise-man-and-the-foolish-man-281" },
+        { "itemId": "scripture-power" },
+        { "itemId": "my-heavenly-father-loves-me-228" },
+        { "itemId": "jesus-has-risen-70" }
       ]
     },
     {

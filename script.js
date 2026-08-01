@@ -87,7 +87,7 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-consolidated-lists-v12";
+const STARTER_DATA_VERSION = "primary-2026-consolidated-lists-v13";
 const ITEM_METADATA_REPAIR_VERSION = "starter-metadata-v2";
 const STARTER_FAVORITES_LAYOUT_VERSION = "pianist-test-layout-v1";
 const STARTER_LIST_ALPHABETICAL_VERSION = "starter-lists-alphabetical-v2";
@@ -95,6 +95,7 @@ const STARTER_LIST_ORDER = [
   "primary-songs-2026",
   "primary-favorites",
   "just-for-fun",
+  "prelude",
   "lds-library"
 ];
 const RETIRED_LYRIC_PDF_REPLACEMENTS = {
@@ -171,6 +172,7 @@ const IMPORTED_STARTER_ITEMS = [
   { id: "gethsemane-1009", title: "Gethsemane, 1009", type: "pdf", file: "music/Just-for-fun/gethsemane-1009.pdf", page: 1009 },
   { id: "he-sent-his-son-34", title: "He Sent His Son, 34", type: "pdf", file: "music/Just-for-fun/he-sent-his-son-34.pdf", page: 34 },
   { id: "holding-hands-around-the-world-1011", title: "Holding Hands Around the World, 1011", type: "pdf", file: "music/Just-for-fun/holding-hands-around-the-world-1011.pdf", page: 1011 },
+  { id: "i-am-a-child-of-god-2", title: "I Am a Child of God, 2", type: "pdf", file: "music/Primary-favorites/i-am-a-child-of-god-2.pdf", page: 2 },
   { id: "i-belong-to-the-church-of-jesus-christ-77", title: "I Belong to the Church of Jesus Christ, 77", type: "pdf", file: "music/Just-for-fun/i-belong-to-the-church-of-jesus-christ-77.pdf", page: 77 },
   { id: "i-hope-they-call-me-on-a-mission-169", title: "I Hope They Call Me on a Mission, 169", type: "pdf", file: "music/Just-for-fun/i-hope-they-call-me-on-a-mission-169.pdf", page: 169 },
   { id: "i-love-to-see-the-temple-95", title: "I Love to See the Temple, 95", type: "pdf", file: "music/Just-for-fun/i-love-to-see-the-temple-95.pdf", page: 95 },
@@ -188,12 +190,71 @@ const IMPORTED_STARTER_ITEMS = [
   { id: "where-love-is-138", title: "Where Love Is, 138", type: "pdf", file: "music/Just-for-fun/where-love-is-138.pdf", page: 138 }
 ];
 
-const PRIMARY_FAVORITES_IMPORT_IDS = IMPORTED_STARTER_ITEMS
-  .filter((item) => item.file.includes("/Primary-favorites/"))
-  .map((item) => item.id);
+const PRIMARY_FAVORITES_IMPORT_IDS = [
+  "a-childs-prayer-12",
+  "beauty-everywhere-232",
+  "called-to-serve-hymnbook-174",
+  "children-all-over-the-world-16",
+  "choose-to-serve-the-lord",
+  "follow-the-prophet-110",
+  "gethsemane-1009",
+  "he-sent-his-son-34",
+  "holding-hands-around-the-world-1011",
+  "i-am-a-child-of-god-2",
+  "i-belong-to-the-church-of-jesus-christ-77",
+  "i-feel-my-saviors-love-74",
+  "i-hope-they-call-me-on-a-mission-169",
+  "i-love-to-see-the-temple-95",
+  "im-trying-to-be-like-jesus-78",
+  "i-need-my-heavenly-father-18",
+  "i-thank-thee-dear-father-7",
+  "i-want-to-be-a-missionary-now-168",
+  "i-will-walk-with-jesus-1004",
+  "i-will-follow-gods-plan-for-me-165",
+  "jesus-has-risen-70",
+  "little-purple-pansies-244",
+  "my-heavenly-father-loves-me-228",
+  "scripture-power",
+  "search-ponder-and-pray-109",
+  "this-little-light-of-mine-1028",
+  "the-wise-man-and-the-foolish-man-281",
+  "where-love-is-138",
+  "when-i-am-baptized-103",
+  "when-he-comes-again-82"
+];
 const JUST_FOR_FUN_IMPORT_IDS = [
-  ...IMPORTED_STARTER_ITEMS.filter((item) => item.file.includes("/Just-for-fun/")).map((item) => item.id),
-  "i-will-follow-gods-plan-for-me-165"
+  "build-an-ark-1060",
+  "do-as-im-doing-276",
+  "follow-the-prophet-110",
+  "give-said-the-little-stream-236",
+  "head-shoulders-knees-and-toes-275a",
+  "hello-song-260",
+  "if-youre-happy-266",
+  "jesus-wants-me-for-a-sunbeam-60",
+  "once-there-was-a-snowman-249",
+  "popcorn-popping-242",
+  "scripture-power",
+  "the-handcart-song-220",
+  "the-wise-man-and-the-foolish-man-281"
+];
+const PRELUDE_IMPORT_IDS = [
+  "called-to-serve-hymnbook-174",
+  "i-belong-to-the-church-of-jesus-christ-77",
+  "i-hope-they-call-me-on-a-mission-169",
+  "i-am-a-child-of-god-2",
+  "i-love-to-see-the-temple-95",
+  "i-need-my-heavenly-father-18",
+  "i-will-follow-gods-plan-for-me-165",
+  "i-will-walk-with-jesus-1004",
+  "search-ponder-and-pray-109",
+  "when-he-comes-again-82",
+  "when-i-am-baptized-103",
+  "where-love-is-138",
+  "this-little-light-of-mine-1028",
+  "the-wise-man-and-the-foolish-man-281",
+  "scripture-power",
+  "my-heavenly-father-loves-me-228",
+  "jesus-has-risen-70"
 ];
 
 const DEFAULT_LIBRARY_DATA = {
@@ -336,36 +397,17 @@ const DEFAULT_LIBRARY_DATA = {
       "id": "primary-favorites",
       "title": "Primary favorites",
       "showCheckboxes": false,
-      "items": [
-        {
-          "itemId": "called-to-serve-hymnbook-174"
-        },
-        {
-          "itemId": "choose-to-serve-the-lord"
-        },
-        {
-          "itemId": "search-ponder-and-pray-109"
-        },
-        {
-          "itemId": "the-wise-man-and-the-foolish-man-281"
-        },
-        {
-          "itemId": "i-will-walk-with-jesus-1004"
-        },
-        {
-          "itemId": "i-feel-my-saviors-love-74"
-        },
-        {
-          "itemId": "this-little-light-of-mine-1028"
-        },
-        {
-          "itemId": "i-will-follow-gods-plan-for-me-165"
-        }
-      ]
+      "items": []
     },
     {
       "id": "just-for-fun",
       "title": "Just for fun",
+      "showCheckboxes": false,
+      "items": []
+    },
+    {
+      "id": "prelude",
+      "title": "Prelude",
       "showCheckboxes": false,
       "items": []
     },
@@ -391,11 +433,15 @@ const DEFAULT_LIBRARY_DATA = {
 DEFAULT_LIBRARY_DATA.items.push(...IMPORTED_STARTER_ITEMS.map((item) => ({ ...item })));
 const defaultPrimaryFavorites = DEFAULT_LIBRARY_DATA.setlists.find((list) => list.id === "primary-favorites");
 const defaultJustForFun = DEFAULT_LIBRARY_DATA.setlists.find((list) => list.id === "just-for-fun");
+const defaultPrelude = DEFAULT_LIBRARY_DATA.setlists.find((list) => list.id === "prelude");
 if (defaultPrimaryFavorites) {
   defaultPrimaryFavorites.items.push(...PRIMARY_FAVORITES_IMPORT_IDS.map((itemId) => ({ itemId })));
 }
 if (defaultJustForFun) {
   defaultJustForFun.items.push(...JUST_FOR_FUN_IMPORT_IDS.map((itemId) => ({ itemId })));
+}
+if (defaultPrelude) {
+  defaultPrelude.items.push(...PRELUDE_IMPORT_IDS.map((itemId) => ({ itemId })));
 }
 
 const APP_THEME = {
@@ -432,6 +478,7 @@ const state = {
   previousScrollY: 0,
   activeListId: "",
   expandedListIds: [],
+  alphabeticalListViewIds: new Set(),
   batchDeleteMode: {
     library: false,
     cards: false,
@@ -3616,6 +3663,7 @@ function renderListTabs(active) {
     const expanded = isExpanded ? "true" : "false";
     const selected = list.id === active.id ? "true" : "false";
     const title = list.title || "Untitled List";
+    const alphabeticalView = state.alphabeticalListViewIds.has(list.id);
     const reorderHandle = dragHandleHtml("list", list.id, title);
     return `
       <div class="list-tab-group${activeClass}${expandedClass}${reorderClass}" role="option" aria-selected="${selected}" data-list-row="${escapeHtml(list.id)}">
@@ -3625,6 +3673,7 @@ function renderListTabs(active) {
           <span class="list-tab-title">${escapeHtml(title)}</span>
         </button>
         ${isExpanded && itemCount ? `<span class="list-tab-count" aria-label="${itemCount} items">${itemCount}</span>` : ""}
+        <button class="list-alphabetical-toggle${alphabeticalView ? " is-active" : ""}" type="button" data-toggle-list-alphabetical="${escapeHtml(list.id)}" aria-label="${alphabeticalView ? "Restore saved order for" : "Show alphabetically"} ${escapeHtml(title)}" aria-pressed="${alphabeticalView}" title="${alphabeticalView ? "Restore saved order" : "Show A-Z"}">A-Z</button>
         <button class="icon-button list-row-edit-button" type="button" data-edit-list-row="${escapeHtml(list.id)}" aria-label="Edit ${escapeHtml(title)}" title="Edit list">&#9998;</button>
         ${reorderHandle}
         </div>
@@ -3635,7 +3684,15 @@ function renderListTabs(active) {
 }
 
 function renderInlineListItems(list) {
+  const alphabeticalView = state.alphabeticalListViewIds.has(list.id);
   const entries = getResolvedListEntries(list);
+  if (alphabeticalView) {
+    entries.sort((a, b) => itemDisplayTitle(a.item).localeCompare(
+      itemDisplayTitle(b.item),
+      undefined,
+      { numeric: true, sensitivity: "base" }
+    ));
+  }
   const pdfCount = entries.filter((entry) => entry.item.type === "pdf").length;
   const playlistArmed = state.armedPdfListId === list.id;
 
@@ -3659,7 +3716,7 @@ function renderInlineListItems(list) {
         const favorite = state.favorites.has(entry.item.id);
         const typeLabel = compactTypeLabel(entry.item);
         return `
-          <div class="inline-list-row" data-list-item-row="${escapeHtml(entry.item.id)}">
+          <div class="inline-list-row${alphabeticalView ? " alphabetical-view" : ""}" data-list-item-row="${escapeHtml(entry.item.id)}">
             <button class="icon-button favorite-toggle inline-list-favorite ${favorite ? "favorite-on" : ""}" type="button" data-favorite="${escapeHtml(entry.item.id)}" aria-label="Toggle favorite for ${escapeHtml(title)}" title="Toggle favorite">
               ${favorite ? "&#9733;" : "&#9734;"}
             </button>
@@ -3668,7 +3725,7 @@ function renderInlineListItems(list) {
               <span class="type-pill compact-type">${escapeHtml(typeLabel)}</span>
             </button>
             <button class="icon-button inline-list-edit-button" type="button" data-edit-item="${escapeHtml(entry.item.id)}" data-edit-context="lists" aria-label="Edit ${escapeHtml(title)}" title="Edit item">&#9998;</button>
-            ${dragHandleHtml("list-item", entry.item.id, title)}
+            ${alphabeticalView ? "" : dragHandleHtml("list-item", entry.item.id, title)}
           </div>
         `;
       }).join("")}
@@ -4277,6 +4334,12 @@ async function handleBodyClick(event) {
   const favoriteButton = event.target.closest("[data-favorite]");
   if (favoriteButton) {
     toggleFavorite(favoriteButton.dataset.favorite);
+    return;
+  }
+
+  const alphabeticalListButton = event.target.closest("[data-toggle-list-alphabetical]");
+  if (alphabeticalListButton) {
+    toggleAlphabeticalListView(alphabeticalListButton.dataset.toggleListAlphabetical);
     return;
   }
 
@@ -8319,6 +8382,16 @@ function openListEditModal(listId) {
   renderListEditModal();
   el.listEditModal.classList.remove("hidden");
   fitOpenMobileModals();
+}
+
+function toggleAlphabeticalListView(listId) {
+  if (!state.lists.some((list) => list.id === listId)) return;
+  if (state.alphabeticalListViewIds.has(listId)) {
+    state.alphabeticalListViewIds.delete(listId);
+  } else {
+    state.alphabeticalListViewIds.add(listId);
+  }
+  renderLists();
 }
 
 function closeListEditModal() {
