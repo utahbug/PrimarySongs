@@ -810,6 +810,12 @@ function collectElements() {
   el.pdfToolbar = document.querySelector(".pdf-toolbar");
   el.pdfTopHomeButton = document.getElementById("pdfTopHomeButton");
   el.pdfAnnotateButton = document.getElementById("pdfAnnotateButton");
+  el.pdfMobileToolsButton = document.getElementById("pdfMobileToolsButton");
+  el.pdfMobileToolsMenu = document.getElementById("pdfMobileToolsMenu");
+  el.pdfMobilePrintButton = document.getElementById("pdfMobilePrintButton");
+  el.pdfMobileAnnotateButton = document.getElementById("pdfMobileAnnotateButton");
+  el.pdfMobileThemeButton = document.getElementById("pdfMobileThemeButton");
+  el.pdfMobileThemeLabel = el.pdfMobileThemeButton?.querySelector(".pdf-mobile-theme-label");
   el.pdfPageThemeToggleButton = document.getElementById("pdfPageThemeToggleButton");
   el.pdfTopTapZonesButton = document.getElementById("pdfTopTapZonesButton");
   el.pdfHomeButton = document.getElementById("pdfHomeButton");
@@ -1138,6 +1144,24 @@ function wireEvents() {
 
   el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfAnnotateButton.addEventListener("click", () => setPdfAnnotationMode(!state.pdfAnnotation.active));
+  el.pdfMobileToolsButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    togglePdfMobileToolsMenu();
+  });
+  el.pdfMobileToolsMenu.addEventListener("click", (event) => event.stopPropagation());
+  el.pdfMobilePrintButton.addEventListener("click", () => {
+    closePdfMobileToolsMenu();
+    printCurrentPdf();
+  });
+  el.pdfMobileAnnotateButton.addEventListener("click", () => {
+    closePdfMobileToolsMenu();
+    setPdfAnnotationMode(!state.pdfAnnotation.active);
+  });
+  el.pdfMobileThemeButton.addEventListener("click", () => {
+    togglePdfPageTheme();
+    closePdfMobileToolsMenu();
+  });
+  document.addEventListener("click", closePdfMobileToolsMenu);
   el.pdfPageThemeToggleButton.addEventListener("click", togglePdfPageTheme);
   el.pdfTopTapZonesButton.addEventListener("click", () => {
     const guideIsVisible = el.pdfViewer.classList.contains("show-tips");
@@ -5435,10 +5459,36 @@ function togglePdfPageTheme() {
 
 function applyPdfPageTheme(darkPage = Boolean(readJson(STORAGE_KEYS.settings, {}).pdfDarkPage)) {
   el.pdfViewer?.classList.toggle("pdf-page-dark", darkPage);
-  if (!el.pdfPageThemeToggleButton) return;
-  el.pdfPageThemeToggleButton.setAttribute("aria-pressed", String(darkPage));
-  el.pdfPageThemeToggleButton.setAttribute("aria-label", darkPage ? "Use white sheet music background" : "Use black sheet music background");
-  el.pdfPageThemeToggleButton.title = darkPage ? "Use white sheet music background" : "Use black sheet music background";
+  if (el.pdfPageThemeToggleButton) {
+    el.pdfPageThemeToggleButton.setAttribute("aria-pressed", String(darkPage));
+    el.pdfPageThemeToggleButton.setAttribute("aria-label", darkPage ? "Use white sheet music background" : "Use black sheet music background");
+    el.pdfPageThemeToggleButton.title = darkPage ? "Use white sheet music background" : "Use black sheet music background";
+  }
+  if (el.pdfMobileThemeButton) {
+    el.pdfMobileThemeButton.setAttribute("aria-pressed", String(darkPage));
+    if (el.pdfMobileThemeLabel) el.pdfMobileThemeLabel.textContent = darkPage ? "Light page" : "Dark page";
+  }
+  syncPdfMobileToolsState();
+}
+
+function togglePdfMobileToolsMenu() {
+  const opening = el.pdfMobileToolsMenu.classList.contains("hidden");
+  el.pdfMobileToolsMenu.classList.toggle("hidden", !opening);
+  el.pdfMobileToolsButton.setAttribute("aria-expanded", opening ? "true" : "false");
+  syncPdfMobileToolsState();
+}
+
+function closePdfMobileToolsMenu() {
+  if (!el.pdfMobileToolsMenu) return;
+  el.pdfMobileToolsMenu.classList.add("hidden");
+  el.pdfMobileToolsButton?.setAttribute("aria-expanded", "false");
+}
+
+function syncPdfMobileToolsState() {
+  if (!el.pdfMobileAnnotateButton) return;
+  el.pdfMobileAnnotateButton.setAttribute("aria-pressed", state.pdfAnnotation.active ? "true" : "false");
+  el.pdfMobileAnnotateButton.lastChild.textContent = state.pdfAnnotation.active ? " Done annotating" : " Annotate";
+  el.pdfMobileToolsButton.classList.toggle("has-active-tool", state.pdfAnnotation.active || el.pdfViewer.classList.contains("pdf-page-dark"));
 }
 
 function updatePdfSettingsDraft() {
@@ -5792,6 +5842,7 @@ function setPdfAnnotationMode(active) {
     showPdfAnnotationNotice();
     syncPdfAnnotationCanvas();
   }
+  syncPdfMobileToolsState();
   updatePdfAnnotationControls();
 }
 
@@ -5935,6 +5986,7 @@ function erasePdfAnnotationsAt(point) {
 }
 
 function closePdfViewer() {
+  closePdfMobileToolsMenu();
   setPdfAnnotationMode(false);
   hidePdfTips();
   closePdfSettings();
