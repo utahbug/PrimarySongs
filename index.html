@@ -29,10 +29,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-222">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-223">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
-    <script src="script.js?v=primary-2026-221" defer></script>
+    <script src="script.js?v=primary-2026-222" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -505,16 +505,11 @@
           <div class="keyboard-panel">
             <div class="piano-header">
               <h2 id="keyboardTitle">Keyboard</h2>
-              <span>Swipe across the keys to play</span>
             </div>
             <div class="piano-sound-controls">
               <label>
                 <span>Sound</span>
                 <select id="keyboardSound" aria-label="Keyboard sound"></select>
-              </label>
-              <label class="piano-volume-control">
-                <span>Volume</span>
-                <input id="keyboardVolume" type="range" min="0" max="100" step="1" value="58" aria-label="Keyboard volume">
               </label>
               <div class="keyboard-transpose-control">
                 <span>Transpose</span>
@@ -524,6 +519,10 @@
                   <button id="keyboardTransposeUp" type="button" aria-label="Transpose up one semitone">+</button>
                 </div>
               </div>
+              <label class="piano-volume-control keyboard-volume-control">
+                <span>Keyboard volume</span>
+                <input id="keyboardVolume" type="range" min="0" max="100" step="1" value="58" aria-label="Keyboard volume">
+              </label>
             </div>
             <p id="keyboardSoundStatus" class="keyboard-sound-status" aria-live="polite">Grand piano</p>
             <div class="keyboard-scroll" aria-label="Scrollable piano keyboard">

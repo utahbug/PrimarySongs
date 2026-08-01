@@ -6508,7 +6508,11 @@ function renderPiano() {
   });
   el.pianoSoundStatus.textContent = PIANO_SOUND_LABELS[state.piano.sound];
   if (el.keyboardSound) el.keyboardSound.value = state.piano.sound;
-  if (el.keyboardVolume) el.keyboardVolume.value = String(Math.round(state.piano.volume * 100));
+  if (el.keyboardVolume) {
+    const keyboardVolumePercent = Math.round(state.piano.volume * 100);
+    el.keyboardVolume.value = String(keyboardVolumePercent);
+    el.keyboardVolume.style.setProperty("--volume-level", `${keyboardVolumePercent}%`);
+  }
   if (el.keyboardTransposeValue) el.keyboardTransposeValue.value = state.piano.transpose > 0 ? `+${state.piano.transpose}` : String(state.piano.transpose);
   if (el.keyboardTransposeDown) el.keyboardTransposeDown.disabled = state.piano.transpose <= -6;
   if (el.keyboardTransposeUp) el.keyboardTransposeUp.disabled = state.piano.transpose >= 6;
