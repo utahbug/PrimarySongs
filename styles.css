@@ -955,7 +955,7 @@ body.dark-background .list-edit-view-tab[data-list-edit-view="add"].active { bac
 
 body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 
-.pdf-toolbar { --pdf-page-left: max(8px, env(safe-area-inset-left)); --pdf-page-right: max(8px, env(safe-area-inset-right)); align-items: center; background: var(--surface); border-bottom: 1px solid var(--line); display: block; min-height: 51px; padding: max(6px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 6px max(8px, env(safe-area-inset-left)); position: relative; }
+.pdf-toolbar { --pdf-page-left: max(8px, env(safe-area-inset-left)); --pdf-page-right: max(8px, env(safe-area-inset-right)); align-items: center; background: var(--surface); border-bottom: 1px solid var(--line); display: block; min-height: 51px; padding: max(6px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 6px max(8px, env(safe-area-inset-left)); position: relative; z-index: 15; }
 
 .pdf-title-wrap { min-width: 0px; padding: 0 128px; text-align: center; }
 
@@ -967,7 +967,7 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-back-button { align-items: center; background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent-strong) 48%, var(--line)); border-radius: 10px; color: var(--accent-strong); display: inline-flex; font-size: 0.82rem; font-weight: 850; gap: 5px; left: var(--pdf-page-left); min-height: 38px; padding: 6px 11px; position: absolute; top: 50%; transform: translateY(-50%); white-space: nowrap; }
 .pdf-back-button span { font-size: 1.08rem; line-height: 1; }
 .pdf-back-button:hover, .pdf-back-button:focus-visible { background: var(--accent-hover); border-color: var(--accent-strong); }
-.pdf-top-left-actions { align-items: center; display: flex; gap: 6px; left: var(--pdf-page-left); position: absolute; top: 50%; transform: translateY(-50%); }
+.pdf-top-left-actions { align-items: center; display: flex; gap: 6px; left: var(--pdf-page-left); position: absolute; top: 50%; transform: translateY(-50%); z-index: 16; }
 .pdf-top-left-actions .pdf-back-button { left: auto; position: static; transform: none; }
 .pdf-top-print-button { min-width: 38px; padding: 6px 8px; }
 .pdf-top-print-button svg { fill: none; height: 20px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; width: 20px; }
