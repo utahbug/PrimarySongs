@@ -796,7 +796,9 @@ function collectElements() {
   el.detailContent = document.getElementById("detailContent");
 
   el.pdfViewer = document.getElementById("pdfViewer");
+  el.pdfToolbar = document.querySelector(".pdf-toolbar");
   el.pdfTopHomeButton = document.getElementById("pdfTopHomeButton");
+  el.pdfTopTapZonesButton = document.getElementById("pdfTopTapZonesButton");
   el.pdfHomeButton = document.getElementById("pdfHomeButton");
   el.pdfTipsButton = document.getElementById("pdfTipsButton");
   el.pdfFollowButton = document.getElementById("pdfFollowButton");
@@ -818,7 +820,6 @@ function collectElements() {
   el.pdfSettingsLayer = document.getElementById("pdfSettingsLayer");
   el.pdfSettingsCloseButton = document.getElementById("pdfSettingsCloseButton");
   el.pdfSettingsApplyButton = document.getElementById("pdfSettingsApplyButton");
-  el.pdfShowTapZonesButton = document.getElementById("pdfShowTapZonesButton");
   el.pdfNumberingMode = document.getElementById("pdfNumberingMode");
   el.pdfRepeatListEnabled = document.getElementById("pdfRepeatListEnabled");
   el.pdfSongNumberingFields = document.getElementById("pdfSongNumberingFields");
@@ -1114,17 +1115,16 @@ function wireEvents() {
   document.body.addEventListener("pointercancel", handleSwipePointerUp);
 
   el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
+  el.pdfTopTapZonesButton.addEventListener("click", () => {
+    syncPdfTipsPreference();
+    setPdfTipsVisible(true, 0, "manual");
+  });
   el.pdfHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfTipsButton.addEventListener("click", togglePdfTips);
   el.pdfSettingsCloseButton.addEventListener("click", closePdfSettings);
   el.pdfSettingsApplyButton.addEventListener("click", applyPdfSettings);
   el.pdfSettingsLayer.addEventListener("click", (event) => {
     if (event.target === el.pdfSettingsLayer) closePdfSettings();
-  });
-  el.pdfShowTapZonesButton.addEventListener("click", () => {
-    closePdfSettings();
-    syncPdfTipsPreference();
-    setPdfTipsVisible(true, 0, "manual");
   });
   el.pdfNumberingMode.addEventListener("change", updatePdfSettingsDraft);
   el.pdfRepeatListEnabled.addEventListener("change", updatePdfSettingsDraft);
@@ -5218,6 +5218,7 @@ async function renderPdfPage(pageNumber) {
     updatePdfStatus();
     el.pdfCanvas.classList.remove("hidden");
     el.pdfLoading.classList.add("hidden");
+    alignPdfToolbarToPage();
   } catch (error) {
     showPdfMessage("This PDF page could not be displayed.");
   } finally {
@@ -5242,6 +5243,19 @@ function updatePdfStatus() {
   el.pdfPageStatus.textContent = [pageStatus, sequenceStatus].filter(Boolean).join(" · ");
   renderPdfPageNumbering(true);
   updatePdfSequenceControls();
+}
+
+function alignPdfToolbarToPage() {
+  if (!el.pdfToolbar || !el.pdfCanvas || el.pdfCanvas.classList.contains("hidden")) return;
+  window.requestAnimationFrame(() => {
+    const toolbarRect = el.pdfToolbar.getBoundingClientRect();
+    const canvasRect = el.pdfCanvas.getBoundingClientRect();
+    if (!toolbarRect.width || !canvasRect.width) return;
+    const left = Math.max(8, Math.round(canvasRect.left - toolbarRect.left));
+    const right = Math.max(8, Math.round(toolbarRect.right - canvasRect.right));
+    el.pdfToolbar.style.setProperty("--pdf-page-left", `${left}px`);
+    el.pdfToolbar.style.setProperty("--pdf-page-right", `${right}px`);
+  });
 }
 
 function returnFromPdfViewer() {

@@ -29,10 +29,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-215">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-216">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
-    <script src="script.js?v=primary-2026-215" defer></script>
+    <script src="script.js?v=primary-2026-216" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -655,6 +655,7 @@
             <p id="pdfPageStatus">Page 1 of 1</p>
           </div>
         </div>
+        <button id="pdfTopTapZonesButton" class="pdf-back-button pdf-top-tap-zones-button" type="button" aria-label="Show tap zones" title="Show tap zones">Tap Zones</button>
       </header>
       <div id="pdfStage" class="pdf-stage">
         <div id="pdfLoading" class="pdf-message">Loading PDF...</div>
@@ -679,8 +680,7 @@
           <div class="pdf-settings-content">
           <section class="pdf-settings-group">
             <h3>Tap Zones</h3>
-            <button id="pdfShowTapZonesButton" class="secondary-button" type="button">Show guide now</button>
-            <label class="pdf-setting-toggle"><input id="pdfTipsShowOnOpen" type="checkbox"> <span>Show when opening music</span></label>
+            <label class="pdf-setting-toggle pdf-tap-zones-setting"><input id="pdfTipsShowOnOpen" type="checkbox"> <span>Show when opening music<small>Display the Tap Zones guide whenever music opens.</small></span></label>
           </section>
           <section class="pdf-settings-group">
             <h3>Page numbering</h3>
@@ -972,12 +972,12 @@
                   <div><strong>Next</strong><span class="help-zone-icon help-turn-icon" aria-hidden="true">&#8250;</span><small>Lower right</small></div>
                 </div>
                 <p class="help-tap-zone-note">The first guide stays until you begin. Later reminders close after three seconds. Clear “Show when opening music” if you no longer need them. Choose Tap Zones in the PDF viewer to show the guide again.</p>
-                <ul>
-                  <li>Bluetooth page-turning pedals and keyboards also work in the PDF viewer.</li>
-                  <li class="help-subitem">Next: Right Arrow, Down Arrow, Page Down, Space, or Enter.</li>
-                  <li class="help-subitem">Previous: Left Arrow, Up Arrow, or Page Up.</li>
-                  <li class="help-subitem">Jump: Home goes to page 1; End goes to the last page.</li>
-                </ul>
+                <div class="help-bluetooth-turning">
+                  <strong>Turning pages with Bluetooth:</strong>
+                  <p><em>Next:</em> Right Arrow, Down Arrow, Page Down, Space, or Enter.</p>
+                  <p><em>Previous:</em> Left Arrow, Up Arrow, or Page Up.</p>
+                  <p><em>Jump:</em> Home goes to page 1; End goes to the last page.</p>
+                </div>
               </div>
             </details>
 
@@ -996,7 +996,15 @@
               <div class="help-topic-content">
                 <ul>
                   <li>Organize songs, cards, and links into custom groups.</li>
-                  <li><strong>Next Song</strong> defaults to On when a list opens. Choose any PDF as the starting song. On its final page, the next-page zone opens the next PDF; after the final PDF, the list starts over. Turn Next Song Off to stay on the current PDF.</li>
+                  <li class="help-next-song-item"><strong>Next Song</strong>
+                    <ul>
+                      <li class="help-subitem">Defaults to On when a list opens.</li>
+                      <li class="help-subitem">Choose any PDF as the starting song.</li>
+                      <li class="help-subitem">On its final page, the next-page zone opens the next PDF.</li>
+                      <li class="help-subitem">After the final PDF, the list starts over.</li>
+                      <li class="help-subitem">Turn Next Song Off to stay on the current PDF.</li>
+                    </ul>
+                  </li>
                 </ul>
               </div>
             </details>
@@ -1004,9 +1012,10 @@
             <details class="help-topic">
               <summary>Cards</summary>
               <div class="help-topic-content">
-                <ul>
-                  <li>Add your own text—such as lyrics—or an image.</li>
-                </ul>
+                <div class="help-card-notes">
+                  <p>Cards let you add your own easy-to-read content, such as lyrics, notes, pasted text, or an image. Cards can be added to favorites and lists.</p>
+                  <p>Whereas sheet music is best viewed on an iPad, Cards are ideal for displaying text (e.g., lyrics).</p>
+                </div>
               </div>
             </details>
 
