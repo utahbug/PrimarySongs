@@ -5357,6 +5357,11 @@ function closePdfSettings() {
 async function printCurrentPdf() {
   const item = state.currentPdf.item;
   if (!item) return;
+  const isAppleTouchDevice = /iPad|iPhone|iPod/i.test(navigator.userAgent)
+    || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (isAppleTouchDevice) {
+    window.alert("The clean PDF will open next.\n\nTo print on iPhone or iPad, tap Share, then choose Print.");
+  }
   const printWindow = window.open("about:blank", "_blank");
   if (!printWindow) {
     window.alert("Allow pop-ups for this app, then choose Print PDF again.");
