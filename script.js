@@ -4,6 +4,9 @@ const PDFJS_VERSION = "3.11.174";
 const PDFJS_WORKER_URL = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js`;
 
 const APP_STORAGE_SCOPE = getAppStorageScope();
+const APP_RELEASE_VERSION = "1.0";
+const APP_BUILD_VERSION = "1.01";
+const UPDATE_CHECK_SESSION_KEY = `${APP_STORAGE_SCOPE}.updateCheck`;
 const STORAGE_KEYS = {
   deletedItems: storageKey("deletedItems"),
   favorites: storageKey("favorites"),
@@ -647,10 +650,12 @@ async function init() {
   renderAll();
   openInitialSection();
   setupServiceWorker();
+  showPendingUpdateResult();
 }
 
 function collectElements() {
   el.appShell = document.getElementById("appShell");
+  el.appUpdateNotice = document.getElementById("appUpdateNotice");
   el.backgroundToggleButton = document.getElementById("backgroundToggleButton");
   el.homeTitleButton = document.getElementById("homeTitleButton");
   el.welcomeSection = document.getElementById("welcomeSection");
@@ -1298,10 +1303,24 @@ function closeAboutModal() {
   fitOpenMobileModals();
 }
 
-async function refreshAppShell() {
+async function refreshAppShell(button = null) {
   closeOverflowMenu();
   closeInfoMenu();
   closeListMoreMenu();
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Checking…";
+  }
+
+  try {
+    sessionStorage.setItem(UPDATE_CHECK_SESSION_KEY, JSON.stringify({
+      fromBuild: APP_BUILD_VERSION,
+      requestedAt: Date.now()
+    }));
+  } catch {
+    // Update checking still works when session storage is unavailable.
+  }
 
   try {
     if ("caches" in window) {
@@ -1324,6 +1343,30 @@ async function refreshAppShell() {
   const url = new URL(window.location.href);
   url.searchParams.set("refresh", Date.now().toString(36));
   window.location.replace(url.toString());
+}
+
+function showPendingUpdateResult() {
+  let pending = null;
+  try {
+    pending = JSON.parse(sessionStorage.getItem(UPDATE_CHECK_SESSION_KEY) || "null");
+    sessionStorage.removeItem(UPDATE_CHECK_SESSION_KEY);
+  } catch {
+    pending = null;
+  }
+  if (!pending || Date.now() - Number(pending.requestedAt || 0) > 5 * 60 * 1000) return;
+
+  const updated = pending.fromBuild && pending.fromBuild !== APP_BUILD_VERSION;
+  showAppNotice(updated
+    ? `Primary Music was updated to build ${APP_BUILD_VERSION}.`
+    : `Primary Music is up to date (build ${APP_BUILD_VERSION}).`);
+}
+
+function showAppNotice(message) {
+  if (!el.appUpdateNotice) return;
+  window.clearTimeout(state.appNoticeTimer);
+  el.appUpdateNotice.textContent = message;
+  el.appUpdateNotice.classList.remove("hidden");
+  state.appNoticeTimer = window.setTimeout(() => el.appUpdateNotice.classList.add("hidden"), 5000);
 }
 
 function toggleBackgroundMode() {
@@ -4245,7 +4288,7 @@ async function handleBodyClick(event) {
 
   const refreshAppButton = event.target.closest("[data-refresh-app]");
   if (refreshAppButton) {
-    await refreshAppShell();
+    await refreshAppShell(refreshAppButton);
     return;
   }
 
