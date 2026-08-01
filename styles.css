@@ -145,7 +145,7 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 body.pdf-open .prototype-notice { display: none; }
 
 @media (max-width: 640px) {
-  .prototype-notice { font-size: 0.72rem; margin-top: 6px; max-width: calc(100% - 20px); padding: 8px 10px; }
+  .prototype-notice { font-size: 0.78rem; margin-top: 6px; max-width: calc(100% - 20px); padding: 8px 10px; }
 }
 
 @media (min-width: 1100px) {
