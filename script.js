@@ -5262,6 +5262,7 @@ function alignPdfToolbarToPage() {
     const right = Math.max(8, Math.round(toolbarRect.right - canvasRect.right));
     el.pdfToolbar.style.setProperty("--pdf-page-left", `${left}px`);
     el.pdfToolbar.style.setProperty("--pdf-page-right", `${right}px`);
+    el.pdfViewer.style.setProperty("--pdf-page-right", `${right}px`);
   });
 }
 
@@ -5442,7 +5443,7 @@ function renderPdfPageNumbering(showNotice) {
   const useful = Boolean(displayed && displayed.count > 1);
   el.pdfViewer.classList.toggle("show-page-number", useful);
   el.pdfPageMarker.classList.toggle("hidden", !useful);
-  el.pdfPageMarker.textContent = useful ? `page ${displayed.number}` : "";
+  el.pdfPageMarker.textContent = useful ? String(displayed.number) : "";
   if (!useful || !showNotice) {
     el.pdfPageNotice.classList.add("hidden");
     return;
