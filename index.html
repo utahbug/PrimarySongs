@@ -537,19 +537,6 @@
               <button id="scaleGuideTab" type="button" role="tab" aria-selected="false" aria-controls="scaleGuide">Scales</button>
             </div>
             <section id="pianoChordGuide" class="keyboard-chord-guide" aria-labelledby="keyboardChordHeading">
-              <div class="piano-style-guide">
-                <label for="pianoStyle"><span>I want to play…</span>
-                  <select id="pianoStyle">
-                    <option value="manual">Choose manually</option>
-                    <option value="hymn">Hymn</option>
-                    <option value="country">Country</option>
-                    <option value="blues">Blues</option>
-                    <option value="jazz">Jazz</option>
-                    <option value="pop">Pop</option>
-                  </select>
-                </label>
-                <div id="pianoStyleRecipe" class="piano-style-recipe" aria-live="polite" hidden></div>
-              </div>
               <div class="piano-chord-controls keyboard-chord-controls">
                 <h3 id="keyboardChordHeading">Chord:</h3>
                 <label><span>Root</span>
@@ -573,6 +560,19 @@
               <div class="chord-answer-grid">
                 <div id="pianoChordNotes" class="piano-chord-notes" aria-live="polite"></div>
                 <div id="pianoChordPartners" class="piano-chord-partners" aria-live="polite"></div>
+              </div>
+              <div class="piano-style-guide">
+                <label for="pianoStyle"><span>I want to play…</span>
+                  <select id="pianoStyle">
+                    <option value="manual">Choose manually</option>
+                    <option value="hymn">Hymn</option>
+                    <option value="country">Country</option>
+                    <option value="blues">Blues</option>
+                    <option value="jazz">Jazz</option>
+                    <option value="pop">Pop</option>
+                  </select>
+                </label>
+                <div id="pianoStyleRecipe" class="piano-style-recipe" aria-live="polite" hidden></div>
               </div>
               <details class="chord-tips">
                 <summary>Chord tips</summary>
