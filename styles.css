@@ -1549,6 +1549,19 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .key-order-black-playable { background: linear-gradient(#425263, #142331); border: 1px solid #0D1821; border-radius: 0 0 4px 4px; box-shadow: 0 3px 5px rgba(16,31,43,0.28); height: 78px; padding: 0; position: absolute; right: -28%; top: -1px; touch-action: none; width: 52%; z-index: 8; }
 .key-order-black-playable:hover, .key-order-black-playable:focus-visible { background: linear-gradient(#53677A, #1B2D3D); }
 .key-order-black-playable.is-playing { background: linear-gradient(#4F9E91, #205C62); box-shadow: inset 0 -5px 0 rgba(7,44,47,0.25); transform: translateY(2px); }
+
+@media (max-width: 600px) {
+  .sidetrack-puzzle { padding: 14px 8px; }
+  .sidetrack-puzzle-heading { grid-template-columns: 34px minmax(0, 1fr) 34px; }
+  .sidetrack-puzzle-heading .sidetrack-puzzle-instruction { font-size: clamp(1.05rem, 5.2vw, 1.35rem); line-height: 1.15; }
+  .sidetrack-puzzle-reset { font-size: 1.05rem; height: 32px; min-height: 32px; width: 32px; }
+  .sidetrack-puzzle-board,
+  .sidetrack-puzzle-pieces { box-sizing: border-box; max-width: 100%; padding-left: 0; padding-right: 0; width: 100%; }
+  .sidetrack-puzzle-pieces { gap: 3px; }
+  .sidetrack-puzzle-slot,
+  .sidetrack-puzzle-piece { flex: 1 1 0; min-width: 0; width: auto; }
+  .sidetrack-puzzle-piece { font-size: 0.88rem; }
+}
 .sidetrack-air { background: linear-gradient(#BFE8FF 0%, #E9F8FF 72%, #F5FBFF 100%); display: grid; grid-template-rows: auto 1fr auto; padding: 12px; }
 .sidetrack-air-progress { align-items: center; display: flex; gap: 4px; justify-content: center; min-height: 20px; padding: 1px 5px 5px; }
 .sidetrack-air-progress span { background: rgba(255,255,255,0.62); border: 1.5px solid #4A91C5; border-radius: 50%; height: 10px; transition: background 150ms ease, transform 150ms ease; width: 10px; }
