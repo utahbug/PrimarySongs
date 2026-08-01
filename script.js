@@ -670,6 +670,7 @@ function collectElements() {
   el.librarySearch = document.getElementById("librarySearch");
   el.librarySort = document.getElementById("librarySort");
   el.libraryTopAddButton = document.getElementById("libraryTopAddButton");
+  el.libraryFileCount = document.getElementById("libraryFileCount");
   el.libraryAddButton = document.getElementById("libraryAddButton");
   el.libraryBatchEditButton = document.getElementById("libraryBatchEditButton");
   el.libraryBatchBar = document.getElementById("libraryBatchBar");
@@ -3344,6 +3345,7 @@ function showSection(sectionName) {
 function renderLibrary() {
   const query = el.librarySearch.value;
   const fileItems = state.data.items.filter(isFileItem);
+  el.libraryFileCount.textContent = `${fileItems.length} ${fileItems.length === 1 ? "file" : "files"}`;
   const filtered = filterItems(fileItems, query);
   renderItemList(el.libraryContent, sortLibraryItems(filtered, el.librarySort.value), {
     compact: true,

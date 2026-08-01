@@ -192,6 +192,8 @@ body.pdf-open .prototype-notice { display: none; }
 
 .tab-action-row { align-items: center; display: flex; gap: 8px; justify-content: space-between; margin: 0px 0px 4px; }
 
+.file-count { color: var(--muted); font-size: 0.9rem; font-style: italic; margin-left: auto; padding-right: 8px; white-space: nowrap; }
+
 .lists-action-row { margin-bottom: 8px; }
 
 .batch-edit-button { font-size: 0.88rem; min-height: 34px; padding: 5px 10px; }
