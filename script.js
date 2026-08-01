@@ -591,7 +591,7 @@ const state = {
     sound: "grand-piano",
     volume: 0.58,
     transpose: 0,
-    shape: "trail",
+    shape: "circle",
     audioContext: null,
     masterGain: null,
     compressor: null,
@@ -6297,7 +6297,7 @@ const KEY_SIGNATURE_POSITIONS = {
 };
 const keyboardKeyChange = { steps: 0 };
 const PIANO_KEY_NAMES = ["C", "C♯ / D♭", "D", "D♯ / E♭", "E", "F", "F♯ / G♭", "G", "G♯ / A♭", "A", "A♯ / B♭", "B"];
-const PIANO_SHAPES = new Set(["trail", "garden", "twinkle", "circle", "zigzag", "rainbow"]);
+const PIANO_SHAPES = new Set(["circle", "zigzag", "rainbow"]);
 const PIANO_GARDEN_OBJECTS = [
   ["🐶", "Dog"], ["🐱", "Cat"], ["🎵", "Music note"],
   ["🦊", "Fox"], ["🐼", "Panda"], ["🎹", "Keyboard"],
@@ -6378,7 +6378,7 @@ function loadPianoSettings() {
   const saved = readJson(STORAGE_KEYS.piano, {});
   if (PIANO_SOUND_LABELS[saved.sound]) state.piano.sound = saved.sound;
   if (PIANO_SHAPES.has(saved.shape)) state.piano.shape = saved.shape;
-  else if (saved.shape) state.piano.shape = "trail";
+  else if (saved.shape) state.piano.shape = "circle";
   const savedVolume = Number(saved.volume);
   if (Number.isFinite(savedVolume)) state.piano.volume = clamp(savedVolume, 0, 1);
   const savedTranspose = Number(saved.transpose);
@@ -6480,7 +6480,7 @@ function renderPiano() {
 }
 
 function handlePianoShapeChange() {
-  state.piano.shape = PIANO_SHAPES.has(el.pianoShape.value) ? el.pianoShape.value : "trail";
+  state.piano.shape = PIANO_SHAPES.has(el.pianoShape.value) ? el.pianoShape.value : "circle";
   state.piano.twinkleIndex = 0;
   savePianoSettings();
   renderPiano();
@@ -7006,7 +7006,7 @@ function shuffledGardenObjects(count) {
 
 function applyPianoShape() {
   if (!el.pianoNoteArc) return;
-  const shape = PIANO_SHAPES.has(state.piano.shape) ? state.piano.shape : "trail";
+  const shape = PIANO_SHAPES.has(state.piano.shape) ? state.piano.shape : "circle";
   el.pianoNoteArc.dataset.shape = shape;
   if (shape === "garden") ensureGardenFill();
   if (shape === "twinkle") ensureTwinkleFill();

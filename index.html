@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="styles.css?v=primary-2026-214">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
-    <script src="script.js?v=primary-2026-214" defer></script>
+    <script src="script.js?v=primary-2026-215" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -432,7 +432,7 @@
                   <span class="activity-picture activity-air-picture" aria-hidden="true">&#x266B;</span>
                   <span>Pop notes</span>
                 </button>
-                <button type="button" data-piano-shape="garden">
+                <button class="hidden" type="button" data-piano-shape="garden" aria-hidden="true" tabindex="-1">
                   <span class="activity-picture activity-sound-picture" aria-hidden="true">
                     <svg viewBox="0 0 64 48">
                       <text class="sound-music-clef" x="2" y="39">&#119070;</text>
@@ -442,22 +442,19 @@
                   </span>
                   <span>Just sound</span>
                 </button>
-                <button type="button" data-piano-shape="twinkle">
+                <button class="hidden" type="button" data-piano-shape="twinkle" aria-hidden="true" tabindex="-1">
                   <span class="activity-picture activity-star-picture" aria-hidden="true">★</span>
                   <span>Twinkle Stars</span>
                 </button>
-                <button type="button" data-piano-shape="trail">
+                <button class="hidden" type="button" data-piano-shape="trail" aria-hidden="true" tabindex="-1">
                   <span class="activity-picture activity-trail-picture" aria-hidden="true"><b>&#x1F3B7;</b><i>&#x266A;</i><i>&#x266B;</i></span>
                   <span>Puzzle</span>
                 </button>
               </div>
               <select id="pianoShape" class="sr-only" aria-label="Fun Stuff activity">
-                <option value="circle">Keyboard</option>
+                <option value="circle" selected>Keyboard</option>
                 <option value="zigzag">Key Order</option>
                 <option value="rainbow">Pop notes</option>
-                <option value="garden">Just sound</option>
-                <option value="twinkle">Twinkle Stars</option>
-                <option value="trail" selected>Puzzle</option>
               </select>
             </div>
             <div class="piano-note-arc" aria-label="Playable sound objects">
