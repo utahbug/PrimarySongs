@@ -821,6 +821,7 @@ function collectElements() {
   el.pdfSettingsLayer = document.getElementById("pdfSettingsLayer");
   el.pdfSettingsCloseButton = document.getElementById("pdfSettingsCloseButton");
   el.pdfSettingsApplyButton = document.getElementById("pdfSettingsApplyButton");
+  el.pdfPrintButton = document.getElementById("pdfPrintButton");
   el.pdfNumberingModeOptions = Array.from(document.querySelectorAll('input[name="pdfNumberingMode"]'));
   el.pdfRepeatListEnabled = document.getElementById("pdfRepeatListEnabled");
   el.pdfSongNumberingFields = document.getElementById("pdfSongNumberingFields");
@@ -1130,6 +1131,7 @@ function wireEvents() {
   el.pdfTipsButton.addEventListener("click", togglePdfTips);
   el.pdfSettingsCloseButton.addEventListener("click", closePdfSettings);
   el.pdfSettingsApplyButton.addEventListener("click", applyPdfSettings);
+  el.pdfPrintButton.addEventListener("click", printCurrentPdf);
   el.pdfSettingsLayer.addEventListener("click", (event) => {
     if (event.target === el.pdfSettingsLayer) closePdfSettings();
   });
@@ -5302,6 +5304,40 @@ function closePdfSettings() {
   state.pdfSettingsDraft = null;
   el.pdfSettingsLayer.classList.add("hidden");
   el.pdfTipsButton.setAttribute("aria-expanded", "false");
+}
+
+async function printCurrentPdf() {
+  const item = state.currentPdf.item;
+  if (!item) return;
+  const printWindow = window.open("about:blank", "_blank");
+  if (!printWindow) {
+    window.alert("Allow pop-ups for this app, then choose Print PDF again.");
+    return;
+  }
+  printWindow.document.title = `Preparing ${itemDisplayTitle(item)}`;
+  printWindow.document.body.innerHTML = '<p style="font:16px system-ui;padding:24px">Preparing PDF for printing&hellip;</p>';
+  try {
+    let printUrl = "";
+    let revokeUrl = false;
+    if (item.fileId) {
+      const file = await getPdfFile(item.fileId);
+      if (!file) throw new Error("Imported PDF missing");
+      printUrl = URL.createObjectURL(file);
+      revokeUrl = true;
+    } else if (item.file) {
+      const encodedPath = item.file.split("/").map((part) => encodeURIComponent(part)).join("/");
+      printUrl = new URL(encodedPath, window.location.href).href;
+    } else {
+      throw new Error("PDF path missing");
+    }
+    printWindow.location.replace(printUrl);
+    printWindow.focus();
+    if (revokeUrl) window.setTimeout(() => URL.revokeObjectURL(printUrl), 120000);
+    closePdfSettings();
+  } catch (error) {
+    printWindow.close();
+    window.alert("This PDF could not be prepared for printing.");
+  }
 }
 
 function getPdfViewerSettings() {
