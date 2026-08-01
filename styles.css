@@ -971,6 +971,10 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-top-left-actions .pdf-back-button { left: auto; position: static; transform: none; }
 .pdf-top-print-button { min-width: 38px; padding: 6px 8px; }
 .pdf-top-print-button svg { fill: none; height: 20px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; width: 20px; }
+.pdf-top-icon-button { height: 38px; justify-content: center; min-width: 38px; padding: 6px; width: 38px; }
+.pdf-top-icon-button .pdf-home-glyph { height: 22px; width: 22px; }
+.pdf-top-icon-button > svg:not(.pdf-home-glyph) { fill: none; height: 21px; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; width: 21px; }
+.pdf-top-icon-button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent-strong); color: #FFFFFF; }
 
 .pdf-top-right-actions { align-items: center; display: flex; gap: 6px; position: absolute; right: var(--pdf-page-right); top: 50%; transform: translateY(-50%); }
 
@@ -991,6 +995,22 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-page-marker::before { content: "page\00a0"; }
 
 .pdf-canvas { background: var(--surface); box-shadow: var(--shadow-pdf); display: block; max-height: 100%; max-width: 100%; transform-origin: top center; will-change: transform; }
+.pdf-annotation-canvas { display: block; left: 0; pointer-events: none; position: absolute; top: 0; z-index: 3; }
+.pdf-viewer.annotation-active .pdf-annotation-canvas { cursor: crosshair; pointer-events: auto; touch-action: none; }
+.pdf-viewer.annotation-active .pdf-canvas { outline: 3px solid color-mix(in srgb, var(--accent) 72%, #FFFFFF); outline-offset: -3px; }
+.pdf-annotation-notice { background: color-mix(in srgb, var(--accent-strong) 90%, transparent); border: 1px solid rgba(255,255,255,.65); border-radius: 999px; bottom: 82px; color: #FFFFFF; font-size: .8rem; font-weight: 800; left: 50%; padding: 7px 12px; pointer-events: none; position: absolute; transform: translateX(-50%); white-space: nowrap; z-index: 13; }
+.pdf-annotation-toolbar { align-items: center; background: color-mix(in srgb, var(--surface) 96%, var(--accent-soft)); border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--line)); border-radius: 13px; bottom: 10px; box-shadow: 0 8px 26px rgba(25, 54, 82, .25); display: flex; gap: 7px; left: 50%; max-width: calc(100% - 18px); overflow-x: auto; padding: 6px; position: absolute; transform: translateX(-50%); z-index: 12; }
+.pdf-annotation-tool-group, .pdf-annotation-colors { align-items: center; display: flex; flex: 0 0 auto; gap: 4px; }
+.pdf-annotation-tool-group + .pdf-annotation-tool-group, .pdf-annotation-colors + .pdf-annotation-tool-group { border-left: 1px solid var(--line); padding-left: 7px; }
+.pdf-annotation-toolbar button { align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; color: var(--accent-strong); display: inline-flex; font-size: 1.12rem; font-weight: 850; height: 36px; justify-content: center; min-width: 36px; padding: 4px 7px; }
+.pdf-annotation-toolbar button:hover, .pdf-annotation-toolbar button:focus-visible, .pdf-annotation-toolbar button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.pdf-annotation-colors button { background: var(--annotation-color); border: 2px solid #FFFFFF; border-radius: 999px; box-shadow: 0 0 0 1px var(--line); height: 26px; min-width: 26px; padding: 0; width: 26px; }
+.pdf-annotation-colors button[data-annotation-color="#245A9A"] { --annotation-color: #245A9A; }
+.pdf-annotation-colors button[data-annotation-color="#C62828"] { --annotation-color: #C62828; }
+.pdf-annotation-colors button[data-annotation-color="#7A3045"] { --annotation-color: #7A3045; }
+.pdf-annotation-colors button[data-annotation-color="#B67817"] { --annotation-color: #B67817; }
+.pdf-annotation-colors button[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--accent-hover), 0 0 0 4px var(--accent-strong); }
+.pdf-annotation-toolbar .pdf-annotation-done { background: linear-gradient(105deg, #237C7A, #2B67B1); color: #FFFFFF; font-size: .78rem; min-width: 52px; }
 
 .pdf-viewer.pdf-page-dark .pdf-stage { background: #101417; }
 
@@ -1081,8 +1101,14 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-settings-glyph { color: var(--accent-strong); font-size: 1.38rem; line-height: 1; }
 .pdf-action-button:hover, .pdf-action-button:focus-visible, .pdf-action-button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
 .pdf-home-action { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent-strong) 55%, var(--line)); color: var(--accent-strong); }
-.pdf-home-action .pdf-home-glyph { height: 26px; width: 26px; }
-.pdf-home-action small { color: var(--accent-strong); font-weight: 850; }
+.pdf-home-action { min-width: 52px; }
+.pdf-home-action .pdf-home-glyph { height: 32px; width: 32px; }
+@media (max-width: 520px) {
+  .pdf-annotation-toolbar { flex-wrap: wrap; gap: 5px; justify-content: center; overflow: visible; padding: 5px; width: calc(100% - 18px); }
+  .pdf-annotation-notice { bottom: 106px; }
+  .pdf-annotation-toolbar button { height: 34px; min-width: 34px; }
+  .pdf-annotation-colors button { height: 23px; min-width: 23px; width: 23px; }
+}
 .pdf-tempo-box { align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; box-shadow: 0 2px 7px color-mix(in srgb, var(--ink) 9%, transparent); display: flex; gap: 6px; min-height: 46px; padding: 4px 5px 4px 8px; }
 .pdf-tempo-box label { align-items: center; display: flex; gap: 5px; }
 .pdf-tempo-box label > span { color: var(--muted); font-size: 0.62rem; font-weight: 800; }

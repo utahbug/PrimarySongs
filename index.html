@@ -29,10 +29,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-226">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-227">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
-    <script src="script.js?v=primary-2026-223" defer></script>
+    <script src="script.js?v=primary-2026-224" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -650,9 +650,12 @@
     <section id="pdfViewer" class="pdf-viewer hidden" aria-label="PDF viewer">
       <header class="pdf-toolbar">
         <div class="pdf-top-left-actions">
-          <button id="pdfTopHomeButton" class="pdf-back-button" type="button" aria-label="Return home" title="Return home"><span aria-hidden="true">&larr;</span> Home</button>
+          <button id="pdfTopHomeButton" class="pdf-back-button pdf-top-icon-button" type="button" aria-label="Return home" title="Return home"><svg class="pdf-home-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.6 10.7 12 2.9l9.4 7.8a1.5 1.5 0 0 1-1.9 2.3l-.5-.4v7.1a1.3 1.3 0 0 1-1.3 1.3h-3.9v-5.8h-3.6V21H6.3A1.3 1.3 0 0 1 5 19.7v-7.1l-.5.4a1.5 1.5 0 1 1-1.9-2.3Z"/></svg></button>
           <button id="pdfPrintButton" class="pdf-back-button pdf-top-print-button" type="button" aria-label="Print the original PDF" title="Print PDF">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3M7 14h10v7H7zM18 11h1"></path></svg>
+          </button>
+          <button id="pdfAnnotateButton" class="pdf-back-button pdf-top-icon-button" type="button" aria-label="Annotate this PDF" title="Annotate PDF" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 4.4-1 10-10-3.4-3.4-10 10L4 20Zm9.8-13.2 3.4 3.4M14.8 5.8l1.5-1.5a1.4 1.4 0 0 1 2 0l1.4 1.4a1.4 1.4 0 0 1 0 2l-1.5 1.5"></path></svg>
           </button>
         </div>
         <div class="pdf-title-wrap">
@@ -669,6 +672,7 @@
       <div id="pdfStage" class="pdf-stage">
         <div id="pdfLoading" class="pdf-message">Loading PDF...</div>
         <canvas id="pdfCanvas" class="pdf-canvas"></canvas>
+        <canvas id="pdfAnnotationCanvas" class="pdf-annotation-canvas" aria-label="PDF annotation drawing layer"></canvas>
         <button id="pdfTapLeft" class="pdf-tap-zone pdf-tap-left" type="button" aria-label="Previous page; top-left jumps to first page"></button>
         <button id="pdfTapRight" class="pdf-tap-zone pdf-tap-right" type="button" aria-label="Next page; top-right jumps to last page"></button>
         <div id="pdfPageNotice" class="pdf-page-notice hidden" aria-live="polite"></div>
@@ -681,6 +685,27 @@
             <strong>TAP ZONES</strong>
           </div>
           <div class="pdf-zone-dismiss-tip">Tap anywhere to close this guide</div>
+        </div>
+        <div id="pdfAnnotationNotice" class="pdf-annotation-notice hidden" role="status">Page turning paused while marking.</div>
+        <div id="pdfAnnotationToolbar" class="pdf-annotation-toolbar hidden" role="toolbar" aria-label="PDF annotation tools">
+          <div class="pdf-annotation-tool-group" aria-label="Drawing tool">
+            <button type="button" data-annotation-tool="pencil" aria-label="Pencil" title="Pencil" aria-pressed="true">&#9998;</button>
+            <button type="button" data-annotation-tool="highlighter" aria-label="Highlighter" title="Highlighter" aria-pressed="false">&#9644;</button>
+            <button type="button" data-annotation-tool="eraser" aria-label="Eraser" title="Eraser" aria-pressed="false">&#9003;</button>
+          </div>
+          <div class="pdf-annotation-colors" aria-label="Annotation color">
+            <button type="button" data-annotation-color="#245A9A" aria-label="Deep blue" title="Deep blue" aria-pressed="true"></button>
+            <button type="button" data-annotation-color="#C62828" aria-label="Red" title="Red" aria-pressed="false"></button>
+            <button type="button" data-annotation-color="#7A3045" aria-label="Maroon" title="Maroon" aria-pressed="false"></button>
+            <button type="button" data-annotation-color="#B67817" aria-label="Golden amber" title="Golden amber" aria-pressed="false"></button>
+          </div>
+          <div class="pdf-annotation-tool-group" aria-label="Annotation actions">
+            <button id="pdfAnnotationUndoButton" type="button" aria-label="Undo" title="Undo">&#8630;</button>
+            <button id="pdfAnnotationClearButton" type="button" aria-label="Clear annotations from this page" title="Clear page">&#128465;</button>
+            <button id="pdfAnnotationPreviousButton" type="button" aria-label="Previous page" title="Previous page">&#8249;</button>
+            <button id="pdfAnnotationNextButton" type="button" aria-label="Next page" title="Next page">&#8250;</button>
+            <button id="pdfAnnotationDoneButton" class="pdf-annotation-done" type="button">Done</button>
+          </div>
         </div>
       </div>
       <div id="pdfSettingsLayer" class="pdf-settings-layer hidden" role="dialog" aria-modal="true" aria-labelledby="pdfSettingsTitle">
@@ -725,7 +750,7 @@
         </div>
       </div>
       <footer class="pdf-action-bar" aria-label="PDF viewer actions">
-        <button id="pdfHomeButton" class="pdf-action-button pdf-home-action" type="button" aria-label="Return to app" title="Return to app"><svg class="pdf-home-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.6 10.7 12 2.9l9.4 7.8a1.5 1.5 0 0 1-1.9 2.3l-.5-.4v7.1a1.3 1.3 0 0 1-1.3 1.3h-3.9v-5.8h-3.6V21H6.3A1.3 1.3 0 0 1 5 19.7v-7.1l-.5.4a1.5 1.5 0 1 1-1.9-2.3Z"/></svg><small>Home</small></button>
+        <button id="pdfHomeButton" class="pdf-action-button pdf-home-action" type="button" aria-label="Return to app" title="Return to app"><svg class="pdf-home-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.6 10.7 12 2.9l9.4 7.8a1.5 1.5 0 0 1-1.9 2.3l-.5-.4v7.1a1.3 1.3 0 0 1-1.3 1.3h-3.9v-5.8h-3.6V21H6.3A1.3 1.3 0 0 1 5 19.7v-7.1l-.5.4a1.5 1.5 0 1 1-1.9-2.3Z"/></svg></button>
         <button id="pdfTipsButton" class="pdf-action-button pdf-settings-action" type="button" aria-label="Open PDF settings" title="PDF settings" aria-expanded="false"><span class="pdf-settings-glyph" aria-hidden="true">&#9881;</span><small>Settings</small></button>
         <div class="pdf-tempo-box hidden" aria-label="Metronome tempo">
           <label for="pdfTempoInput"><span>BPM</span><input id="pdfTempoInput" type="number" min="40" max="220" step="1" inputmode="numeric" value="90" aria-label="Metronome tempo"></label>

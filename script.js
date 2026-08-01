@@ -17,6 +17,7 @@ const STORAGE_KEYS = {
   cardOrder: storageKey("cardOrder"),
   pdfPages: storageKey("pdfPages"),
   pdfNumbering: storageKey("pdfNumbering"),
+  pdfAnnotations: storageKey("pdfAnnotations"),
   quickIndexes: storageKey("quickIndexes"),
   recents: storageKey("recents"),
   settings: storageKey("settings"),
@@ -555,6 +556,16 @@ const state = {
     tipsMode: "",
     pageNoticeTimer: null
   },
+  pdfAnnotation: {
+    active: false,
+    tool: "pencil",
+    color: "#245A9A",
+    pointerId: null,
+    currentStroke: null,
+    erasing: false,
+    undoByPage: new Map(),
+    noticeTimer: null
+  },
   metronome: {
     bpm: 90,
     beatsPerMeasure: 4,
@@ -798,6 +809,7 @@ function collectElements() {
   el.pdfViewer = document.getElementById("pdfViewer");
   el.pdfToolbar = document.querySelector(".pdf-toolbar");
   el.pdfTopHomeButton = document.getElementById("pdfTopHomeButton");
+  el.pdfAnnotateButton = document.getElementById("pdfAnnotateButton");
   el.pdfPageThemeToggleButton = document.getElementById("pdfPageThemeToggleButton");
   el.pdfTopTapZonesButton = document.getElementById("pdfTopTapZonesButton");
   el.pdfHomeButton = document.getElementById("pdfHomeButton");
@@ -816,6 +828,14 @@ function collectElements() {
   el.pdfTipsShowOnOpen = document.getElementById("pdfTipsShowOnOpen");
   el.pdfLoading = document.getElementById("pdfLoading");
   el.pdfCanvas = document.getElementById("pdfCanvas");
+  el.pdfAnnotationCanvas = document.getElementById("pdfAnnotationCanvas");
+  el.pdfAnnotationToolbar = document.getElementById("pdfAnnotationToolbar");
+  el.pdfAnnotationNotice = document.getElementById("pdfAnnotationNotice");
+  el.pdfAnnotationUndoButton = document.getElementById("pdfAnnotationUndoButton");
+  el.pdfAnnotationClearButton = document.getElementById("pdfAnnotationClearButton");
+  el.pdfAnnotationPreviousButton = document.getElementById("pdfAnnotationPreviousButton");
+  el.pdfAnnotationNextButton = document.getElementById("pdfAnnotationNextButton");
+  el.pdfAnnotationDoneButton = document.getElementById("pdfAnnotationDoneButton");
   el.pdfTapLeft = document.getElementById("pdfTapLeft");
   el.pdfTapRight = document.getElementById("pdfTapRight");
   el.pdfSettingsLayer = document.getElementById("pdfSettingsLayer");
@@ -1117,6 +1137,7 @@ function wireEvents() {
   document.body.addEventListener("pointercancel", handleSwipePointerUp);
 
   el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
+  el.pdfAnnotateButton.addEventListener("click", () => setPdfAnnotationMode(!state.pdfAnnotation.active));
   el.pdfPageThemeToggleButton.addEventListener("click", togglePdfPageTheme);
   el.pdfTopTapZonesButton.addEventListener("click", () => {
     const guideIsVisible = el.pdfViewer.classList.contains("show-tips");
@@ -1132,6 +1153,17 @@ function wireEvents() {
   el.pdfSettingsCloseButton.addEventListener("click", closePdfSettings);
   el.pdfSettingsApplyButton.addEventListener("click", applyPdfSettings);
   el.pdfPrintButton.addEventListener("click", printCurrentPdf);
+  el.pdfAnnotationToolbar.querySelectorAll("[data-annotation-tool]").forEach((button) => button.addEventListener("click", () => selectPdfAnnotationTool(button.dataset.annotationTool)));
+  el.pdfAnnotationToolbar.querySelectorAll("[data-annotation-color]").forEach((button) => button.addEventListener("click", () => selectPdfAnnotationColor(button.dataset.annotationColor)));
+  el.pdfAnnotationUndoButton.addEventListener("click", undoPdfAnnotation);
+  el.pdfAnnotationClearButton.addEventListener("click", clearPdfAnnotationsForPage);
+  el.pdfAnnotationPreviousButton.addEventListener("click", () => goToPdfPage(state.currentPdf.pageNumber - 1));
+  el.pdfAnnotationNextButton.addEventListener("click", () => goToPdfPage(state.currentPdf.pageNumber + 1));
+  el.pdfAnnotationDoneButton.addEventListener("click", () => setPdfAnnotationMode(false));
+  el.pdfAnnotationCanvas.addEventListener("pointerdown", handlePdfAnnotationPointerDown);
+  el.pdfAnnotationCanvas.addEventListener("pointermove", handlePdfAnnotationPointerMove);
+  el.pdfAnnotationCanvas.addEventListener("pointerup", finishPdfAnnotationPointer);
+  el.pdfAnnotationCanvas.addEventListener("pointercancel", finishPdfAnnotationPointer);
   el.pdfSettingsLayer.addEventListener("click", (event) => {
     if (event.target === el.pdfSettingsLayer) closePdfSettings();
   });
@@ -2932,6 +2964,17 @@ function remapDuplicateItemReferences(duplicateMap) {
   });
   if (pagesChanged) writeJson(STORAGE_KEYS.pdfPages, pages);
 
+  const annotations = readJson(STORAGE_KEYS.pdfAnnotations, {});
+  let annotationsChanged = false;
+  duplicateMap.forEach((keptId, removedId) => {
+    if (annotations[removedId]) {
+      annotations[keptId] = { ...(annotations[removedId] || {}), ...(annotations[keptId] || {}) };
+      delete annotations[removedId];
+      annotationsChanged = true;
+    }
+  });
+  if (annotationsChanged) writeJson(STORAGE_KEYS.pdfAnnotations, annotations);
+
   const edits = readJson(STORAGE_KEYS.itemEdits, {});
   let editsChanged = false;
   duplicateIds.forEach((id) => {
@@ -3060,6 +3103,9 @@ async function deleteUserItem(itemId) {
   const pdfPages = readJson(STORAGE_KEYS.pdfPages, {});
   delete pdfPages[itemId];
   writeJson(STORAGE_KEYS.pdfPages, pdfPages);
+  const pdfAnnotations = readJson(STORAGE_KEYS.pdfAnnotations, {});
+  delete pdfAnnotations[itemId];
+  writeJson(STORAGE_KEYS.pdfAnnotations, pdfAnnotations);
 
   const recents = readJson(STORAGE_KEYS.recents, []).filter((id) => id !== itemId);
   writeJson(STORAGE_KEYS.recents, recents);
@@ -5228,6 +5274,8 @@ async function renderPdfPage(pageNumber) {
     el.pdfCanvas.classList.remove("hidden");
     el.pdfLoading.classList.add("hidden");
     alignPdfToolbarToPage();
+    syncPdfAnnotationCanvas();
+    updatePdfAnnotationControls();
   } catch (error) {
     showPdfMessage("This PDF page could not be displayed.");
   } finally {
@@ -5659,7 +5707,230 @@ function goToPdfPage(pageNumber) {
   renderPdfPage(targetPage);
 }
 
+function getPdfAnnotationPageKey() {
+  const itemId = state.currentPdf.item?.id;
+  return itemId ? `${itemId}:${state.currentPdf.pageNumber}` : "";
+}
+
+function getPdfAnnotationDocument() {
+  return readJson(STORAGE_KEYS.pdfAnnotations, {});
+}
+
+function getPdfPageAnnotations() {
+  const itemId = state.currentPdf.item?.id;
+  if (!itemId) return [];
+  const all = getPdfAnnotationDocument();
+  const strokes = all[itemId]?.[state.currentPdf.pageNumber];
+  return Array.isArray(strokes) ? strokes : [];
+}
+
+function savePdfPageAnnotations(strokes) {
+  const itemId = state.currentPdf.item?.id;
+  if (!itemId) return;
+  const all = getPdfAnnotationDocument();
+  const itemPages = { ...(all[itemId] || {}) };
+  if (strokes.length) itemPages[state.currentPdf.pageNumber] = strokes;
+  else delete itemPages[state.currentPdf.pageNumber];
+  if (Object.keys(itemPages).length) all[itemId] = itemPages;
+  else delete all[itemId];
+  writeJson(STORAGE_KEYS.pdfAnnotations, all);
+}
+
+function clonePdfAnnotationStrokes(strokes) {
+  return strokes.map((stroke) => ({ ...stroke, points: stroke.points.map((point) => ({ ...point })) }));
+}
+
+function pushPdfAnnotationUndo() {
+  const key = getPdfAnnotationPageKey();
+  if (!key) return;
+  const history = state.pdfAnnotation.undoByPage.get(key) || [];
+  history.push(clonePdfAnnotationStrokes(getPdfPageAnnotations()));
+  if (history.length > 20) history.shift();
+  state.pdfAnnotation.undoByPage.set(key, history);
+  updatePdfAnnotationControls();
+}
+
+function undoPdfAnnotation() {
+  const key = getPdfAnnotationPageKey();
+  const history = state.pdfAnnotation.undoByPage.get(key) || [];
+  if (!history.length) return;
+  savePdfPageAnnotations(history.pop());
+  state.pdfAnnotation.undoByPage.set(key, history);
+  renderPdfAnnotations();
+  updatePdfAnnotationControls();
+}
+
+function clearPdfAnnotationsForPage() {
+  if (!getPdfPageAnnotations().length) return;
+  if (!window.confirm("Clear all annotations from this page?")) return;
+  pushPdfAnnotationUndo();
+  savePdfPageAnnotations([]);
+  renderPdfAnnotations();
+  updatePdfAnnotationControls();
+}
+
+function setPdfAnnotationMode(active) {
+  if (!state.currentPdf.doc) return;
+  state.pdfAnnotation.active = Boolean(active);
+  state.pdfAnnotation.pointerId = null;
+  state.pdfAnnotation.currentStroke = null;
+  state.pdfAnnotation.erasing = false;
+  hidePdfTips();
+  el.pdfViewer.classList.toggle("annotation-active", state.pdfAnnotation.active);
+  el.pdfAnnotationToolbar.classList.toggle("hidden", !state.pdfAnnotation.active);
+  el.pdfAnnotateButton.setAttribute("aria-pressed", state.pdfAnnotation.active ? "true" : "false");
+  el.pdfAnnotateButton.setAttribute("aria-label", state.pdfAnnotation.active ? "Finish annotating" : "Annotate this PDF");
+  el.pdfTopTapZonesButton.disabled = state.pdfAnnotation.active;
+  el.pdfTapLeft.disabled = state.pdfAnnotation.active;
+  el.pdfTapRight.disabled = state.pdfAnnotation.active;
+  if (state.pdfAnnotation.active) {
+    showPdfAnnotationNotice();
+    syncPdfAnnotationCanvas();
+  }
+  updatePdfAnnotationControls();
+}
+
+function showPdfAnnotationNotice() {
+  window.clearTimeout(state.pdfAnnotation.noticeTimer);
+  el.pdfAnnotationNotice.classList.remove("hidden");
+  state.pdfAnnotation.noticeTimer = window.setTimeout(() => el.pdfAnnotationNotice.classList.add("hidden"), 2400);
+}
+
+function selectPdfAnnotationTool(tool) {
+  if (!["pencil", "highlighter", "eraser"].includes(tool)) return;
+  state.pdfAnnotation.tool = tool;
+  updatePdfAnnotationControls();
+}
+
+function selectPdfAnnotationColor(color) {
+  state.pdfAnnotation.color = color;
+  if (state.pdfAnnotation.tool === "eraser") state.pdfAnnotation.tool = "pencil";
+  updatePdfAnnotationControls();
+}
+
+function updatePdfAnnotationControls() {
+  if (!el.pdfAnnotationToolbar) return;
+  el.pdfAnnotationToolbar.querySelectorAll("[data-annotation-tool]").forEach((button) => button.setAttribute("aria-pressed", button.dataset.annotationTool === state.pdfAnnotation.tool ? "true" : "false"));
+  el.pdfAnnotationToolbar.querySelectorAll("[data-annotation-color]").forEach((button) => button.setAttribute("aria-pressed", button.dataset.annotationColor === state.pdfAnnotation.color ? "true" : "false"));
+  const history = state.pdfAnnotation.undoByPage.get(getPdfAnnotationPageKey()) || [];
+  el.pdfAnnotationUndoButton.disabled = !history.length;
+  el.pdfAnnotationClearButton.disabled = !getPdfPageAnnotations().length;
+  el.pdfAnnotationPreviousButton.disabled = state.currentPdf.pageNumber <= 1;
+  el.pdfAnnotationNextButton.disabled = state.currentPdf.pageNumber >= state.currentPdf.pageCount;
+}
+
+function syncPdfAnnotationCanvas() {
+  if (!el.pdfAnnotationCanvas || !el.pdfCanvas || el.pdfCanvas.classList.contains("hidden")) return;
+  window.requestAnimationFrame(() => {
+    const stageRect = el.pdfStage.getBoundingClientRect();
+    const pageRect = el.pdfCanvas.getBoundingClientRect();
+    if (!pageRect.width || !pageRect.height) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    el.pdfAnnotationCanvas.style.left = `${pageRect.left - stageRect.left}px`;
+    el.pdfAnnotationCanvas.style.top = `${pageRect.top - stageRect.top}px`;
+    el.pdfAnnotationCanvas.style.width = `${pageRect.width}px`;
+    el.pdfAnnotationCanvas.style.height = `${pageRect.height}px`;
+    el.pdfAnnotationCanvas.width = Math.max(1, Math.round(pageRect.width * dpr));
+    el.pdfAnnotationCanvas.height = Math.max(1, Math.round(pageRect.height * dpr));
+    el.pdfAnnotationCanvas.dataset.dpr = String(dpr);
+    renderPdfAnnotations();
+  });
+}
+
+function renderPdfAnnotations() {
+  const canvas = el.pdfAnnotationCanvas;
+  if (!canvas?.width) return;
+  const dpr = Number(canvas.dataset.dpr) || 1;
+  const width = canvas.width / dpr;
+  const height = canvas.height / dpr;
+  const context = canvas.getContext("2d");
+  context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  context.clearRect(0, 0, width, height);
+  getPdfPageAnnotations().forEach((stroke) => drawPdfAnnotationStroke(context, stroke, width, height));
+  if (state.pdfAnnotation.currentStroke) drawPdfAnnotationStroke(context, state.pdfAnnotation.currentStroke, width, height);
+}
+
+function drawPdfAnnotationStroke(context, stroke, width, height) {
+  if (!stroke?.points?.length) return;
+  context.save();
+  context.strokeStyle = stroke.color || "#245A9A";
+  context.globalAlpha = stroke.tool === "highlighter" ? 0.3 : 0.94;
+  context.lineWidth = Math.max(stroke.tool === "highlighter" ? 14 : 2.2, Math.min(width, height) * (stroke.tool === "highlighter" ? 0.022 : 0.0035));
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.beginPath();
+  stroke.points.forEach((point, index) => {
+    const x = point.x * width;
+    const y = point.y * height;
+    if (index) context.lineTo(x, y);
+    else context.moveTo(x, y);
+  });
+  if (stroke.points.length === 1) context.lineTo(stroke.points[0].x * width + 0.1, stroke.points[0].y * height + 0.1);
+  context.stroke();
+  context.restore();
+}
+
+function getPdfAnnotationPoint(event) {
+  const rect = el.pdfAnnotationCanvas.getBoundingClientRect();
+  return { x: clamp((event.clientX - rect.left) / Math.max(rect.width, 1), 0, 1), y: clamp((event.clientY - rect.top) / Math.max(rect.height, 1), 0, 1) };
+}
+
+function handlePdfAnnotationPointerDown(event) {
+  if (!state.pdfAnnotation.active || (event.pointerType === "mouse" && event.button !== 0)) return;
+  event.preventDefault();
+  state.pdfAnnotation.pointerId = event.pointerId;
+  el.pdfAnnotationCanvas.setPointerCapture?.(event.pointerId);
+  pushPdfAnnotationUndo();
+  const point = getPdfAnnotationPoint(event);
+  if (state.pdfAnnotation.tool === "eraser") {
+    state.pdfAnnotation.erasing = true;
+    erasePdfAnnotationsAt(point);
+    return;
+  }
+  state.pdfAnnotation.currentStroke = { tool: state.pdfAnnotation.tool, color: state.pdfAnnotation.color, points: [point] };
+  renderPdfAnnotations();
+}
+
+function handlePdfAnnotationPointerMove(event) {
+  if (!state.pdfAnnotation.active || state.pdfAnnotation.pointerId !== event.pointerId) return;
+  event.preventDefault();
+  const events = event.getCoalescedEvents ? event.getCoalescedEvents() : [event];
+  events.forEach((sample) => {
+    const point = getPdfAnnotationPoint(sample);
+    if (state.pdfAnnotation.erasing) erasePdfAnnotationsAt(point);
+    else state.pdfAnnotation.currentStroke?.points.push(point);
+  });
+  renderPdfAnnotations();
+}
+
+function finishPdfAnnotationPointer(event) {
+  if (state.pdfAnnotation.pointerId !== event.pointerId) return;
+  event.preventDefault();
+  if (state.pdfAnnotation.currentStroke) {
+    const strokes = getPdfPageAnnotations();
+    strokes.push(state.pdfAnnotation.currentStroke);
+    savePdfPageAnnotations(strokes);
+  }
+  state.pdfAnnotation.pointerId = null;
+  state.pdfAnnotation.currentStroke = null;
+  state.pdfAnnotation.erasing = false;
+  renderPdfAnnotations();
+  updatePdfAnnotationControls();
+}
+
+function erasePdfAnnotationsAt(point) {
+  const canvasRect = el.pdfAnnotationCanvas.getBoundingClientRect();
+  const threshold = 22 / Math.max(1, Math.min(canvasRect.width, canvasRect.height));
+  const strokes = getPdfPageAnnotations();
+  const kept = strokes.filter((stroke) => !stroke.points.some((sample) => Math.hypot(sample.x - point.x, sample.y - point.y) <= threshold));
+  if (kept.length !== strokes.length) {
+    savePdfPageAnnotations(kept);
+    renderPdfAnnotations();
+  }
+}
+
 function closePdfViewer() {
+  setPdfAnnotationMode(false);
   hidePdfTips();
   closePdfSettings();
   window.clearTimeout(state.currentPdf.pageNoticeTimer);
@@ -5678,6 +5949,7 @@ function closePdfViewer() {
 }
 
 function handlePdfTapZoneClick(event, direction) {
+  if (state.pdfAnnotation.active) return;
   if (state.currentPdf.suppressClick) {
     event.preventDefault();
     state.currentPdf.suppressClick = false;
@@ -5707,6 +5979,7 @@ function performPdfTapZoneAction(clientY, direction) {
 }
 
 function handlePdfTouchStart(event) {
+  if (state.pdfAnnotation.active) return;
   if (event.touches.length === 2) {
     event.preventDefault();
     const center = getTouchCenter(event.touches);
@@ -5731,6 +6004,7 @@ function handlePdfTouchStart(event) {
 }
 
 function handlePdfTouchMove(event) {
+  if (state.pdfAnnotation.active) return;
   if (state.currentPdf.touchMode === "pinch" && event.touches.length >= 2) {
     event.preventDefault();
     const distance = getTouchDistance(event.touches);
@@ -5757,6 +6031,7 @@ function handlePdfTouchMove(event) {
 }
 
 function handlePdfTouchEnd(event) {
+  if (state.pdfAnnotation.active) return;
   if (state.currentPdf.touchMode === "pinch") {
     event.preventDefault();
     if (event.touches.length >= 2) return;
@@ -5854,6 +6129,7 @@ function applyPdfTransform() {
   const { panX, panY, zoom } = state.currentPdf;
   el.pdfCanvas.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
   el.pdfCanvas.classList.toggle("is-zoomed", zoom > 1.02);
+  syncPdfAnnotationCanvas();
 }
 
 function clampPdfPan() {
@@ -9197,6 +9473,7 @@ async function exportBackup() {
       lastOpened: readJson(STORAGE_KEYS.lastOpened, null),
       quickChecks: readJson(STORAGE_KEYS.quickChecks, {}),
       pdfPages: readJson(STORAGE_KEYS.pdfPages, {}),
+      pdfAnnotations: readJson(STORAGE_KEYS.pdfAnnotations, {}),
       recents: readJson(STORAGE_KEYS.recents, []),
       settings: readJson(STORAGE_KEYS.settings, {}),
       starterFavorites: readJson(STORAGE_KEYS.starterFavorites, []),
@@ -9264,6 +9541,7 @@ function importBackupFromFile(event) {
       }
       writeJson(STORAGE_KEYS.quickChecks, data.quickChecks || {});
       writeJson(STORAGE_KEYS.pdfPages, data.pdfPages || {});
+      writeJson(STORAGE_KEYS.pdfAnnotations, data.pdfAnnotations || {});
       writeJson(STORAGE_KEYS.recents, data.recents || []);
       writeJson(STORAGE_KEYS.settings, data.settings || {});
       writeJson(STORAGE_KEYS.starterFavorites, data.starterFavorites || []);
