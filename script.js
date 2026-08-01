@@ -808,7 +808,6 @@ function collectElements() {
 
   el.pdfViewer = document.getElementById("pdfViewer");
   el.pdfToolbar = document.querySelector(".pdf-toolbar");
-  el.pdfTopHomeButton = document.getElementById("pdfTopHomeButton");
   el.pdfAnnotateButton = document.getElementById("pdfAnnotateButton");
   el.pdfMobileToolsButton = document.getElementById("pdfMobileToolsButton");
   el.pdfMobileToolsMenu = document.getElementById("pdfMobileToolsMenu");
@@ -1142,7 +1141,6 @@ function wireEvents() {
   document.body.addEventListener("pointerup", handleSwipePointerUp);
   document.body.addEventListener("pointercancel", handleSwipePointerUp);
 
-  el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
   el.pdfAnnotateButton.addEventListener("click", () => setPdfAnnotationMode(!state.pdfAnnotation.active));
   el.pdfMobileToolsButton.addEventListener("click", (event) => {
     event.stopPropagation();
