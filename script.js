@@ -5270,7 +5270,9 @@ async function renderPdfPage(pageNumber) {
     const page = await state.currentPdf.doc.getPage(pageNumber);
     const unscaled = page.getViewport({ scale: 1 });
     const stageBox = el.pdfStage.getBoundingClientRect();
-    const maxWidth = Math.max(stageBox.width - 24, 320);
+    const visibleViewportWidth = window.visualViewport?.width || document.documentElement.clientWidth || window.innerWidth;
+    const availableStageWidth = Math.min(stageBox.width, visibleViewportWidth);
+    const maxWidth = Math.max(240, availableStageWidth - 24);
     const maxHeight = Math.max(stageBox.height - 24, 320);
     const fitScale = Math.min(maxWidth / unscaled.width, maxHeight / unscaled.height);
     const viewport = page.getViewport({ scale: fitScale });
@@ -5383,8 +5385,33 @@ async function printCurrentPdf() {
   if (!item) return;
   const isAppleTouchDevice = /iPad|iPhone|iPod/i.test(navigator.userAgent)
     || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  if (isAppleTouchDevice) {
-    window.alert("The clean PDF will open next.\n\nTo print on iPhone or iPad, tap Share, then choose Print.");
+  if (isAppleTouchDevice && navigator.share) {
+    try {
+      let sourceFile;
+      if (item.fileId) {
+        sourceFile = await getPdfFile(item.fileId);
+        if (!sourceFile) throw new Error("Imported PDF missing");
+      } else if (item.file) {
+        const encodedPath = item.file.split("/").map((part) => encodeURIComponent(part)).join("/");
+        const response = await fetch(new URL(encodedPath, window.location.href).href);
+        if (!response.ok) throw new Error("PDF fetch failed");
+        sourceFile = await response.blob();
+      } else {
+        throw new Error("PDF path missing");
+      }
+      const safeTitle = itemDisplayTitle(item).replace(/[\\/:*?"<>|]+/g, "-").trim() || "Sheet music";
+      const shareFile = new File([sourceFile], `${safeTitle}.pdf`, { type: "application/pdf" });
+      if (!navigator.canShare || navigator.canShare({ files: [shareFile] })) {
+        await navigator.share({ files: [shareFile], title: safeTitle });
+        closePdfSettings();
+        return;
+      }
+    } catch (error) {
+      if (error?.name === "AbortError") return;
+      window.alert("The Share sheet could not open. The PDF will open next; use Safari's Share button, then choose Print.");
+    }
+  } else if (isAppleTouchDevice) {
+    window.alert("The clean PDF will open next.\n\nTo print on iPhone or iPad, use Safari's Share button, then choose Print.");
   }
   const printWindow = window.open("about:blank", "_blank");
   if (!printWindow) {
