@@ -1558,9 +1558,8 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
   .sidetrack-puzzle-board,
   .sidetrack-puzzle-pieces { box-sizing: border-box; max-width: 100%; padding-left: 0; padding-right: 0; width: 100%; }
   .sidetrack-puzzle-pieces { gap: 3px; }
-  .sidetrack-puzzle-slot,
-  .sidetrack-puzzle-piece { flex: 1 1 0; min-width: 0; width: auto; }
-  .sidetrack-puzzle-piece { font-size: 0.88rem; }
+  .sidetrack-puzzle-slot { flex: 1 1 0; min-width: 0; width: auto; }
+  .sidetrack-puzzle-piece { flex: 0 0 calc((100% - 21px) / 8); font-size: 0.88rem; min-width: 0; width: calc((100% - 21px) / 8); }
 }
 .sidetrack-air { background: linear-gradient(#BFE8FF 0%, #E9F8FF 72%, #F5FBFF 100%); display: grid; grid-template-rows: auto 1fr auto; padding: 12px; }
 .sidetrack-air-progress { align-items: center; display: flex; gap: 4px; justify-content: center; min-height: 20px; padding: 1px 5px 5px; }
