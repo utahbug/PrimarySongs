@@ -347,26 +347,26 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .list-tab-group:hover > .list-tab-row { background: linear-gradient(100deg, color-mix(in srgb, #237C7A 14%, var(--surface)), color-mix(in srgb, #3667A8 12%, var(--surface))); }
 
-.list-tab-group.active > .list-tab-row { background: linear-gradient(110deg, #237C7A 0%, #2D768A 45%, #3667A8 76%, #245A9A 100%); border-color: #2D6F91; color: #FFFFFF; }
+.list-tab-group.active > .list-tab-row { background: linear-gradient(100deg, color-mix(in srgb, #237C7A 18%, var(--surface)) 0%, color-mix(in srgb, #3667A8 20%, var(--surface)) 100%); border-color: color-mix(in srgb, #2D6F91 45%, var(--line)); box-shadow: inset 5px 0px 0px #237C7A, inset 0px -1px 0px color-mix(in srgb, #3667A8 36%, var(--line)); color: var(--ink); }
 
 .list-tab-main { align-items: center; background: transparent; border: 0px; color: inherit; display: flex; flex: 1 1 auto; gap: 8px; justify-content: flex-start; min-height: 50px; min-width: 0px; padding: 3px 4px 3px 10px; text-align: left; width: auto; }
 
 .list-tab-main:hover, .list-tab-main:focus-visible, .list-row-edit-button:hover, .list-row-edit-button:focus-visible { background: var(--accent-hover); }
 
-.list-tab-group.active .list-tab-main:hover, .list-tab-group.active .list-tab-main:focus-visible, .list-tab-group.active .list-row-edit-button:hover, .list-tab-group.active .list-row-edit-button:focus-visible { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
+.list-tab-group.active .list-tab-main:hover, .list-tab-group.active .list-tab-main:focus-visible, .list-tab-group.active .list-row-edit-button:hover, .list-tab-group.active .list-row-edit-button:focus-visible { background: color-mix(in srgb, #3667A8 12%, transparent); color: var(--accent-strong); }
 
 .list-title-mark { align-items: center; background: linear-gradient(135deg, #237C7A, #3667A8); border-radius: 8px; color: #FFFFFF; display: inline-flex; flex: 0 0 27px; font-size: 1rem; font-weight: 900; height: 27px; justify-content: center; line-height: 1; }
-.list-tab-group.active .list-title-mark { background: rgba(255, 255, 255, 0.16); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); }
+.list-tab-group.active .list-title-mark { background: linear-gradient(135deg, #237C7A, #3667A8); box-shadow: 0 2px 7px color-mix(in srgb, #245A9A 22%, transparent); }
 .list-tab-title { color: inherit; flex: 1 1 auto; font-size: 0.96rem; font-weight: 400; min-width: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .list-tab-count { color: var(--muted); flex: 0 0 auto; font-size: 0.82rem; font-weight: 750; margin-left: 5px; }
 
-.list-tab-group.active .list-tab-count { color: inherit; opacity: 0.85; }
+.list-tab-group.active .list-tab-count { color: var(--accent-strong); opacity: 0.88; }
 
 .list-alphabetical-toggle { align-items: center; background: color-mix(in srgb, var(--accent-soft) 68%, var(--surface)); border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line)); border-radius: 999px; color: var(--accent-strong); display: inline-flex; flex: 0 0 auto; font-size: 0.66rem; font-weight: 850; height: 28px; justify-content: center; letter-spacing: 0.02em; min-width: 38px; padding: 2px 7px; white-space: nowrap; }
 .list-alphabetical-toggle:hover, .list-alphabetical-toggle:focus-visible { background: var(--accent-hover); }
 .list-alphabetical-toggle.is-active { background: #FFFFFF; border-color: #FFFFFF; box-shadow: 0 0 0 2px color-mix(in srgb, #FFFFFF 28%, transparent); color: #245A9A; }
-.list-tab-group.active .list-alphabetical-toggle:not(.is-active) { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.42); color: #FFFFFF; }
+.list-tab-group.active .list-alphabetical-toggle:not(.is-active) { background: color-mix(in srgb, var(--surface) 74%, transparent); border-color: color-mix(in srgb, #3667A8 42%, var(--line)); color: var(--accent-strong); }
 
 .list-row-edit-button { align-self: center; background: transparent; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); flex: 0 0 30px; font-size: 0.86rem; height: 30px; margin: 0px 7px 0px 5px; min-height: 30px; min-width: 30px; padding: 0px; width: 30px; }
 
@@ -375,13 +375,13 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
   .list-row-edit-button { margin-left: 2px; margin-right: 3px; }
 }
 
-.list-tab-group.active .list-row-edit-button { border-color: rgba(255, 255, 255, 0.5); color: #FFFFFF; }
+.list-tab-group.active .list-row-edit-button { background: color-mix(in srgb, var(--surface) 72%, transparent); border-color: color-mix(in srgb, #3667A8 42%, var(--line)); color: var(--accent-strong); }
 
-.list-tab-group.active .reorder-step-controls { border-color: rgba(255, 255, 255, 0.34); color: #FFFFFF; }
+.list-tab-group.active .reorder-step-controls { border-color: color-mix(in srgb, #3667A8 42%, var(--line)); color: var(--accent-strong); }
 
-.list-tab-group.active .reorder-step-button { border-color: rgba(255, 255, 255, 0.34); color: #FFFFFF; }
-.list-tab-group.active .reorder-step-button + .reorder-step-button { border-left-color: rgba(255, 255, 255, 0.34); }
-.list-tab-group.active .reorder-step-button:hover, .list-tab-group.active .reorder-step-button:focus-visible { background: rgba(255, 255, 255, 0.16); color: #FFFFFF; }
+.list-tab-group.active .reorder-step-button { border-color: color-mix(in srgb, #3667A8 42%, var(--line)); color: var(--accent-strong); }
+.list-tab-group.active .reorder-step-button + .reorder-step-button { border-left-color: color-mix(in srgb, #3667A8 42%, var(--line)); }
+.list-tab-group.active .reorder-step-button:hover, .list-tab-group.active .reorder-step-button:focus-visible { background: color-mix(in srgb, #3667A8 12%, transparent); color: var(--accent-strong); }
 
 .inline-list-items { background: var(--surface); border-top: 1px solid var(--line); display: grid; margin-left: 18px; }
 .list-play-through-row { align-items: center; background: color-mix(in srgb, var(--accent) 7%, var(--surface)); border-bottom: 1px solid var(--line); display: flex; justify-content: flex-start; padding: 7px 8px; }
@@ -483,7 +483,7 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 .drag-handle:hover, .drag-handle:focus-visible { background: var(--accent-hover); color: var(--accent-strong); }
 
 .drag-handle span { background: radial-gradient(circle, currentColor 1.7px, transparent 1.9px) 0px 0px / 7px 7px; display: block; height: 21px; opacity: 0.72; width: 14px; }
-.list-tab-group.active .list-drag-handle { color: #FFFFFF; }
+.list-tab-group.active .list-drag-handle { color: var(--accent-strong); }
 .inline-list-row.is-dragging { background: var(--accent-soft); opacity: 0.8; }
 .favorite-reorder-row.is-dragging,
 .card-reorder-row.is-dragging,
