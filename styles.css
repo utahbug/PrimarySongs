@@ -43,8 +43,8 @@ body.identity-condensed .identity-name { font-size: 0.98rem; }
 
 .display-preference-wrap { flex: 0 0 auto; position: relative; }
 
-.header-info-button, .header-tools-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; color: rgba(255, 255, 255, 0.9); display: inline-flex; height: 30px; justify-content: center; padding: 3px; width: 30px; }
-.header-info-button .info-icon-mark { color: currentcolor; font-size: 0px; height: 19px; width: 19px; }
+.header-info-button, .header-tools-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; color: rgba(255, 255, 255, 0.9); display: inline-flex; height: 32px; justify-content: center; padding: 3px; width: 32px; }
+.header-info-button .info-icon-mark { color: currentcolor; font-size: 0px; height: 23px; width: 23px; }
 .header-info-button .info-icon-mark::before { content: "i"; font-family: Georgia, serif; font-size: 0.88rem; font-style: italic; font-weight: 800; line-height: 1; transform: translateY(1.5px); }
 
 .header-info-button:hover, .header-info-button:focus-visible, .header-tools-button:hover, .header-tools-button:focus-visible, .header-tools-button.active, .app-header .background-toggle-button:hover, .app-header .background-toggle-button:focus-visible { background: rgba(255, 255, 255, 0.16); color: #FFFFFF; }
@@ -52,6 +52,8 @@ body.identity-condensed .identity-name { font-size: 0.98rem; }
 .background-toggle-button { align-items: center; background: transparent; border: 0px; border-radius: 999px; display: inline-flex; flex: 0 0 auto; height: 30px; justify-content: center; padding: 4px; width: 30px; }
 
 .background-toggle-button span { background: linear-gradient(45deg, #050505 0 50%, #FFFFFF 50% 100%); border: 1px solid var(--line); border-radius: 999px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--surface) 70%, transparent); display: block; height: 18px; width: 18px; }
+.app-header .background-toggle-button { height: 32px; width: 32px; }
+.app-header .background-toggle-button span { height: 22px; width: 22px; }
 
 .background-toggle-button:hover, .background-toggle-button:focus-visible { background: var(--accent-hover); }
 
@@ -95,7 +97,7 @@ body.pdf-open .nav-overflow-wrap .overflow-menu { bottom: calc(58px + env(safe-a
 .nav-help-button { --tab-accent: #245A78; min-width: 40px; padding-inline: 7px; }
 .info-icon-mark { align-items: center; border: 2px solid currentcolor; border-radius: 999px; color: var(--accent-strong); display: inline-flex; font-family: Georgia, serif; font-size: 0.88rem; font-style: italic; font-weight: 800; height: 21px; justify-content: center; line-height: 1; width: 21px; }
 .nav-help-button:hover .info-icon-mark, .nav-help-button:focus-visible .info-icon-mark { color: var(--accent-strong); }
-.music-notes-icon { filter: drop-shadow(0.8px 1px 1px rgba(28, 47, 61, 0.38)); height: 27px; overflow: visible; width: 28px; }
+.music-notes-icon { filter: drop-shadow(0.8px 1px 1px rgba(28, 47, 61, 0.38)); height: 25px; overflow: visible; transform: translateY(1px); width: 26px; }
 .music-notes-shadow { fill: #294657; opacity: 0.42; transform: translate(0.7px, 0.8px); }
 .music-notes-main { fill: url("#musicNotesGradient"); stroke: #607886; stroke-width: 0.35; }
 .music-notes-highlight { fill: rgba(255,255,255,0.72); }
