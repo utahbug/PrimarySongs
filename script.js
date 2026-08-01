@@ -2975,7 +2975,8 @@ async function confirmAndDeleteItem(itemId, options = {}) {
     return;
   }
 
-  const ok = window.confirm("Delete this item? This cannot be undone.");
+  const title = itemDisplayTitle(item);
+  const ok = window.confirm(`Delete "${title}" from this app?\n\nIt will also be removed from Favorites and every list on this device. This cannot be undone.`);
   if (!ok) {
     closeSwipeRows();
     return;
@@ -8487,7 +8488,7 @@ function renderListEditItems(list) {
           ${meta ? `<span class="compact-meta">${escapeHtml(meta)}</span>` : ""}
         </div>
         <div class="list-edit-item-actions">
-          <button class="icon-button remove-button" type="button" data-list-modal-remove="${value}" aria-label="Remove ${escapeHtml(title)} from list" title="Remove from list">&#128465;</button>
+          <button class="remove-button list-item-remove-button" type="button" data-list-modal-remove="${value}" aria-label="Remove ${escapeHtml(title)} from this list only" title="Remove from this list only"><span aria-hidden="true">&minus;</span><span>Remove</span></button>
           ${dragHandleHtml("list-item", entry.item.id, title)}
         </div>
       </div>
@@ -8614,7 +8615,7 @@ function createList(title = "", entries = []) {
 function deleteList(listId) {
   const list = state.lists.find((candidate) => candidate.id === listId);
   if (!list) return false;
-  const ok = window.confirm(`Delete "${list.title}"? This only removes the list, not the songs.`);
+  const ok = window.confirm(`Delete the list "${list.title}"?\n\nThe songs and files will remain available elsewhere in the app.`);
   if (!ok) return false;
 
   state.lists = state.lists.filter((candidate) => candidate.id !== listId);
