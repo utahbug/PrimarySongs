@@ -798,6 +798,7 @@ function collectElements() {
   el.pdfViewer = document.getElementById("pdfViewer");
   el.pdfToolbar = document.querySelector(".pdf-toolbar");
   el.pdfTopHomeButton = document.getElementById("pdfTopHomeButton");
+  el.pdfPageThemeToggleButton = document.getElementById("pdfPageThemeToggleButton");
   el.pdfTopTapZonesButton = document.getElementById("pdfTopTapZonesButton");
   el.pdfHomeButton = document.getElementById("pdfHomeButton");
   el.pdfTipsButton = document.getElementById("pdfTipsButton");
@@ -1115,6 +1116,7 @@ function wireEvents() {
   document.body.addEventListener("pointercancel", handleSwipePointerUp);
 
   el.pdfTopHomeButton.addEventListener("click", returnFromPdfViewer);
+  el.pdfPageThemeToggleButton.addEventListener("click", togglePdfPageTheme);
   el.pdfTopTapZonesButton.addEventListener("click", () => {
     syncPdfTipsPreference();
     setPdfTipsVisible(true, 0, "manual");
@@ -5324,6 +5326,22 @@ function syncPdfViewerSettings() {
     ? `Page 1 is set to PDF page ${custom.startPage}.`
     : "Go to the page that should be page 1, then choose “Use current page as page 1.”";
   renderPdfPageNumbering(false);
+  applyPdfPageTheme();
+}
+
+function togglePdfPageTheme() {
+  const settings = readJson(STORAGE_KEYS.settings, {});
+  const nextSettings = { ...settings, pdfDarkPage: !settings.pdfDarkPage };
+  writeJson(STORAGE_KEYS.settings, nextSettings);
+  applyPdfPageTheme(nextSettings.pdfDarkPage);
+}
+
+function applyPdfPageTheme(darkPage = Boolean(readJson(STORAGE_KEYS.settings, {}).pdfDarkPage)) {
+  el.pdfViewer?.classList.toggle("pdf-page-dark", darkPage);
+  if (!el.pdfPageThemeToggleButton) return;
+  el.pdfPageThemeToggleButton.setAttribute("aria-pressed", String(darkPage));
+  el.pdfPageThemeToggleButton.setAttribute("aria-label", darkPage ? "Use white sheet music background" : "Use black sheet music background");
+  el.pdfPageThemeToggleButton.title = darkPage ? "Use white sheet music background" : "Use black sheet music background";
 }
 
 function updatePdfSettingsDraft() {

@@ -949,7 +949,7 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 
 .pdf-toolbar { --pdf-page-left: max(8px, env(safe-area-inset-left)); --pdf-page-right: max(8px, env(safe-area-inset-right)); align-items: center; background: var(--surface); border-bottom: 1px solid var(--line); display: block; min-height: 51px; padding: max(6px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 6px max(8px, env(safe-area-inset-left)); position: relative; }
 
-.pdf-title-wrap { min-width: 0px; padding: 0 102px; text-align: center; }
+.pdf-title-wrap { min-width: 0px; padding: 0 128px; text-align: center; }
 
 .pdf-title-wrap h2 { font-size: clamp(0.9rem, 3vw, 1.1rem); margin-bottom: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -960,7 +960,13 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-back-button span { font-size: 1.08rem; line-height: 1; }
 .pdf-back-button:hover, .pdf-back-button:focus-visible { background: var(--accent-hover); border-color: var(--accent-strong); }
 
-.pdf-top-tap-zones-button { left: auto; right: var(--pdf-page-right); }
+.pdf-top-right-actions { align-items: center; display: flex; gap: 6px; position: absolute; right: var(--pdf-page-right); top: 50%; transform: translateY(-50%); }
+
+.pdf-top-right-actions .pdf-back-button { left: auto; position: static; transform: none; }
+
+.pdf-page-theme-toggle { border: 1px solid color-mix(in srgb, var(--accent-strong) 40%, var(--line)); height: 34px; padding: 4px; width: 34px; }
+
+.pdf-page-theme-toggle span { height: 19px; width: 19px; }
 
 .pdf-home-icon { background: var(--accent-strong); border-color: var(--accent-strong); color: #FFFFFF; font-weight: 800; min-height: 38px; min-width: 38px; padding: 7px; }
 
@@ -972,6 +978,10 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-page-marker { align-items: center; align-self: stretch; background: color-mix(in srgb, var(--surface) 78%, var(--accent-soft)); border: 1px solid color-mix(in srgb, var(--accent-strong) 38%, var(--line)); border-radius: 9px; color: var(--accent-strong); display: inline-flex; flex: 0 0 auto; font-size: 0.86rem; font-weight: 900; justify-content: center; min-width: 38px; padding: 5px 8px; pointer-events: none; }
 
 .pdf-canvas { background: var(--surface); box-shadow: var(--shadow-pdf); display: block; max-height: 100%; max-width: 100%; transform-origin: top center; will-change: transform; }
+
+.pdf-viewer.pdf-page-dark .pdf-stage { background: #101417; }
+
+.pdf-viewer.pdf-page-dark .pdf-canvas { filter: invert(1) hue-rotate(180deg); }
 
 .pdf-canvas.is-zoomed { cursor: grab; }
 
