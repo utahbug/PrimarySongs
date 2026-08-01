@@ -29,7 +29,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-223">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-224">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
     <script src="script.js?v=primary-2026-222" defer></script>
@@ -402,17 +402,10 @@
                   </optgroup>
                 </select>
               </div>
-              <label class="piano-volume-control">
-                <span class="piano-volume-icon">
-                  <svg viewBox="0 0 28 24" aria-hidden="true"><path d="M3 9h4l6-5v16l-6-5H3z"></path><path d="M17 8c2 2 2 6 0 8M20.5 5c4 4 4 10 0 14"></path></svg>
-                  <span class="sr-only">Volume</span>
-                </span>
-                <input id="pianoVolume" type="range" min="0" max="100" step="1" value="58" aria-label="Fun Stuff volume">
-              </label>
-            </div>
-            <div class="piano-shape-control">
-              <span>Activity</span>
-              <div class="fun-activity-grid" role="group" aria-label="Choose an activity">
+              <div class="fun-control-row">
+                <div class="piano-shape-control">
+                  <span>Activity</span>
+                  <div class="fun-activity-grid" role="group" aria-label="Choose an activity">
                 <button type="button" data-piano-shape="circle">
                   <span class="activity-picture activity-keyboard-picture" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
                   <span>Keyboard</span>
@@ -450,12 +443,21 @@
                   <span class="activity-picture activity-trail-picture" aria-hidden="true"><b>&#x1F3B7;</b><i>&#x266A;</i><i>&#x266B;</i></span>
                   <span>Puzzle</span>
                 </button>
+                  </div>
+                  <select id="pianoShape" class="sr-only" aria-label="Fun Stuff activity">
+                    <option value="circle" selected>Keyboard</option>
+                    <option value="zigzag">Key Order</option>
+                    <option value="rainbow">Pop notes</option>
+                  </select>
+                </div>
+                <label class="piano-volume-control">
+                  <span class="piano-volume-icon">
+                    <svg viewBox="0 0 28 24" aria-hidden="true"><path d="M3 9h4l6-5v16l-6-5H3z"></path><path d="M17 8c2 2 2 6 0 8M20.5 5c4 4 4 10 0 14"></path></svg>
+                    <span class="sr-only">Volume</span>
+                  </span>
+                  <input id="pianoVolume" type="range" min="0" max="100" step="1" value="58" aria-label="Fun Stuff volume">
+                </label>
               </div>
-              <select id="pianoShape" class="sr-only" aria-label="Fun Stuff activity">
-                <option value="circle" selected>Keyboard</option>
-                <option value="zigzag">Key Order</option>
-                <option value="rainbow">Pop notes</option>
-              </select>
             </div>
             <div class="piano-note-arc" aria-label="Playable sound objects">
               <button class="piano-note piano-play-object" data-note="C4" data-object="🐶" type="button" aria-label="Dog">🐶</button>
