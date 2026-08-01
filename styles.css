@@ -1095,6 +1095,12 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
 .pdf-settings-group > label, .pdf-song-numbering-fields label { display: grid; gap: 5px; }
 .pdf-settings-group label > span, .pdf-song-numbering-fields label > span { color: var(--muted); font-size: 0.8rem; font-weight: 400; }
 .pdf-settings-group select, .pdf-settings-group input[type="number"] { min-height: 42px; }
+.pdf-numbering-options { border: 0; display: grid; gap: 6px; margin: 0; padding: 0; }
+.pdf-numbering-option { align-items: center; background: color-mix(in srgb, var(--surface) 92%, var(--accent)); border: 1px solid var(--line); border-radius: 9px; cursor: pointer; display: flex; gap: 9px; min-height: 42px; padding: 8px 10px; }
+.pdf-numbering-option:has(input:checked) { background: color-mix(in srgb, var(--accent) 13%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
+.pdf-numbering-option input { appearance: auto; accent-color: var(--accent); flex: 0 0 auto; height: 19px; margin: 0; width: 19px; }
+.pdf-numbering-option span { color: var(--ink); font-size: 0.86rem; font-weight: 400; }
+.pdf-numbering-option input:checked + span { color: var(--accent); font-weight: 700; }
 .pdf-setting-toggle { align-items: center; display: flex !important; gap: 9px !important; }
 .pdf-setting-toggle input { height: 20px; margin: 0; width: 20px; }
 .pdf-setting-toggle span { color: var(--ink) !important; font-size: 0.86rem !important; font-weight: 400 !important; }

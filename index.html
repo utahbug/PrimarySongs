@@ -29,10 +29,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-217">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-218">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
-    <script src="script.js?v=primary-2026-217" defer></script>
+    <script src="script.js?v=primary-2026-218" defer></script>
   </head>
   <body>
     <div id="appShell" class="app-shell">
@@ -679,7 +679,7 @@
       </div>
       <div id="pdfSettingsLayer" class="pdf-settings-layer hidden" role="dialog" aria-modal="true" aria-labelledby="pdfSettingsTitle">
         <div class="pdf-settings-panel">
-          <header><h2 id="pdfSettingsTitle">PDF Settings</h2><button id="pdfSettingsCloseButton" type="button" aria-label="Close settings">&times;</button></header>
+          <header><h2 id="pdfSettingsTitle">PDF Viewer Settings</h2><button id="pdfSettingsCloseButton" type="button" aria-label="Close settings">&times;</button></header>
           <div class="pdf-settings-content">
           <section class="pdf-settings-group">
             <h3>Tap Zones</h3>
@@ -687,16 +687,21 @@
           </section>
           <section class="pdf-settings-group">
             <h3>Page numbering</h3>
-            <label><span>Visibility</span><select id="pdfNumberingMode">
-              <option value="off">Off</option>
-              <option value="document">On</option>
-              <option value="song">On, but designate page 1</option>
-            </select></label>
+            <fieldset class="pdf-numbering-options" aria-label="Page numbering visibility">
+              <label class="pdf-numbering-option"><input type="radio" name="pdfNumberingMode" value="off"><span>Off</span></label>
+              <label class="pdf-numbering-option"><input type="radio" name="pdfNumberingMode" value="document"><span>On</span></label>
+              <label class="pdf-numbering-option"><input type="radio" name="pdfNumberingMode" value="song"><span>On, but designate page 1</span></label>
+            </fieldset>
             <div id="pdfSongNumberingFields" class="pdf-song-numbering-fields hidden">
               <button id="pdfSongStartButton" class="secondary-button" type="button">Use current page as page 1</button>
               <label><span>Number of pages</span><input id="pdfSongPageCount" type="number" min="1" max="999" inputmode="numeric" value="1"></label>
               <p id="pdfSongNumberingStatus"></p>
             </div>
+          </section>
+          <section class="pdf-settings-group">
+            <h3>Metronome</h3>
+            <label class="pdf-setting-toggle"><input id="pdfMetronomeEnabled" type="checkbox"> <span>Show in footer</span></label>
+            <label id="pdfSettingsTempoRow" class="hidden"><span>Tempo (BPM)</span><input id="pdfSettingsTempoInput" type="number" min="40" max="220" step="1" inputmode="numeric" value="90"></label>
           </section>
           <section class="pdf-settings-group">
             <h3>Next Song</h3>
@@ -708,11 +713,6 @@
                 <li>When Off, tapping that zone keeps the current PDF open.</li>
               </ul>
             </div>
-          </section>
-          <section class="pdf-settings-group">
-            <h3>Metronome</h3>
-            <label class="pdf-setting-toggle"><input id="pdfMetronomeEnabled" type="checkbox"> <span>Show in footer</span></label>
-            <label id="pdfSettingsTempoRow" class="hidden"><span>Tempo (BPM)</span><input id="pdfSettingsTempoInput" type="number" min="40" max="220" step="1" inputmode="numeric" value="90"></label>
           </section>
           </div>
           <footer class="pdf-settings-footer"><button id="pdfSettingsApplyButton" class="primary-button" type="button">Apply</button></footer>

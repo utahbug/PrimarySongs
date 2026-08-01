@@ -821,7 +821,7 @@ function collectElements() {
   el.pdfSettingsLayer = document.getElementById("pdfSettingsLayer");
   el.pdfSettingsCloseButton = document.getElementById("pdfSettingsCloseButton");
   el.pdfSettingsApplyButton = document.getElementById("pdfSettingsApplyButton");
-  el.pdfNumberingMode = document.getElementById("pdfNumberingMode");
+  el.pdfNumberingModeOptions = Array.from(document.querySelectorAll('input[name="pdfNumberingMode"]'));
   el.pdfRepeatListEnabled = document.getElementById("pdfRepeatListEnabled");
   el.pdfSongNumberingFields = document.getElementById("pdfSongNumberingFields");
   el.pdfSongStartButton = document.getElementById("pdfSongStartButton");
@@ -1128,7 +1128,7 @@ function wireEvents() {
   el.pdfSettingsLayer.addEventListener("click", (event) => {
     if (event.target === el.pdfSettingsLayer) closePdfSettings();
   });
-  el.pdfNumberingMode.addEventListener("change", updatePdfSettingsDraft);
+  el.pdfNumberingModeOptions.forEach((option) => option.addEventListener("change", updatePdfSettingsDraft));
   el.pdfRepeatListEnabled.addEventListener("change", updatePdfSettingsDraft);
   el.pdfSongStartButton.addEventListener("click", setDraftPdfSongStart);
   el.pdfSongPageCount.addEventListener("change", updatePdfSettingsDraft);
@@ -5311,7 +5311,9 @@ function syncPdfViewerSettings() {
   const savedSettings = getPdfViewerSettings();
   const settings = state.pdfSettingsDraft || savedSettings;
   if (state.pdfSettingsDraft) el.pdfTipsShowOnOpen.checked = settings.showOnOpen;
-  el.pdfNumberingMode.value = settings.numberingMode;
+  el.pdfNumberingModeOptions.forEach((option) => {
+    option.checked = option.value === settings.numberingMode;
+  });
   el.pdfRepeatListEnabled.checked = settings.nextSongDefault;
   el.pdfMetronomeEnabled.checked = settings.metronomeEnabled;
   el.pdfSettingsTempoInput.value = String(settings.bpm || state.metronome.bpm);
@@ -5348,7 +5350,7 @@ function updatePdfSettingsDraft() {
   if (!state.pdfSettingsDraft) return;
   const draft = state.pdfSettingsDraft;
   draft.showOnOpen = el.pdfTipsShowOnOpen.checked;
-  draft.numberingMode = el.pdfNumberingMode.value;
+  draft.numberingMode = el.pdfNumberingModeOptions.find((option) => option.checked)?.value || "off";
   draft.nextSongDefault = el.pdfRepeatListEnabled.checked;
   draft.metronomeEnabled = el.pdfMetronomeEnabled.checked;
   draft.bpm = clamp(Math.round(Number(el.pdfSettingsTempoInput.value) || 90), 40, 220);
@@ -5435,7 +5437,7 @@ function renderPdfPageNumbering(showNotice) {
   const useful = Boolean(displayed && displayed.count > 1);
   el.pdfViewer.classList.toggle("show-page-number", useful);
   el.pdfPageMarker.classList.toggle("hidden", !useful);
-  el.pdfPageMarker.textContent = useful ? `#${displayed.number}` : "";
+  el.pdfPageMarker.textContent = useful ? `page ${displayed.number}` : "";
   if (!useful || !showNotice) {
     el.pdfPageNotice.classList.add("hidden");
     return;
