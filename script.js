@@ -14,6 +14,7 @@ const STORAGE_KEYS = {
   lists: storageKey("lists"),
   listEditSort: storageKey("listEditSort"),
   cardSubtypes: storageKey("cardSubtypes"),
+  cardOrder: storageKey("cardOrder"),
   pdfPages: storageKey("pdfPages"),
   pdfNumbering: storageKey("pdfNumbering"),
   quickIndexes: storageKey("quickIndexes"),
@@ -504,6 +505,13 @@ const state = {
     moved: false
   },
   listDrag: {
+    row: null,
+    container: null,
+    pointerId: null,
+    startY: 0,
+    moved: false
+  },
+  cardDrag: {
     row: null,
     container: null,
     pointerId: null,
@@ -1087,6 +1095,10 @@ function wireEvents() {
   document.body.addEventListener("pointermove", handleFavoriteDragPointerMove, { passive: false });
   document.body.addEventListener("pointerup", handleFavoriteDragPointerUp);
   document.body.addEventListener("pointercancel", handleFavoriteDragPointerCancel);
+  document.body.addEventListener("pointerdown", handleCardDragPointerDown);
+  document.body.addEventListener("pointermove", handleCardDragPointerMove, { passive: false });
+  document.body.addEventListener("pointerup", handleCardDragPointerUp);
+  document.body.addEventListener("pointercancel", handleCardDragPointerCancel);
   document.body.addEventListener("pointerdown", handleListDragPointerDown);
   document.body.addEventListener("pointermove", handleListDragPointerMove, { passive: false });
   document.body.addEventListener("pointerup", handleListDragPointerUp);
@@ -1321,12 +1333,14 @@ function closeListMoreMenu() {
 function handleDocumentKeydown(event) {
   if (handlePdfPageTurnKey(event)) return;
 
-  const dragHandle = event.target.closest?.("[data-favorite-drag], [data-list-drag], [data-list-item-drag]");
+  const dragHandle = event.target.closest?.("[data-favorite-drag], [data-card-drag], [data-list-drag], [data-list-item-drag]");
   if (dragHandle && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
     event.preventDefault();
     const direction = event.key === "ArrowUp" ? "up" : "down";
     if (dragHandle.dataset.favoriteDrag) {
       moveFavoriteOrderStep(dragHandle.dataset.favoriteDrag, direction);
+    } else if (dragHandle.dataset.cardDrag) {
+      moveCardOrderStep(dragHandle.dataset.cardDrag, direction);
     } else if (dragHandle.dataset.listDrag) {
       moveListOrderStep(dragHandle.dataset.listDrag, direction);
     } else if (dragHandle.dataset.listItemDrag) {
@@ -3386,9 +3400,10 @@ function createItemCard(item, options = {}) {
   const deleteAction = batchMode ? "" : itemDeleteActionHtml(item);
   const title = itemDisplayTitle(item);
   const selected = batchMode && state.batchDeleteSelections[options.batchDeleteSection]?.has(item.id);
-  article.className = `${options.compact ? "item-card compact-item-card" : "item-card"}${deleteAction ? " swipe-row" : ""}${options.reorderFavorites ? " favorite-reorder-row" : ""}${batchMode ? " batch-delete-row" : ""}${selected ? " batch-selected" : ""}`;
+  article.className = `${options.compact ? "item-card compact-item-card" : "item-card"}${deleteAction ? " swipe-row" : ""}${options.reorderFavorites ? " favorite-reorder-row" : ""}${options.reorderCards ? " card-reorder-row" : ""}${batchMode ? " batch-delete-row" : ""}${selected ? " batch-selected" : ""}`;
   article.dataset.id = item.id;
   if (options.reorderFavorites) article.dataset.favoriteRow = item.id;
+  if (options.reorderCards) article.dataset.cardRow = item.id;
   if (options.compact) {
     if (batchMode) {
       article.innerHTML = batchDeleteRowHtml(item, options.batchDeleteSection, selected);
@@ -3396,7 +3411,9 @@ function createItemCard(item, options = {}) {
     }
     const reorderHandle = options.reorderFavorites
       ? dragHandleHtml("favorite", item.id, title)
-      : "";
+      : options.reorderCards
+        ? dragHandleHtml("card", item.id, title)
+        : "";
     article.innerHTML = `
       ${deleteAction}
       <div class="swipe-content item-card-content compact-item-card-content">
@@ -3929,11 +3946,12 @@ function updateListPickerOptions(listId = state.activeListId) {
 }
 
 function renderCards() {
-  const cards = state.data.items.filter((item) => item.type === "card").sort(compareTitle);
+  const cards = getOrderedCards();
   el.cardsContent.classList.remove("cards-grid");
   renderItemList(el.cardsContent, cards, {
     compact: true,
     compactAction: "edit",
+    reorderCards: true,
     hideMeta: true,
     emptyTitle: "Turn words into a rehearsal aid",
     emptyMessage: "Add a Card for lyrics, cues, actions, or teaching notes that need to be easy to read."
@@ -4480,6 +4498,80 @@ function handleListDragPointerDown(event) {
   row.classList.add("is-dragging");
   container.classList.add("list-reorder-active");
   handle.setPointerCapture?.(event.pointerId);
+}
+
+function handleCardDragPointerDown(event) {
+  const handle = event.target.closest("[data-card-drag]");
+  if (!handle) return;
+  const row = handle.closest("[data-card-row]");
+  const container = row?.parentElement;
+  if (!row || !container) return;
+
+  event.preventDefault();
+  closeSwipeRows();
+  state.cardDrag = { row, container, pointerId: event.pointerId, startY: event.clientY, moved: false };
+  row.classList.add("is-dragging");
+  container.classList.add("cards-reorder-active");
+  handle.setPointerCapture?.(event.pointerId);
+}
+
+function handleCardDragPointerMove(event) {
+  const drag = state.cardDrag;
+  if (!drag.row || event.pointerId !== drag.pointerId) return;
+  if (Math.abs(event.clientY - drag.startY) > 4) drag.moved = true;
+  event.preventDefault();
+
+  const rows = Array.from(drag.container.querySelectorAll("[data-card-row]"))
+    .filter((row) => row !== drag.row);
+  const beforeRow = rows.find((row) => {
+    const rect = row.getBoundingClientRect();
+    return event.clientY < rect.top + rect.height / 2;
+  });
+  markDragDestination(drag.container, beforeRow || rows[rows.length - 1]);
+  if (beforeRow) drag.container.insertBefore(drag.row, beforeRow);
+  else drag.container.appendChild(drag.row);
+}
+
+function handleCardDragPointerUp(event) {
+  if (!state.cardDrag.row || event.pointerId !== state.cardDrag.pointerId) return;
+  finishCardDrag(true);
+}
+
+function handleCardDragPointerCancel(event) {
+  if (!state.cardDrag.row || event.pointerId !== state.cardDrag.pointerId) return;
+  finishCardDrag(false);
+}
+
+function finishCardDrag(saveOrder) {
+  const drag = state.cardDrag;
+  if (!drag.row || !drag.container) return;
+  const orderedIds = Array.from(drag.container.querySelectorAll("[data-card-row]"))
+    .map((row) => row.dataset.cardRow)
+    .filter(Boolean);
+  drag.row.classList.remove("is-dragging");
+  drag.container.classList.remove("cards-reorder-active");
+  clearDragDestination(drag.container);
+  const shouldSave = saveOrder && drag.moved;
+  state.cardDrag = { row: null, container: null, pointerId: null, startY: 0, moved: false };
+  if (shouldSave) {
+    saveCardOrder(orderedIds);
+    state.swipe.suppressClick = true;
+    window.setTimeout(() => { state.swipe.suppressClick = false; }, 250);
+  } else if (!saveOrder) {
+    renderCards();
+  }
+}
+
+function getOrderedCards() {
+  const cards = state.data.items.filter((item) => item.type === "card");
+  const byId = new Map(cards.map((card) => [card.id, card]));
+  const savedOrder = readJson(STORAGE_KEYS.cardOrder, []);
+  const ordered = Array.isArray(savedOrder)
+    ? savedOrder.map((id) => byId.get(id)).filter(Boolean)
+    : [];
+  const included = new Set(ordered.map((card) => card.id));
+  const remaining = cards.filter((card) => !included.has(card.id)).sort(compareTitle);
+  return [...ordered, ...remaining];
 }
 
 function handleListItemDragPointerDown(event) {
@@ -8239,11 +8331,24 @@ function reorderStepControlsHtml(kind, id, label, index, count) {
   `;
 }
 
+function saveCardOrder(orderedIds) {
+  const cardIds = state.data.items.filter((item) => item.type === "card").map((item) => item.id);
+  const validIds = new Set(cardIds);
+  const nextIds = orderedIds.filter((id, index) => validIds.has(id) && orderedIds.indexOf(id) === index);
+  cardIds.forEach((id) => {
+    if (!nextIds.includes(id)) nextIds.push(id);
+  });
+  writeJson(STORAGE_KEYS.cardOrder, nextIds);
+  renderCards();
+}
+
 function dragHandleHtml(kind, id, label) {
   const safeId = escapeHtml(id);
   const safeLabel = escapeHtml(label);
   const dataAttribute = kind === "favorite"
     ? `data-favorite-drag="${safeId}"`
+    : kind === "card"
+      ? `data-card-drag="${safeId}"`
     : kind === "list"
       ? `data-list-drag="${safeId}"`
       : `data-list-item-drag="${safeId}"`;
@@ -8415,6 +8520,15 @@ function openListEditModal(listId) {
   renderListEditModal();
   el.listEditModal.classList.remove("hidden");
   fitOpenMobileModals();
+}
+
+function moveCardOrderStep(id, direction) {
+  const orderedIds = getOrderedCards().map((card) => card.id);
+  const index = orderedIds.indexOf(id);
+  const nextIndex = direction === "up" ? index - 1 : index + 1;
+  if (index < 0 || nextIndex < 0 || nextIndex >= orderedIds.length) return;
+  [orderedIds[index], orderedIds[nextIndex]] = [orderedIds[nextIndex], orderedIds[index]];
+  saveCardOrder(orderedIds);
 }
 
 function toggleAlphabeticalListView(listId) {
@@ -8990,6 +9104,7 @@ async function exportBackup() {
       importedItems: readJson(STORAGE_KEYS.importedItems, []),
       itemEdits: readJson(STORAGE_KEYS.itemEdits, {}),
       cardSubtypes: getRememberedCardSubtypes(),
+      cardOrder: readJson(STORAGE_KEYS.cardOrder, []),
       lists: readJson(STORAGE_KEYS.lists, state.lists),
       quickIndexes: readJson(STORAGE_KEYS.quickIndexes, state.data.quickIndexes || []),
       setlists: readJson(STORAGE_KEYS.setlists, state.data.setlists || []),
@@ -9048,6 +9163,7 @@ function importBackupFromFile(event) {
       writeJson(STORAGE_KEYS.importedItems, data.importedItems || []);
       writeJson(STORAGE_KEYS.itemEdits, data.itemEdits || {});
       writeJson(STORAGE_KEYS.cardSubtypes, data.cardSubtypes || []);
+      writeJson(STORAGE_KEYS.cardOrder, data.cardOrder || []);
       if (data.lists) {
         writeJson(STORAGE_KEYS.lists, data.lists);
       } else {

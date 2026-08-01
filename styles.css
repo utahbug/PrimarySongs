@@ -440,6 +440,9 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 .compact-index-list .favorite-reorder-row .item-card-content,
 .compact-index-list .item-card.swipe-row.favorite-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 38px; }
 
+.compact-index-list .card-reorder-row .item-card-content,
+.compact-index-list .item-card.swipe-row.card-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 34px 38px; }
+
 .compact-index-list.favorite-list .item-card-content,
 .compact-index-list.favorite-list .item-card.swipe-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr); }
 .compact-index-list.favorite-list.favorite-reorder-list .favorite-reorder-row .item-card-content,
@@ -457,9 +460,11 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 
 .batch-toggle-open { border-radius: 6px; }
 
-.favorite-reorder-row.is-dragging .item-card-content { background: var(--accent-soft); }
+.favorite-reorder-row.is-dragging .item-card-content,
+.card-reorder-row.is-dragging .item-card-content { background: var(--accent-soft); }
 
-.favorite-reorder-row.is-dragging { opacity: 0.78; }
+.favorite-reorder-row.is-dragging,
+.card-reorder-row.is-dragging { opacity: 0.78; }
 
 .drag-handle { align-items: center; align-self: stretch; background: transparent; border: 0px; color: var(--muted); cursor: grab; display: inline-flex; flex: 0 0 38px; justify-content: center; min-height: 42px; min-width: 38px; padding: 0px; touch-action: none; }
 
@@ -471,10 +476,12 @@ select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 
 .list-tab-group.active .list-drag-handle { color: #FFFFFF; }
 .inline-list-row.is-dragging { background: var(--accent-soft); opacity: 0.8; }
 .favorite-reorder-row.is-dragging,
+.card-reorder-row.is-dragging,
 .list-reorder-row.is-dragging,
 .inline-list-row.is-dragging,
 .list-edit-item-row.is-dragging { box-shadow: inset 5px 0px 0px #2B67B1, 0px 4px 14px color-mix(in srgb, #2B67B1 28%, transparent); opacity: 1; position: relative; z-index: 3; }
 .favorite-reorder-row.is-dragging .item-card-content,
+.card-reorder-row.is-dragging .item-card-content,
 .list-reorder-row.is-dragging .list-tab-row,
 .inline-list-row.is-dragging,
 .list-edit-item-row.is-dragging { background: color-mix(in srgb, #4A90E2 22%, var(--surface)); }
@@ -1125,6 +1132,8 @@ body.pdf-open .pdf-viewer { bottom: 0px; height: 100dvh; }
   .compact-index-list .item-card.swipe-row .item-card-content { gap: 6px; grid-template-columns: 34px minmax(0px, 1fr) 34px; min-height: 50px; padding: 3px 0px; }
   .compact-index-list .favorite-reorder-row .item-card-content,
   .compact-index-list .item-card.swipe-row.favorite-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 38px; }
+  .compact-index-list .card-reorder-row .item-card-content,
+  .compact-index-list .item-card.swipe-row.card-reorder-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr) 34px 38px; }
   .favorite-list .compact-delete-button { display: none; }
   .compact-index-list.favorite-list .item-card-content,
   .compact-index-list.favorite-list .item-card.swipe-row .item-card-content { grid-template-columns: 34px minmax(0px, 1fr); }
