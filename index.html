@@ -29,7 +29,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
     <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=primary-2026-225">
+    <link rel="stylesheet" href="styles.css?v=primary-2026-226">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
     <script src="lyrics-cards.js?v=primary-2026-101" defer></script>
     <script src="script.js?v=primary-2026-223" defer></script>
@@ -649,7 +649,12 @@
 
     <section id="pdfViewer" class="pdf-viewer hidden" aria-label="PDF viewer">
       <header class="pdf-toolbar">
-        <button id="pdfTopHomeButton" class="pdf-back-button" type="button" aria-label="Return home" title="Return home"><span aria-hidden="true">&larr;</span> Home</button>
+        <div class="pdf-top-left-actions">
+          <button id="pdfTopHomeButton" class="pdf-back-button" type="button" aria-label="Return home" title="Return home"><span aria-hidden="true">&larr;</span> Home</button>
+          <button id="pdfPrintButton" class="pdf-back-button pdf-top-print-button" type="button" aria-label="Print the original PDF" title="Print PDF">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3M7 14h10v7H7zM18 11h1"></path></svg>
+          </button>
+        </div>
         <div class="pdf-title-wrap">
           <h2 id="pdfTitle">PDF</h2>
           <div class="pdf-status-line">
@@ -714,13 +719,6 @@
                 <li>When Off, tapping that zone keeps the current PDF open.</li>
               </ul>
             </div>
-          </section>
-          <section class="pdf-settings-group pdf-print-group">
-            <button id="pdfPrintButton" class="secondary-button pdf-print-button" type="button" aria-label="Print the original PDF">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3M7 14h10v7H7zM18 11h1"></path></svg>
-              <span>Print PDF</span>
-            </button>
-            <small>Opens the original document in your device's PDF and print view.</small>
           </section>
           </div>
           <footer class="pdf-settings-footer"><button id="pdfSettingsApplyButton" class="primary-button" type="button">Apply</button></footer>
