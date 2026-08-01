@@ -6611,16 +6611,24 @@ function buildSidetrackPuzzle() {
     <div class="sidetrack-puzzle-pieces"></div>
     <p class="sidetrack-puzzle-status" aria-live="polite">Build the keyboard</p>`;
   const naturalNotes = SIDETRACK_NOTES.filter(([, label]) => !label.includes("#"));
-  const pieces = naturalNotes.map(([note, label], index) => ({ note, label, index }))
+  const pieces = naturalNotes.map(([note, label], index) => ({
+    note,
+    label: note === "C4" ? "C\u2084" : note === "C5" ? "C\u2085" : label,
+    keyName: note === "C4" ? "low C" : note === "C5" ? "high C" : label,
+    index
+  }))
     .sort(() => Math.random() - 0.5);
   const tray = el.sidetrackPuzzle.querySelector(".sidetrack-puzzle-pieces");
-  pieces.forEach(({ note, label, index }) => {
+  pieces.forEach(({ note, label, keyName, index }) => {
     const piece = document.createElement("button");
     piece.type = "button";
     piece.className = "sidetrack-puzzle-piece";
     piece.dataset.note = note;
+    piece.dataset.keyName = keyName;
     piece.dataset.puzzleIndex = String(index);
     piece.textContent = label;
+    piece.setAttribute("aria-label", `${keyName}; drag to its keyboard position`);
+    piece.title = keyName;
     piece.addEventListener("pointerdown", startSidetrackPuzzleDrag);
     piece.addEventListener("pointermove", moveSidetrackPuzzleDrag);
     piece.addEventListener("pointerup", endSidetrackPuzzleDrag);
@@ -6663,34 +6671,49 @@ function endSidetrackPuzzleDrag(event) {
   piece.style.visibility = "";
   piece.classList.remove("dragging");
   piece.style.transform = "";
-  const cCanUseEitherEnd = piece.textContent === "C" && ["0", "7"].includes(slot?.dataset.puzzleIndex);
   if (slot && !slot.classList.contains("filled")
-      && (slot.dataset.puzzleIndex === piece.dataset.puzzleIndex || cCanUseEitherEnd)) {
+      && slot.dataset.puzzleIndex === piece.dataset.puzzleIndex) {
     slot.appendChild(piece);
     slot.classList.add("filled");
-    piece.disabled = true;
+    enablePlacedKeyOrderKey(piece);
     playJazzPuzzleSuccess();
     const remaining = el.sidetrackPuzzle.querySelectorAll(".sidetrack-puzzle-pieces .sidetrack-puzzle-piece").length;
     const status = el.sidetrackPuzzle.querySelector(".sidetrack-puzzle-status");
-    status.textContent = remaining ? `${remaining} key${remaining === 1 ? "" : "s"} left` : "Keyboard complete!";
+    status.textContent = remaining
+      ? `${piece.dataset.keyName} placed â€” play it! ${remaining} key${remaining === 1 ? "" : "s"} left`
+      : "Keyboard complete!";
     if (!remaining) enableCompletedKeyOrder();
+  } else if (slot) {
+    const status = el.sidetrackPuzzle.querySelector(".sidetrack-puzzle-status");
+    status.textContent = piece.dataset.note === "C4"
+      ? "Low C goes on the far left"
+      : piece.dataset.note === "C5"
+        ? "High C goes on the far right"
+        : "Try a different space";
   }
   sidetrackPuzzleDrag = null;
 }
 
+function enablePlacedKeyOrderKey(piece) {
+  if (!piece || piece.classList.contains("key-order-playable")) return;
+  piece.disabled = false;
+  piece.classList.add("keyboard-key", "key-order-playable");
+  piece.removeEventListener("pointerdown", startSidetrackPuzzleDrag);
+  piece.removeEventListener("pointermove", moveSidetrackPuzzleDrag);
+  piece.removeEventListener("pointerup", endSidetrackPuzzleDrag);
+  piece.removeEventListener("pointercancel", cancelSidetrackPuzzleDrag);
+  piece.setAttribute("aria-label", `Play ${piece.dataset.keyName || piece.textContent}`);
+  piece.title = `Play ${piece.dataset.keyName || piece.textContent}`;
+  piece.addEventListener("pointerdown", handlePianoPointerDown);
+  piece.addEventListener("pointermove", handlePianoPointerMove);
+  piece.addEventListener("pointerup", handlePianoPointerUp);
+  piece.addEventListener("pointercancel", handlePianoPointerUp);
+  piece.addEventListener("lostpointercapture", handlePianoPointerUp);
+}
+
 function enableCompletedKeyOrder() {
   el.sidetrackPuzzle.querySelectorAll(".sidetrack-puzzle-slot .sidetrack-puzzle-piece").forEach((piece) => {
-    piece.disabled = false;
-    piece.classList.add("keyboard-key", "key-order-playable");
-    piece.removeEventListener("pointerdown", startSidetrackPuzzleDrag);
-    piece.removeEventListener("pointermove", moveSidetrackPuzzleDrag);
-    piece.removeEventListener("pointerup", endSidetrackPuzzleDrag);
-    piece.removeEventListener("pointercancel", cancelSidetrackPuzzleDrag);
-    piece.addEventListener("pointerdown", handlePianoPointerDown);
-    piece.addEventListener("pointermove", handlePianoPointerMove);
-    piece.addEventListener("pointerup", handlePianoPointerUp);
-    piece.addEventListener("pointercancel", handlePianoPointerUp);
-    piece.addEventListener("lostpointercapture", handlePianoPointerUp);
+    enablePlacedKeyOrderKey(piece);
   });
   const blackKeys = [
     { slot: 0, note: "C sharp 4", label: "C sharp" },
