@@ -5276,6 +5276,9 @@ function detailHtml(item) {
         <span class="card-speech-status" data-card-speech-status aria-live="polite"></span>
       </div>
     `;
+    const readingHeading = lyricHeading
+      ? `<div class="card-reading-heading-row">${lyricHeading}${speechAction}</div>`
+      : speechAction;
     return `
       <article class="detail-card card-detail-card${item.lyricsCard ? " lyrics-card-detail" : ""}" data-card-reading-level="${CARD_READING_SCALES.indexOf(state.cardReadingScale)}">
         <div class="detail-actions card-detail-actions">
@@ -5286,8 +5289,7 @@ function detailHtml(item) {
           ${deleteAction}
           ${editAction}
         </div>
-        ${lyricHeading}
-        ${speechAction}
+        ${readingHeading}
         ${item.imageFileId ? localImageSlotHtml(item) : ""}
         ${cardContentHtml(item)}
         ${cardFactsHtml(item)}
