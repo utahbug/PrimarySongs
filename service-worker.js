@@ -1,13 +1,13 @@
-const CACHE_NAME = "primary-music-helper-shell-v497";
+const CACHE_NAME = "primary-music-helper-shell-v498";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=primary-2026-255",
+  "./styles.css?v=primary-2026-256",
   "./assets/pdf.min.js?v=3.11.174",
   "./assets/pdf.worker.min.js?v=3.11.174",
   "./lyrics-cards.js?v=primary-2026-101",
-  "./script.js?v=primary-2026-253",
+  "./script.js?v=primary-2026-254",
   "./library.json",
   "./manifest.json",
   "./favicon.ico",

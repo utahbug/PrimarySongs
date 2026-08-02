@@ -917,6 +917,7 @@ function collectElements() {
   el.importDialogTitle = document.getElementById("importTitle");
   el.importSaveButton = document.getElementById("importSaveButton");
   el.importDeleteButton = document.getElementById("importDeleteButton");
+  el.importDiscardButton = document.getElementById("importDiscardButton");
 
   el.listEditModal = document.getElementById("listEditModal");
   el.listEditPanel = document.getElementById("listEditPanel");
@@ -1009,6 +1010,7 @@ function wireEvents() {
   });
   el.backupFileInput.addEventListener("change", importBackupFromFile);
   el.importCloseButton.addEventListener("click", closeImportModal);
+  el.importDiscardButton.addEventListener("click", closeImportModal);
   el.importDeleteButton.addEventListener("click", handleDeleteItemFromForm);
   el.importType.addEventListener("change", updateImportTypeFields);
   el.importCardSubtype.addEventListener("change", handleCardSubtypeChange);
@@ -2233,6 +2235,8 @@ function resetImportForm() {
   el.importSaveButton.setAttribute("aria-label", "Save");
   el.importSaveButton.title = "Save";
   el.importTitleLabel.textContent = "Title";
+  el.importTitleField.required = false;
+  el.importDiscardButton.classList.add("hidden");
   el.importDeleteButton.classList.add("hidden");
   setImportStatus("");
 }
@@ -2315,7 +2319,11 @@ function applyImportContext() {
   el.importModal.dataset.context = context;
   el.importModal.dataset.itemType = type;
   el.importTypeRow.classList.toggle("hidden", context !== "library" || editing);
-  el.importTitleLabel.textContent = "Title";
+  const titleRequired = type === "card";
+  el.importTitleLabel.innerHTML = titleRequired
+    ? `Title <span class="required-marker" aria-hidden="true">*</span><span class="sr-only"> (required)</span>`
+    : "Title";
+  el.importTitleField.required = titleRequired;
   el.importDialogTitle.textContent = editing
     ? `Edit ${type === "link" ? "link" : type === "card" ? "card" : "item"}`
     : context === "links"
@@ -2327,6 +2335,7 @@ function applyImportContext() {
   el.importSaveButton.setAttribute("aria-label", editing ? "Save changes" : "Save");
   el.importSaveButton.title = editing ? "Save changes" : "Save";
   el.importDeleteButton.classList.toggle("hidden", !editing || !isDeletableItem(state.editingItemId));
+  el.importDiscardButton.classList.toggle("hidden", editing || type !== "card");
 
   el.importCategoryRow.classList.toggle("hidden", linkOnly);
   syncCardSubtypeFields();
