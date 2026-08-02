@@ -1,4 +1,4 @@
-const CACHE_NAME = "primary-music-helper-shell-v493";
+const CACHE_NAME = "primary-music-helper-shell-v494";
 
 const CORE_ASSETS = [
   "./",
