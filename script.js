@@ -921,6 +921,7 @@ function collectElements() {
   el.importSaveButton = document.getElementById("importSaveButton");
   el.importDeleteButton = document.getElementById("importDeleteButton");
   el.importDiscardButton = document.getElementById("importDiscardButton");
+  el.importSpeechVoiceField = document.getElementById("importSpeechVoiceField");
 
   el.listEditModal = document.getElementById("listEditModal");
   el.listEditPanel = document.getElementById("listEditPanel");
@@ -2339,6 +2340,7 @@ function applyImportContext() {
   el.importSaveButton.title = editing ? "Save changes" : "Save";
   el.importDeleteButton.classList.toggle("hidden", !editing || !isDeletableItem(state.editingItemId));
   el.importDiscardButton.classList.toggle("hidden", editing || type !== "card");
+  el.importSpeechVoiceField.classList.toggle("hidden", type !== "card");
 
   el.importCategoryRow.classList.toggle("hidden", linkOnly);
   syncCardSubtypeFields();
@@ -5322,10 +5324,6 @@ function detailHtml(item) {
           <span class="card-speech-icon" aria-hidden="true">&#128266;</span>
           <span data-card-speech-label>Read aloud</span>
         </button>
-        <label class="card-speech-voice-field">
-          <span>Voice</span>
-          <select data-card-speech-voice aria-label="Read aloud voice">${cardSpeechVoiceOptionsHtml()}</select>
-        </label>
         <span class="card-speech-status" data-card-speech-status aria-live="polite"></span>
       </div>
     `;
