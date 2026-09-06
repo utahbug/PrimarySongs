@@ -5,7 +5,7 @@ const PDFJS_WORKER_URL = new URL(`assets/pdf.worker.min.js?v=${PDFJS_VERSION}`, 
 
 const APP_STORAGE_SCOPE = getAppStorageScope();
 const APP_RELEASE_VERSION = "1.0";
-const APP_BUILD_VERSION = "1.01";
+const APP_BUILD_VERSION = "1.06";
 const UPDATE_CHECK_SESSION_KEY = `${APP_STORAGE_SCOPE}.updateCheck`;
 const STORAGE_KEYS = {
   deletedItems: storageKey("deletedItems"),
@@ -92,7 +92,7 @@ const PITCH_PRESETS = {
   violin: { label: "Violin", notes: TUNER_INSTRUMENTS.violin.targets, defaultNote: "A4" },
   flute: { label: "Flute", midiStart: 60, midiEnd: 96, defaultNote: "A4" }
 };
-const STARTER_DATA_VERSION = "primary-2026-consolidated-lists-v14";
+const STARTER_DATA_VERSION = "primary-2026-consolidated-lists-v15";
 const ITEM_METADATA_REPAIR_VERSION = "starter-metadata-v2";
 const STARTER_FAVORITES_LAYOUT_VERSION = "pianist-test-layout-v1";
 const STARTER_LIST_ALPHABETICAL_VERSION = "starter-lists-alphabetical-v2";
@@ -126,18 +126,23 @@ const RETIRED_STARTER_LISTS = [
   },
   {
     id: "setlist-primary-program-lyrics-cards",
-    title: "Primary Program - Text",
+    title: "Primary Program - Lyrics Cards",
     itemIds: ["lyrics-card-this-little-light-of-mine-1028", "lyrics-card-called-to-serve-249", "lyrics-card-i-will-follow-gods-plan-165"]
   },
   {
     id: "setlist-primary-songs-2026-lyrics-cards",
-    title: "Primary Songs 2026 - Text",
+    title: "Primary Songs 2026 - Lyrics Cards",
     itemIds: ["lyrics-card-choose-to-serve-the-lord", "lyrics-card-search-ponder-and-pray-109", "lyrics-card-wise-man-foolish-man-281", "lyrics-card-i-will-walk-with-jesus-1004", "lyrics-card-i-feel-my-saviors-love-74", "lyrics-card-this-little-light-of-mine-1028"]
   },
   {
     id: "setlist-primary-songs-2026-lyrics",
     title: "Primary Songs 2026 (lyrics)",
     itemIds: ["lyrics-card-called-to-serve-249", "lyrics-card-choose-to-serve-the-lord", "lyrics-card-i-feel-my-saviors-love-74", "lyrics-card-i-will-follow-gods-plan-165", "lyrics-card-i-will-walk-with-jesus-1004", "lyrics-card-search-ponder-and-pray-109", "lyrics-card-wise-man-foolish-man-281", "lyrics-card-this-little-light-of-mine-1028"]
+  },
+  {
+    id: "setlist-primary-songs-2026-lyrics",
+    title: "Primary Songs 2026 (lyrics)",
+    itemIds: ["lyrics-card-choose-to-serve-the-lord", "lyrics-card-search-ponder-and-pray-109", "lyrics-card-wise-man-foolish-man-281", "lyrics-card-i-will-walk-with-jesus-1004", "lyrics-card-i-feel-my-saviors-love-74", "lyrics-card-this-little-light-of-mine-1028"]
   }
 ];
 const FILE_ITEM_TYPES = new Set(["pdf", "image", "note", "index"]);
@@ -947,6 +952,7 @@ function collectElements() {
   el.aboutPanel = document.getElementById("aboutPanel");
   el.aboutCloseButton = document.getElementById("aboutCloseButton");
   el.mobileDisclaimerTrigger = document.getElementById("mobileDisclaimerTrigger");
+  el.mobileDisclaimerTriggers = Array.from(document.querySelectorAll("[data-mobile-disclaimer-trigger]"));
   el.mobileDisclaimerDialog = document.getElementById("mobileDisclaimerDialog");
   el.mobileDisclaimerClose = document.getElementById("mobileDisclaimerClose");
 
@@ -1048,10 +1054,13 @@ function wireEvents() {
   });
   el.helpCloseButton.addEventListener("click", closeHelpModal);
   el.aboutCloseButton.addEventListener("click", closeAboutModal);
-  el.mobileDisclaimerTrigger.addEventListener("click", openMobileDisclaimer);
+  el.mobileDisclaimerTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => openMobileDisclaimer(trigger));
+  });
   el.mobileDisclaimerClose.addEventListener("click", closeMobileDisclaimer);
   el.mobileDisclaimerDialog.addEventListener("close", () => {
-    if (!el.aboutModal.classList.contains("hidden")) el.mobileDisclaimerTrigger.focus();
+    if (state.mobileDisclaimerReturnFocus?.isConnected) state.mobileDisclaimerReturnFocus.focus();
+    state.mobileDisclaimerReturnFocus = null;
   });
   el.metronomeMinusButton.addEventListener("click", () => setMetronomeBpm(state.metronome.bpm - 1));
   el.metronomePlusButton.addEventListener("click", () => setMetronomeBpm(state.metronome.bpm + 1));
@@ -1327,7 +1336,8 @@ function closeAboutModal() {
   fitOpenMobileModals();
 }
 
-function openMobileDisclaimer() {
+function openMobileDisclaimer(trigger = el.mobileDisclaimerTrigger) {
+  state.mobileDisclaimerReturnFocus = trigger;
   if (typeof el.mobileDisclaimerDialog.showModal === "function") {
     el.mobileDisclaimerDialog.showModal();
   } else {
@@ -1341,7 +1351,10 @@ function closeMobileDisclaimer(restoreFocus = true) {
     el.mobileDisclaimerDialog.close();
   } else {
     el.mobileDisclaimerDialog.removeAttribute("open");
-    if (restoreFocus) el.mobileDisclaimerTrigger.focus();
+    if (restoreFocus && state.mobileDisclaimerReturnFocus?.isConnected) {
+      state.mobileDisclaimerReturnFocus.focus();
+    }
+    state.mobileDisclaimerReturnFocus = null;
   }
 }
 
@@ -1981,7 +1994,7 @@ function starterUnifiedLists() {
         checked: Boolean(entry.checked)
       }))
     }))
-  ]));
+  ]).filter((list) => !isRetiredStarterId(list.id)));
 }
 
 function alphabetizeStarterListEntries(lists = []) {
@@ -2033,23 +2046,30 @@ function normalizeLists(lists) {
 }
 
 function pruneRetiredStarterLists(lists, persist = false) {
-  const retiredById = new Map(RETIRED_STARTER_LISTS.map((list) => [list.id, list]));
   const pruned = lists.filter((list) => {
-    const retired = retiredById.get(list.id);
-    if (!retired || list.userCreated || list.title !== retired.title) return true;
-
+    if (list.userCreated) return true;
     const entries = list.entries || [];
-    const unchanged = entries.length === retired.itemIds.length && entries.every((entry, index) => {
-      const hasPersonalDetails = entry.page || entry.book || entry.notes || entry.order;
-      return entry.itemId === retired.itemIds[index] && !hasPersonalDetails;
+    const unchangedRetiredStarter = RETIRED_STARTER_LISTS.some((retired) => {
+      if (list.id !== retired.id || list.title !== retired.title || entries.length !== retired.itemIds.length) {
+        return false;
+      }
+      return entries.every((entry, index) => {
+        const hasPersonalDetails = entry.page || entry.book || entry.notes || entry.order;
+        const canonicalItemId = RETIRED_LYRIC_PDF_REPLACEMENTS[entry.itemId] || entry.itemId;
+        return canonicalItemId === retired.itemIds[index] && !hasPersonalDetails;
+      });
     });
-    return !unchanged;
+    return !unchangedRetiredStarter;
   });
 
   if (persist && pruned.length !== lists.length) {
     writeJson(STORAGE_KEYS.lists, pruned);
   }
   return pruned;
+}
+
+function isRetiredStarterId(id) {
+  return RETIRED_STARTER_LISTS.some((list) => list.id === id);
 }
 
 function pruneOldEmptyListShells(lists, persist = false) {
