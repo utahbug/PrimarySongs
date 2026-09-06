@@ -1,7 +1,7 @@
 ﻿{
     "name":  "Primary Music",
     "short_name":  "Primary Music",
-    "description":  "A fast, local-first Primary music helper for songs, rehearsal lists, lyric cards, and pianist tools.",
+    "description":  "A fast, local-first Primary music helper for songs, rehearsal lists, readable text, and pianist tools.",
     "start_url":  "./index.html",
     "scope":  "./",
     "display":  "standalone",
