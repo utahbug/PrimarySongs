@@ -5,7 +5,7 @@ const PDFJS_WORKER_URL = new URL(`assets/pdf.worker.min.js?v=${PDFJS_VERSION}`, 
 
 const APP_STORAGE_SCOPE = getAppStorageScope();
 const APP_RELEASE_VERSION = "1.0";
-const APP_BUILD_VERSION = "1.10";
+const APP_BUILD_VERSION = "1.11";
 const UPDATE_CHECK_SESSION_KEY = `${APP_STORAGE_SCOPE}.updateCheck`;
 const SW_RELOAD_SESSION_KEY = `${APP_STORAGE_SCOPE}.serviceWorkerReload`;
 const STORAGE_KEYS = {
@@ -636,6 +636,7 @@ const state = {
 };
 
 const el = {};
+let identityScrollFrame = 0;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -644,6 +645,7 @@ async function init() {
   setupKeyboardUi();
   applyAppSettings();
   wireEvents();
+  updateIdentityBar();
   setupCardSpeechVoices();
   configurePdfJs();
   await loadLibrary();
@@ -986,6 +988,7 @@ function collectElements() {
 }
 
 function wireEvents() {
+  window.addEventListener("scroll", scheduleIdentityBarUpdate, { passive: true });
   el.backgroundToggleButton.addEventListener("click", toggleBackgroundMode);
   el.homeTitleButton.addEventListener("click", goHome);
 
@@ -1342,6 +1345,18 @@ function closeAboutModal() {
   el.aboutModal.classList.add("hidden");
   closeMobileDisclaimer(false);
   fitOpenMobileModals();
+}
+
+function scheduleIdentityBarUpdate() {
+  if (identityScrollFrame) return;
+  identityScrollFrame = window.requestAnimationFrame(() => {
+    identityScrollFrame = 0;
+    updateIdentityBar();
+  });
+}
+
+function updateIdentityBar() {
+  document.body.classList.toggle("identity-condensed", window.scrollY > 40);
 }
 
 function openMobileDisclaimer(trigger = el.mobileDisclaimerTrigger) {
