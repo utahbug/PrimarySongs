@@ -1,13 +1,14 @@
-const CACHE_NAME = "primary-music-helper-shell-v515";
+const CACHE_PREFIX = "primary-music-helper-shell-";
+const CACHE_NAME = `${CACHE_PREFIX}v516`;
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=primary-2026-267",
+  "./styles-v516.css",
   "./assets/pdf.min.js?v=3.11.174",
   "./assets/pdf.worker.min.js?v=3.11.174",
   "./lyrics-cards.js?v=primary-2026-101",
-  "./script.js?v=primary-2026-266",
+  "./script-v516.js",
   "./library.json",
   "./manifest.json",
   "./favicon.ico",
@@ -79,7 +80,10 @@ const OFFLINE_ASSETS = [...CORE_ASSETS, ...OFFLINE_PDFS];
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => Promise.allSettled(OFFLINE_ASSETS.map((asset) => cache.add(asset))))
+      .then(async (cache) => {
+        await cache.addAll(CORE_ASSETS);
+        await Promise.allSettled(OFFLINE_PDFS.map((asset) => cache.add(asset)));
+      })
       .then(() => self.skipWaiting())
   );
 });
@@ -87,7 +91,9 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys
+        .filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
+        .map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -130,37 +136,37 @@ async function reportOfflineReadiness(event) {
 }
 
 async function navigationNetworkFirst(request) {
+  const cache = await caches.open(CACHE_NAME);
   try {
-    const response = await fetch(request);
+    const response = await fetch(request, { cache: "no-store" });
     if (response?.ok) {
-      const cache = await caches.open(CACHE_NAME);
       await cache.put("./index.html", response.clone());
     }
     return response;
   } catch {
-    return (await caches.match("./index.html")) || (await caches.match("./"));
+    return (await cache.match("./index.html")) || (await cache.match("./"));
   }
 }
 
 async function networkFirst(request, fallback) {
+  const cache = await caches.open(CACHE_NAME);
   try {
-    const response = await fetch(request);
+    const response = await fetch(request, { cache: "no-store" });
     if (response?.ok) {
-      const cache = await caches.open(CACHE_NAME);
       await cache.put(request, response.clone());
     }
     return response;
   } catch {
-    return (await caches.match(request, { ignoreSearch: true })) || (fallback ? caches.match(fallback) : undefined);
+    return (await cache.match(request)) || (fallback ? cache.match(fallback) : undefined);
   }
 }
 
 async function cacheFirst(request) {
-  const cached = await caches.match(request, { ignoreSearch: true });
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request);
   if (cached) return cached;
   const response = await fetch(request);
   if (response?.ok) {
-    const cache = await caches.open(CACHE_NAME);
     await cache.put(request, response.clone());
   }
   return response;

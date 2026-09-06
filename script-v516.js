@@ -5,8 +5,9 @@ const PDFJS_WORKER_URL = new URL(`assets/pdf.worker.min.js?v=${PDFJS_VERSION}`, 
 
 const APP_STORAGE_SCOPE = getAppStorageScope();
 const APP_RELEASE_VERSION = "1.0";
-const APP_BUILD_VERSION = "1.06";
+const APP_BUILD_VERSION = "1.07";
 const UPDATE_CHECK_SESSION_KEY = `${APP_STORAGE_SCOPE}.updateCheck`;
+const SW_RELOAD_SESSION_KEY = `${APP_STORAGE_SCOPE}.serviceWorkerReload`;
 const STORAGE_KEYS = {
   deletedItems: storageKey("deletedItems"),
   favorites: storageKey("favorites"),
@@ -2130,13 +2131,27 @@ function setupServiceWorker() {
     setOfflineReadiness(false, "Offline mode unavailable");
     return;
   }
+  const hadController = Boolean(navigator.serviceWorker.controller);
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!hadController) return;
+    try {
+      if (sessionStorage.getItem(SW_RELOAD_SESSION_KEY)) return;
+      sessionStorage.setItem(SW_RELOAD_SESSION_KEY, "1");
+    } catch {
+      // A reload is still safe when session storage is unavailable.
+    }
+    showAppNotice("Primary Music was updated. Reloading…");
+    window.setTimeout(() => window.location.reload(), 250);
+  });
   navigator.serviceWorker.register("service-worker.js", { updateViaCache: "none" }).then(async (registration) => {
     await registration.update();
     const readyRegistration = await navigator.serviceWorker.ready;
     await checkOfflineReadiness(readyRegistration);
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      window.setTimeout(() => checkOfflineReadiness(readyRegistration), 300);
-    });
+    try {
+      sessionStorage.removeItem(SW_RELOAD_SESSION_KEY);
+    } catch {
+      // Nothing to clean up when session storage is unavailable.
+    }
   }).catch(() => setOfflineReadiness(false, "Offline setup incomplete"));
 }
 
