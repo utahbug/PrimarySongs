@@ -5,7 +5,7 @@ const PDFJS_WORKER_URL = new URL(`assets/pdf.worker.min.js?v=${PDFJS_VERSION}`, 
 
 const APP_STORAGE_SCOPE = getAppStorageScope();
 const APP_RELEASE_VERSION = "1.0";
-const APP_BUILD_VERSION = "1.11";
+const APP_BUILD_VERSION = "1.12";
 const UPDATE_CHECK_SESSION_KEY = `${APP_STORAGE_SCOPE}.updateCheck`;
 const SW_RELOAD_SESSION_KEY = `${APP_STORAGE_SCOPE}.serviceWorkerReload`;
 const STORAGE_KEYS = {
